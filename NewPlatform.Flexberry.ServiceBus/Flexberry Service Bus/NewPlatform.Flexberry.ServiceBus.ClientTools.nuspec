@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>NewPlatform.Flexberry.ServiceBus.ClientTools</id>
+    <version>1.0.0-alpha02</version>
+    <title>Flexberry Service Bus ClientTools</title>
+    <authors>New Platform Ltd.</authors>
+    <owners>New Platform Ltd.</owners>
+    <licenseUrl>http://flexberry.net</licenseUrl>
+    <projectUrl>http://flexberry.net</projectUrl>
+    <iconUrl>http://flexberry.net/portals/_default/skins/flexerry/images/logo_last.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Client tools for Flexberry Service Bus.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright © New Platform Ltd. 2017</copyright>
+    <tags>Flexberry Service Bus</tags>
+  </metadata>
+  <files>
+    <file src="NewPlatform.Flexberry.ServiceBus.ClientTools.dll" target="lib\net45\NewPlatform.Flexberry.ServiceBus.ClientTools.dll" />
+    <file src="NewPlatform.Flexberry.ServiceBus.ClientTools.xml" target="lib\net45\NewPlatform.Flexberry.ServiceBus.ClientTools.xml" />
+  </files>
+</package>

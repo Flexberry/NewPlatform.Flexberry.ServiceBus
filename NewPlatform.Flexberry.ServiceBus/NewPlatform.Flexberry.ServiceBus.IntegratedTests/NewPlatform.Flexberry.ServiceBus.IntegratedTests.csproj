@@ -1,0 +1,568 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Flexberry Service Bus\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\Flexberry Service Bus\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NewPlatform.Flexberry.ServiceBus.IntegratedTests</RootNamespace>
+    <AssemblyName>NewPlatform.Flexberry.ServiceBus.IntegratedTests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\..\Analyzers\Flexberry.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>NewPlatform.Flexberry.ServiceBus.IntegratedTests.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AccessControl, Version=1.0.2.0, Culture=neutral, PublicKeyToken=f28793b2170d3093, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\AccessControl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ActiveReports, Version=3.3.0.1999, Culture=neutral, PublicKeyToken=cc4967777c49a3ff">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ActiveReports.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ActiveReports.Viewer, Version=3.3.0.1999, Culture=neutral, PublicKeyToken=cc4967777c49a3ff">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ActiveReports.Viewer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AdmConsole%28Objects%29, Version=1.0.0.1, Culture=neutral, PublicKeyToken=bcc231dedbc359ed, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\AdmConsole(Objects).dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="C1.Common, Version=1.0.20031.116, Culture=neutral, PublicKeyToken=e272bb32d11b1948">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\C1.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="C1.Win.C1FlexGrid, Version=2.5.20053.220, Culture=neutral, PublicKeyToken=c9c7ad9c0a5706c9">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\C1.Win.C1FlexGrid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ChangesToSqlBTMonitor, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e5ad39f116a43e0b, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CheckingLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f5217598140e5d0f, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\CheckingLibrary.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Controller, Version=1.0.0.1, Culture=neutral, PublicKeyToken=777b9d7017ea5bad, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\Controller.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DocGen plugin, Version=1.0.0.1, Culture=neutral, PublicKeyToken=a55f848436075175, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\DocGen plugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ExternalLangDef.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="History Case Tool plugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=627c596682cce462, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\History Case Tool plugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.Services.CurrentUserService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=087bc7ccdc1b0bb4, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.Services.CurrentUserService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.Services.UnityFactory, Version=1.0.0.1, Culture=neutral, PublicKeyToken=6389c2e26f4059bc, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.Services.UnityFactory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.AzManBridge, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68fa18c590f08613, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\ICSSoft.STORMNET.AzManBridge.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Business, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c17bb360f7843f45, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Business.DRDataService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cef244157a7f77f7, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.DRDataService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Business.LINQProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=68e48bb6f6293778, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.LINQProvider.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Business.LockService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68ac0e47b5ef94d8, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.LockService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Business.MSSQLDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=49b42003269a4a66, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.MSSQLDataService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Business.ODBCDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=4c6916a347bdf8b1, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.ODBCDataService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Business.OracleDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=b24b342e1d86de22, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.OracleDataService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Business.PostgresDataService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c1da4b21bda90afe, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.PostgresDataService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.BusinessTaskMonitor, Version=1.0.0.1, Culture=neutral, PublicKeyToken=d828ff671605fa4b, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ICSSoft.STORMNET.BusinessTaskMonitor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=898f36b7a907d804, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.DataObject, Version=1.0.0.1, Culture=neutral, PublicKeyToken=023a90c13b0ca8dc, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.DataObject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3ca22139c3589202, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ICSSoft.STORMNET.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.EBSI, Version=1.0.0.1, Culture=neutral, PublicKeyToken=4c9e491de0b2ba13, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ICSSoft.STORMNET.EBSI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.EBSI.Debugger, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a480521ce96fafdd, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\ICSSoft.STORMNET.EBSI.Debugger.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.FileType, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3865dfcfdb206ca8, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ICSSoft.STORMNET.FileType.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.FunctionalLanguage, Version=1.0.0.1, Culture=neutral, PublicKeyToken=88efc6f76e5cd161, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.FunctionalLanguage.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Licensing, Version=1.0.0.1, Culture=neutral, PublicKeyToken=15dc7043cb849295, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\ICSSoft.STORMNET.Licensing.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.RightManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=2f453919c28176ba, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\ICSSoft.STORMNET.RightManager.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Tools, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c824f5305b237be9, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Tools.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.UI, Version=1.0.0.1, Culture=neutral, PublicKeyToken=21ce651d390c1fa0, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ICSSoft.STORMNET.UI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.UserDataTypes, Version=1.0.0.1, Culture=neutral, PublicKeyToken=bc478021255def29, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Windows.Forms, Version=1.0.0.1, Culture=neutral, PublicKeyToken=ce4988eff6f608d0, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ICSSoft.STORMNET.Windows.Forms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Windows.Forms.AdditionalControls, Version=1.0.0.1, Culture=neutral, PublicKeyToken=11915d04b14f387d, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ICSSoft.STORMNET.Windows.Forms.AdditionalControls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Windows.Forms.MaskEditControl, Version=1.0.0.1, Culture=neutral, PublicKeyToken=023a90c13b0ca8dc, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ICSSoft.STORMNET.Windows.Forms.MaskEditControl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.Windows.Forms.XmlViewer, Version=1.0.0.1, Culture=neutral, PublicKeyToken=92a3a6dafbd262ce, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\ICSSoft.STORMNET.Windows.Forms.XmlViewer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ImportCaseTool, Version=1.0.0.1, Culture=neutral, PublicKeyToken=0b014dafd8bc1c07, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\ImportCaseTool.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="IntelliSearch, Version=1.0.0.1, Culture=neutral, PublicKeyToken=edf6a99f89c97525, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\IntelliSearch.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Interop.ActiveDs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96924c19c47317a6, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\Interop.ActiveDs.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LogService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1237387dc1b896f5, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.LogService.1.1.0\lib\net45\LogService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MagicLocalLibrary, Version=1.7.0.0, Culture=neutral, PublicKeyToken=cd83a4ab7c958644, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\MagicLocalLibrary.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Interop.Security.AzRoles, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\Microsoft.Interop.Security.AzRoles.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Microsoft.Owin.Hosting.2.0.2\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Logging, Version=5.0.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\EnterpriseLibrary.Logging.5.0.505.0\lib\NET35\Microsoft.Practices.EnterpriseLibrary.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration, Version=2.1.505.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Npgsql.2.2.7\lib\net45\Mono.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Moq, Version=4.6.38.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Moq.4.6.38-alpha\lib\net45\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MS SQL Server direct generator, Version=1.0.0.1, Culture=neutral, PublicKeyToken=b4e3ef95acd8b6fb, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\MS SQL Server direct generator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NewPlatform.Flexberry.Designer.OrmCasePlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1770be16d5df9a3e, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORMCasePlugin.2.0.0-beta01\lib\net40\NewPlatform.Flexberry.Designer.OrmCasePlugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NewPlatform.Flexberry.ORM.TestingTools, Version=1.0.0.0, Culture=neutral, PublicKeyToken=419cde84dfbc9a2d, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.TestingTools.2.0.0\lib\net40\NewPlatform.Flexberry.ORM.TestingTools.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NewPlatform.Flexberry.Security, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b04c483e14c0d306, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\NewPlatform.Flexberry.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NewPlatform.Flexberry.Security.BusinessServers, Version=1.0.0.1, Culture=neutral, PublicKeyToken=2a87ddf394e1b26a, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\NewPlatform.Flexberry.Security.BusinessServers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NewPlatform.Flexberry.Security.Objects, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e9e142aba0117561, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\NewPlatform.Flexberry.Security.Objects.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NewPlatform.Flexberry.TestingTools, Version=1.0.0.0, Culture=neutral, PublicKeyToken=721c627970ca1d6b, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.TestingTools.1.0.2\lib\net40\NewPlatform.Flexberry.TestingTools.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=2.2.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Npgsql.2.2.7\lib\net45\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=2.8.60318.667, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NuGet.Core.2.8.5\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Oracle.ManagedDataAccess.12.1.022\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.4.1.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\RazorEngine.3.4.1\lib\net45\RazorEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Remotion.Linq, Version=1.13.183.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Remotion.Linq.1.13.183.0\lib\net35\Remotion.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Repository, Version=1.0.0.1, Culture=neutral, PublicKeyToken=93dad7197e99c26e, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Winforms.2.0.0-beta01\lib\net35\Repository.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Repository.Forms, Version=1.0.0.1, Culture=neutral, PublicKeyToken=4194a61e9089c339, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\Repository.Forms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RightManagement Case Tool plugin, Version=1.0.0.1, Culture=neutral, PublicKeyToken=aba50d56a70e14f9, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\RightManagement Case Tool plugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLDDLDOM, Version=1.0.0.1, Culture=neutral, PublicKeyToken=95f127f3f21da2ea, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\SQLDDLDOM.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\stdole.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="STORM.Net Case CS Tool plugin, Version=1.0.0.1, Culture=neutral, PublicKeyToken=bb0d4d3a740c334b, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\STORM.Net Case CS Tool plugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="STORM.Net Case SQL Tool plugin, Version=1.0.0.1, Culture=neutral, PublicKeyToken=1607b5f104f60593, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\STORM.Net Case SQL Tool plugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="STORM.NET Case Tool plugin, Version=1.0.0.1, Culture=neutral, PublicKeyToken=20df2844978d081d, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\STORM.NET Case Tool plugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UMLAD, Version=1.0.0.1, Culture=neutral, PublicKeyToken=fa10a97a3c6f949c, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\UMLAD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UMLCAD, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e26976aae209e55f, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\UMLCAD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UMLCOD, Version=1.0.0.1, Culture=neutral, PublicKeyToken=ced716007ebd3760, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\UMLCOD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UMLCommon, Version=1.0.0.1, Culture=neutral, PublicKeyToken=dd01e27340e419eb, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\UMLCommon.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UMLDPD, Version=1.0.0.1, Culture=neutral, PublicKeyToken=04e2dec4a7bdea2e, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\UMLDPD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UMLEBSD, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a1e6ace1e8a969ea, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\UMLEBSD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UMLSD, Version=1.0.0.1, Culture=neutral, PublicKeyToken=ce7a2caf16932815, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\UMLSD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UMLSTD, Version=1.0.0.1, Culture=neutral, PublicKeyToken=15c906472214b3d8, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\UMLSTD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="UMLUCD, Version=1.0.0.1, Culture=neutral, PublicKeyToken=9593862c381f4204, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\UMLUCD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="XmiHelper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c53d8cc06898cc4d, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\XmiHelper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="XmiPlugin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ae294c873016e806, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\XmiPlugin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="XmlSchemaGenerator, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cebc4279ba626ad6, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Designer.1.3.0-beta01\lib\net45\XmlSchemaGenerator.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\Flexberry Service Bus\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="BaseServiceBusIntegratedTest.cs" />
+    <Compile Include="Components\ObjectRepository\CachedDataServiceObjectRepositoryTest.cs" />
+    <Compile Include="Components\ObjectRepository\DataServiceObjectRepositoryTest.cs" />
+    <Compile Include="Components\ObjectRepository\ObjectRepositoryTestHelper.cs" />
+    <Compile Include="Components\ReceivingManager\DefaultReceivingManagerTest.cs" />
+    <Compile Include="Components\SendingManager\BaseSendingManagerTest.cs" />
+    <Compile Include="Components\SendingManager\DefaultSendingManagerTest.cs" />
+    <Compile Include="Components\StatisticsService\DefaultStatisticsCompressorServiceTest.cs" />
+    <Compile Include="Components\SubscriptionsManager\CachedSubscriptionsManagerTest.cs" />
+    <Compile Include="Components\SubscriptionsManager\DefaultSubscriptionsManagerTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceHelperTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="NewPlatform.Flexberry.ServiceBus.IntegratedTests.snk" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\Flexberry Service Bus\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\Flexberry Service Bus\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\Flexberry Service Bus\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus.ClientTools\Objects\NewPlatform.Flexberry.ServiceBus.ClientTools.csproj">
+      <Project>{5de41952-fd87-47da-b6d1-f805c670cb09}</Project>
+      <Name>NewPlatform.Flexberry.ServiceBus.ClientTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus.Components\Objects\NewPlatform.Flexberry.ServiceBus.Components.csproj">
+      <Project>{82b674c0-ab1c-4c83-b451-39d4812c51ca}</Project>
+      <Name>NewPlatform.Flexberry.ServiceBus.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus.Objects\Objects\NewPlatform.Flexberry.ServiceBus.Objects.csproj">
+      <Project>{ccf11380-4c57-48a2-b832-bc8f477c0b2a}</Project>
+      <Name>NewPlatform.Flexberry.ServiceBus.Objects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus\NewPlatform.Flexberry.ServiceBus.csproj">
+      <Project>{67040f2c-82a9-4ac2-b21d-298c161fe08f}</Project>
+      <Name>NewPlatform.Flexberry.ServiceBus</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\CrossBusCommunicationService\" />
+    <Folder Include="Components\Logger\" />
+    <Folder Include="Components\MailScanningService\" />
+    <Folder Include="Components\RerouterService\Configuration\" />
+    <Folder Include="Components\WcfService\" />
+    <Folder Include="Components\WebApiService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Components\SendingManager\RequestTemplates\HTTPRequestTemplate.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Components\SendingManager\RequestTemplates\WebRequestTemplate.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\Flexberry Service Bus\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\Flexberry Service Bus\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

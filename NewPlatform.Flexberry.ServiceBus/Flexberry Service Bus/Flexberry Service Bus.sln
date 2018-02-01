@@ -1,0 +1,138 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus", "..\NewPlatform.Flexberry.ServiceBus\NewPlatform.Flexberry.ServiceBus.csproj", "{67040F2C-82A9-4AC2-B21D-298C161FE08F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.Tests", "..\NewPlatform.Flexberry.ServiceBus.Tests\NewPlatform.Flexberry.ServiceBus.Tests.csproj", "{1E8E0091-2BDC-4B89-A868-302E44A064F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet Package", "NuGet Package", "{9E02470A-CC2C-4915-98D7-C6A1EF50596C}"
+	ProjectSection(SolutionItems) = preProject
+		NewPlatform.Flexberry.ServiceBus.ClientTools.nuspec = NewPlatform.Flexberry.ServiceBus.ClientTools.nuspec
+		NewPlatform.Flexberry.ServiceBus.Components.nuspec = NewPlatform.Flexberry.ServiceBus.Components.nuspec
+		NewPlatform.Flexberry.ServiceBus.nuspec = NewPlatform.Flexberry.ServiceBus.nuspec
+		NewPlatform.Flexberry.ServiceBus.Objects.nuspec = NewPlatform.Flexberry.ServiceBus.Objects.nuspec
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.IntegratedTests", "..\NewPlatform.Flexberry.ServiceBus.IntegratedTests\NewPlatform.Flexberry.ServiceBus.IntegratedTests.csproj", "{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.ClientTools", "..\NewPlatform.Flexberry.ServiceBus.ClientTools\Objects\NewPlatform.Flexberry.ServiceBus.ClientTools.csproj", "{5DE41952-FD87-47DA-B6D1-F805C670CB09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.Objects", "..\NewPlatform.Flexberry.ServiceBus.Objects\Objects\NewPlatform.Flexberry.ServiceBus.Objects.csproj", "{CCF11380-4C57-48A2-B832-BC8F477C0B2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.Components", "..\NewPlatform.Flexberry.ServiceBus.Components\Objects\NewPlatform.Flexberry.ServiceBus.Components.csproj", "{82B674C0-AB1C-4C83-B451-39D4812C51CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.ConsoleHost", "..\NewPlatform.Flexberry.ServiceBus.ConsoleHost\NewPlatform.Flexberry.ServiceBus.ConsoleHost.csproj", "{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.WinServiceHost", "..\NewPlatform.Flexberry.ServiceBus.WinServiceHost\NewPlatform.Flexberry.ServiceBus.WinServiceHost.csproj", "{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{179AA846-7B68-4B25-ABAD-40228754B66D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSSQL", "MSSQL", "{E13337C1-CB98-4CD8-9C4B-8E7FD70943A7}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\MSSQL\CreateNewDB.sql = SQL\MSSQL\CreateNewDB.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgreSQL", "PostgreSQL", "{179FEDE8-1FAB-4C5F-BACA-C7B383332896}"
+	ProjectSection(SolutionItems) = preProject
+		SQL\PostgreSQL\CreateNewDB.sql = SQL\PostgreSQL\CreateNewDB.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Linux", "Linux", "{14AD83C9-3FC2-476F-BA8F-18BE3E06CAA9}"
+	ProjectSection(SolutionItems) = preProject
+		Linux\flexberryservicebus = Linux\flexberryservicebus
+		Linux\readme.txt = Linux\readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UML", "UML", "{34A98E32-0E84-44AD-9D03-B1CD0594E697}"
+	ProjectSection(SolutionItems) = preProject
+		Flexberry Service Bus.crp = Flexberry Service Bus.crp
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{67040F2C-82A9-4AC2-B21D-298C161FE08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67040F2C-82A9-4AC2-B21D-298C161FE08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67040F2C-82A9-4AC2-B21D-298C161FE08F}.Debug|x86.ActiveCfg = Debug|x86
+		{67040F2C-82A9-4AC2-B21D-298C161FE08F}.Debug|x86.Build.0 = Debug|x86
+		{67040F2C-82A9-4AC2-B21D-298C161FE08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67040F2C-82A9-4AC2-B21D-298C161FE08F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67040F2C-82A9-4AC2-B21D-298C161FE08F}.Release|x86.ActiveCfg = Release|x86
+		{67040F2C-82A9-4AC2-B21D-298C161FE08F}.Release|x86.Build.0 = Release|x86
+		{1E8E0091-2BDC-4B89-A868-302E44A064F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E8E0091-2BDC-4B89-A868-302E44A064F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E8E0091-2BDC-4B89-A868-302E44A064F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1E8E0091-2BDC-4B89-A868-302E44A064F5}.Debug|x86.Build.0 = Debug|Any CPU
+		{1E8E0091-2BDC-4B89-A868-302E44A064F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E8E0091-2BDC-4B89-A868-302E44A064F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E8E0091-2BDC-4B89-A868-302E44A064F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{1E8E0091-2BDC-4B89-A868-302E44A064F5}.Release|x86.Build.0 = Release|Any CPU
+		{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}.Debug|x86.Build.0 = Debug|Any CPU
+		{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}.Release|x86.ActiveCfg = Release|Any CPU
+		{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}.Release|x86.Build.0 = Release|Any CPU
+		{5DE41952-FD87-47DA-B6D1-F805C670CB09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE41952-FD87-47DA-B6D1-F805C670CB09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE41952-FD87-47DA-B6D1-F805C670CB09}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5DE41952-FD87-47DA-B6D1-F805C670CB09}.Debug|x86.Build.0 = Debug|Any CPU
+		{5DE41952-FD87-47DA-B6D1-F805C670CB09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE41952-FD87-47DA-B6D1-F805C670CB09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE41952-FD87-47DA-B6D1-F805C670CB09}.Release|x86.ActiveCfg = Release|Any CPU
+		{5DE41952-FD87-47DA-B6D1-F805C670CB09}.Release|x86.Build.0 = Release|Any CPU
+		{CCF11380-4C57-48A2-B832-BC8F477C0B2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCF11380-4C57-48A2-B832-BC8F477C0B2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCF11380-4C57-48A2-B832-BC8F477C0B2A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CCF11380-4C57-48A2-B832-BC8F477C0B2A}.Debug|x86.Build.0 = Debug|Any CPU
+		{CCF11380-4C57-48A2-B832-BC8F477C0B2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCF11380-4C57-48A2-B832-BC8F477C0B2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCF11380-4C57-48A2-B832-BC8F477C0B2A}.Release|x86.ActiveCfg = Release|Any CPU
+		{CCF11380-4C57-48A2-B832-BC8F477C0B2A}.Release|x86.Build.0 = Release|Any CPU
+		{82B674C0-AB1C-4C83-B451-39D4812C51CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82B674C0-AB1C-4C83-B451-39D4812C51CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82B674C0-AB1C-4C83-B451-39D4812C51CA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{82B674C0-AB1C-4C83-B451-39D4812C51CA}.Debug|x86.Build.0 = Debug|Any CPU
+		{82B674C0-AB1C-4C83-B451-39D4812C51CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82B674C0-AB1C-4C83-B451-39D4812C51CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82B674C0-AB1C-4C83-B451-39D4812C51CA}.Release|x86.ActiveCfg = Release|Any CPU
+		{82B674C0-AB1C-4C83-B451-39D4812C51CA}.Release|x86.Build.0 = Release|Any CPU
+		{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}.Debug|x86.ActiveCfg = Debug|x86
+		{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}.Debug|x86.Build.0 = Debug|x86
+		{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}.Release|x86.ActiveCfg = Release|x86
+		{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}.Release|x86.Build.0 = Release|x86
+		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Debug|x86.ActiveCfg = Debug|x86
+		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Debug|x86.Build.0 = Debug|x86
+		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Release|x86.ActiveCfg = Release|x86
+		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E13337C1-CB98-4CD8-9C4B-8E7FD70943A7} = {179AA846-7B68-4B25-ABAD-40228754B66D}
+		{179FEDE8-1FAB-4C5F-BACA-C7B383332896} = {179AA846-7B68-4B25-ABAD-40228754B66D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\EnterpriseLibrary.Logging.5.0.505.0\lib\NET35;packages\Unity.Interception.2.1.505.0\lib\NET35;packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Data.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Logging.Database.5.0.505.0\lib\NET35;packages\EnterpriseLibrary.Logging.5.0.505.1\lib\NET35
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
+		SolutionGuid = {F215F1DF-A27B-4EEF-8915-E65D534CC4EB}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+# template	Flexberry Service Bus - esb from NewPlatform.
+#
+# chkconfig: - 90 10
+# description:	
+# processname: flexberryservicebus
+# config: NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
+# pidfile: /var/run/monosrv/flexberryservicebus.pid
+
+# Do not load RH compatibility interface.
+WITHOUT_RC_COMPAT=1
+
+# Source function library.
+. /etc/init.d/functions
+
+LOCKFILE=/tmp/flexberryservicebus.lock
+MONOSERVER=/usr/local/mono/mono-4.6.1/bin/mono-service2
+SERVICEPATH=/opt/flexberryservicebus
+SERVICEEXE=NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe
+USER=flexberryservicebus
+export MONO_IOMAP=all
+
+start()
+{
+	if [ ! -f ${LOCKFILE} ]; then
+		su -c "${MONOSERVER} -l:${LOCKFILE} -d:${SERVICEPATH} -m:flexberryservicebus ${SERVICEEXE}" ${USER}
+	else
+		echo "Flexberry Service Bus is already running!"
+	fi
+}
+
+stop()
+{
+	if [ -f ${LOCKFILE} ]; then
+		PID=$(su -c "cat ${LOCKFILE}")
+		kill ${PID}
+	else
+		echo "Flexberry Service Bus is not running"
+	fi
+}
+
+restart()
+{
+	stop
+	sleep 1
+	start
+}
+
+reset()
+{
+	stop
+	sleep 1	
+	rm ${LOCKFILE}
+	sleep 1
+	start
+}
+
+status()
+{
+	if [ -f ${LOCKFILE} ]; then
+		echo "Flexberry Service Bus is running"
+	else
+		echo "Flexberry Service Bus is not running"
+	fi
+}
+
+# See how we were called.
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		restart
+		;;
+	reset)
+		reset
+		;;
+	status)
+		status
+		;;
+	*)
+		msg_usage "${0##*/} {start|stop|restart|reset|status}"
+		RETVAL=1
+esac
