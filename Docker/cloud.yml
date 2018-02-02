@@ -1,0 +1,22 @@
+version: '3'
+services:
+  HWSBPostgres:
+    image: "flexberry/hwsb-postgres:latest"
+    volumes:
+      - hwsbDB:/var/lib/pgsql/data/
+    ports:
+     - "5432:5432"
+  FlexberryServiceBus:
+    environment:
+     - DOCKER_HOSTNAME=${COMPUTERNAME}.${USERDNSDOMAIN}
+    image: "flexberry/hwsb:latest"
+    ports:
+     - "7075:7075"
+     - "7085:7085"
+  servicebuseditor:
+    image: "flexberry/servicebuseditor:latest"
+    ports:
+     - "180:80"
+
+volumes:
+  hwsbDB: 
