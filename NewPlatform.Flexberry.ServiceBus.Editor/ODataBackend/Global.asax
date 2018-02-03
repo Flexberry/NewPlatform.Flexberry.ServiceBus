@@ -1,1 +1,0 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="NewPlatform.Flexberry.ServiceBus.Editor.Global" Language="C#" %>
