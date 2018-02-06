@@ -1,0 +1,848 @@
+
+
+
+
+CREATE TABLE SubscriptionStatisticsMonitor (
+
+ primaryKey UUID NOT NULL,
+
+ Number INT NOT NULL,
+
+ Category VARCHAR(255) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ Subscription UUID NOT NULL,
+
+ StatisticsMonitor UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Bus (
+
+ primaryKey UUID NOT NULL,
+
+ ManagerAddress VARCHAR(255) NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ ID VARCHAR(255) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ Address VARCHAR(255) NULL,
+
+ DnsIdentity VARCHAR(255) NULL,
+
+ Description TEXT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE StatisticsRecord (
+
+ primaryKey UUID NOT NULL,
+
+ Since TIMESTAMP(3) NOT NULL,
+
+ "To" TIMESTAMP(3) NOT NULL,
+
+ StatisticsInterval VARCHAR(12) NOT NULL,
+
+ SentCount INT NULL,
+
+ ReceivedCount INT NULL,
+
+ ErrorsCount INT NULL,
+
+ UniqueErrorsCount INT NULL,
+
+ ConnectionCount INT NULL,
+
+ QueueLength INT NULL,
+
+ SentAvgTime INT NULL,
+
+ QueryAvgTime INT NULL,
+
+ StatisticsSetting UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE StatisticsSetting (
+
+ primaryKey UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ Subscription UUID NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Client (
+
+ primaryKey UUID NOT NULL,
+
+ ID VARCHAR(255) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ Address VARCHAR(255) NULL,
+
+ DnsIdentity VARCHAR(255) NULL,
+
+ Description TEXT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE StatisticsCompressionSetting (
+
+ primaryKey UUID NOT NULL,
+
+ CompressTo VARCHAR(12) NOT NULL,
+
+ StatisticsAgeCount INT NOT NULL,
+
+ StatisticsAgeUnits VARCHAR(6) NOT NULL,
+
+ CompressFrequencyCount INT NOT NULL,
+
+ CompressFrequencyUnits VARCHAR(6) NOT NULL,
+
+ NextCompressTime TIMESTAMP(3) NOT NULL,
+
+ LastCompressTime TIMESTAMP(3) NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ StatisticsSetting UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Message (
+
+ primaryKey UUID NOT NULL,
+
+ SendingTime TIMESTAMP(3) NOT NULL,
+
+ ReceivingTime TIMESTAMP(3) NOT NULL,
+
+ IsSending BOOLEAN NULL,
+
+ ErrorCount INT NULL,
+
+ Sender VARCHAR(255) NULL,
+
+ Body TEXT NULL,
+
+ Attachment TEXT NULL,
+
+ Priority INT NULL,
+
+ "Group" VARCHAR(255) NULL,
+
+ Tags VARCHAR NULL,
+
+ Logs VARCHAR NULL,
+
+ MessageType UUID NOT NULL,
+
+ Recipient UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE SendingPermission (
+
+ primaryKey UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ MessageType UUID NOT NULL,
+
+ Client UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Subscription (
+
+ primaryKey UUID NOT NULL,
+
+ Description TEXT NULL,
+
+ ExpiryDate TIMESTAMP(3) NOT NULL,
+
+ IsCallback BOOLEAN NULL,
+
+ TransportType VARCHAR(4) NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ MessageType UUID NOT NULL,
+
+ Client UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE StatisticsMonitor (
+
+ primaryKey UUID NOT NULL,
+
+ Owner VARCHAR(255) NULL,
+
+ Name VARCHAR(255) NOT NULL,
+
+ Public BOOLEAN NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE MessageType (
+
+ primaryKey UUID NOT NULL,
+
+ ID VARCHAR(255) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ Description TEXT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMNETLOCKDATA (
+
+ LockKey VARCHAR(300) NOT NULL,
+
+ UserName VARCHAR(300) NOT NULL,
+
+ LockDate TIMESTAMP(3) NULL,
+
+ PRIMARY KEY (LockKey));
+
+
+CREATE TABLE STORMSETTINGS (
+
+ primaryKey UUID NOT NULL,
+
+ Module VARCHAR(1000) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ Value TEXT NULL,
+
+ "User" VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAdvLimit (
+
+ primaryKey UUID NOT NULL,
+
+ "User" VARCHAR(255) NULL,
+
+ Published BOOLEAN NULL,
+
+ Module VARCHAR(255) NULL,
+
+ Name VARCHAR(255) NULL,
+
+ Value TEXT NULL,
+
+ HotKeyData INT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMFILTERSETTING (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(255) NOT NULL,
+
+ DataObjectView VARCHAR(255) NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMWEBSEARCH (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(255) NOT NULL,
+
+ "Order" INT NOT NULL,
+
+ PresentView VARCHAR(255) NOT NULL,
+
+ DetailedView VARCHAR(255) NOT NULL,
+
+ FilterSetting_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMFILTERDETAIL (
+
+ primaryKey UUID NOT NULL,
+
+ Caption VARCHAR(255) NOT NULL,
+
+ DataObjectView VARCHAR(255) NOT NULL,
+
+ ConnectMasterProp VARCHAR(255) NOT NULL,
+
+ OwnerConnectProp VARCHAR(255) NULL,
+
+ FilterSetting_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMFILTERLOOKUP (
+
+ primaryKey UUID NOT NULL,
+
+ DataObjectType VARCHAR(255) NOT NULL,
+
+ Container VARCHAR(255) NULL,
+
+ ContainerTag VARCHAR(255) NULL,
+
+ FieldsToView VARCHAR(255) NULL,
+
+ FilterSetting_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE UserSetting (
+
+ primaryKey UUID NOT NULL,
+
+ AppName VARCHAR(256) NULL,
+
+ UserName VARCHAR(512) NULL,
+
+ UserGuid UUID NULL,
+
+ ModuleName VARCHAR(1024) NULL,
+
+ ModuleGuid UUID NULL,
+
+ SettName VARCHAR(256) NULL,
+
+ SettGuid UUID NULL,
+
+ SettLastAccessTime TIMESTAMP(3) NULL,
+
+ StrVal VARCHAR(256) NULL,
+
+ TxtVal TEXT NULL,
+
+ IntVal INT NULL,
+
+ BoolVal BOOLEAN NULL,
+
+ GuidVal UUID NULL,
+
+ DecimalVal DECIMAL(20,10) NULL,
+
+ DateTimeVal TIMESTAMP(3) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE ApplicationLog (
+
+ primaryKey UUID NOT NULL,
+
+ Category VARCHAR(64) NULL,
+
+ EventId INT NULL,
+
+ Priority INT NULL,
+
+ Severity VARCHAR(32) NULL,
+
+ Title VARCHAR(256) NULL,
+
+ Timestamp TIMESTAMP(3) NULL,
+
+ MachineName VARCHAR(32) NULL,
+
+ AppDomainName VARCHAR(512) NULL,
+
+ ProcessId VARCHAR(256) NULL,
+
+ ProcessName VARCHAR(512) NULL,
+
+ ThreadName VARCHAR(512) NULL,
+
+ Win32ThreadId VARCHAR(128) NULL,
+
+ Message VARCHAR(2500) NULL,
+
+ FormattedMessage TEXT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAuObjType (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(255) NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAuEntity (
+
+ primaryKey UUID NOT NULL,
+
+ ObjectPrimaryKey VARCHAR(38) NOT NULL,
+
+ OperationTime TIMESTAMP(3) NOT NULL,
+
+ OperationType VARCHAR(100) NOT NULL,
+
+ ExecutionResult VARCHAR(12) NOT NULL,
+
+ Source VARCHAR(255) NOT NULL,
+
+ SerializedField TEXT NULL,
+
+ User_m0 UUID NOT NULL,
+
+ ObjectType_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAuField (
+
+ primaryKey UUID NOT NULL,
+
+ Field VARCHAR(100) NOT NULL,
+
+ OldValue TEXT NULL,
+
+ NewValue TEXT NULL,
+
+ MainChange_m0 UUID NULL,
+
+ AuditEntity_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAG (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(80) NOT NULL,
+
+ Login VARCHAR(50) NULL,
+
+ Pwd VARCHAR(50) NULL,
+
+ IsUser BOOLEAN NOT NULL,
+
+ IsGroup BOOLEAN NOT NULL,
+
+ IsRole BOOLEAN NOT NULL,
+
+ ConnString VARCHAR(255) NULL,
+
+ Enabled BOOLEAN NULL,
+
+ Email VARCHAR(80) NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLG (
+
+ primaryKey UUID NOT NULL,
+
+ Group_m0 UUID NOT NULL,
+
+ User_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMI (
+
+ primaryKey UUID NOT NULL,
+
+ User_m0 UUID NOT NULL,
+
+ Agent_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE Session (
+
+ primaryKey UUID NOT NULL,
+
+ UserKey UUID NULL,
+
+ StartedAt TIMESTAMP(3) NULL,
+
+ LastAccess TIMESTAMP(3) NULL,
+
+ Closed BOOLEAN NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMS (
+
+ primaryKey UUID NOT NULL,
+
+ Name VARCHAR(100) NOT NULL,
+
+ Type VARCHAR(100) NULL,
+
+ IsAttribute BOOLEAN NOT NULL,
+
+ IsOperation BOOLEAN NOT NULL,
+
+ IsView BOOLEAN NOT NULL,
+
+ IsClass BOOLEAN NOT NULL,
+
+ SharedOper BOOLEAN NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMP (
+
+ primaryKey UUID NOT NULL,
+
+ Subject_m0 UUID NOT NULL,
+
+ Agent_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMF (
+
+ primaryKey UUID NOT NULL,
+
+ FilterText TEXT NULL,
+
+ Name VARCHAR(255) NULL,
+
+ FilterTypeNView VARCHAR(255) NULL,
+
+ Subject_m0 UUID NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMAC (
+
+ primaryKey UUID NOT NULL,
+
+ TypeAccess VARCHAR(7) NULL,
+
+ Filter_m0 UUID NULL,
+
+ Permition_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLO (
+
+ primaryKey UUID NOT NULL,
+
+ Class_m0 UUID NOT NULL,
+
+ Operation_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLA (
+
+ primaryKey UUID NOT NULL,
+
+ View_m0 UUID NOT NULL,
+
+ Attribute_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLV (
+
+ primaryKey UUID NOT NULL,
+
+ Class_m0 UUID NOT NULL,
+
+ View_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+CREATE TABLE STORMLR (
+
+ primaryKey UUID NOT NULL,
+
+ StartDate TIMESTAMP(3) NULL,
+
+ EndDate TIMESTAMP(3) NULL,
+
+ Agent_m0 UUID NOT NULL,
+
+ Role_m0 UUID NOT NULL,
+
+ CreateTime TIMESTAMP(3) NULL,
+
+ Creator VARCHAR(255) NULL,
+
+ EditTime TIMESTAMP(3) NULL,
+
+ Editor VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+
+
+ ALTER TABLE SubscriptionStatisticsMonitor ADD CONSTRAINT FK519714382a404956b21eb13fdf4169e8 FOREIGN KEY (Subscription) REFERENCES Subscription; 
+CREATE INDEX Index937631bf0d1143d284a101adf128d038 on SubscriptionStatisticsMonitor (Subscription); 
+
+ ALTER TABLE SubscriptionStatisticsMonitor ADD CONSTRAINT FK663471e2bf9e42f3a5b2144309d7577b FOREIGN KEY (StatisticsMonitor) REFERENCES StatisticsMonitor; 
+CREATE INDEX Indexd0abce9669b7413abc6df9fdc9dcaf4e on SubscriptionStatisticsMonitor (StatisticsMonitor); 
+
+ ALTER TABLE StatisticsRecord ADD CONSTRAINT FK8b048c11dd8b432293a8630cca92b9ca FOREIGN KEY (StatisticsSetting) REFERENCES StatisticsSetting; 
+CREATE INDEX Index842613c2e19643c595676c926408e6c5 on StatisticsRecord (StatisticsSetting); 
+
+ ALTER TABLE StatisticsSetting ADD CONSTRAINT FK268db9f73b154f1fa242832de6ca6cc3 FOREIGN KEY (Subscription) REFERENCES Subscription; 
+CREATE INDEX Index954b536731cc46759fecab7ad21f324d on StatisticsSetting (Subscription); 
+
+ ALTER TABLE StatisticsCompressionSetting ADD CONSTRAINT FK93e267a5d6af46d890c81d76eedc056b FOREIGN KEY (StatisticsSetting) REFERENCES StatisticsSetting; 
+CREATE INDEX Indexc7290693ac524403a60dc8bf82fd4489 on StatisticsCompressionSetting (StatisticsSetting); 
+
+ ALTER TABLE Message ADD CONSTRAINT FKfc5834fbdf074cb792ca0e7fad38637b FOREIGN KEY (MessageType) REFERENCES MessageType; 
+CREATE INDEX Index81de90a4efbf417a8da4884d5d101f06 on Message (MessageType); 
+
+ ALTER TABLE Message ADD CONSTRAINT FK2879270d874542c8bb90cbe8bb78f609 FOREIGN KEY (Recipient) REFERENCES Client; 
+CREATE INDEX Index5cbc299b5beb4231af94dae8899e48ec on Message (Recipient); 
+
+ ALTER TABLE SendingPermission ADD CONSTRAINT FKf254171f4bce4b7ab816ce55c6c30556 FOREIGN KEY (MessageType) REFERENCES MessageType; 
+CREATE INDEX Index698eec2fb43b4c4fa35edada3589e4f7 on SendingPermission (MessageType); 
+
+ ALTER TABLE SendingPermission ADD CONSTRAINT FK15f270990d8d4ac4957836eab6060861 FOREIGN KEY (Client) REFERENCES Client; 
+CREATE INDEX Indexae88a2d52c2b45a1845fcbdc982b09b1 on SendingPermission (Client); 
+
+ ALTER TABLE Subscription ADD CONSTRAINT FKb021ec7137504a0d9dc42f9c29e171f1 FOREIGN KEY (MessageType) REFERENCES MessageType; 
+CREATE INDEX Index03fcc7b352a24379aca1c61d73d4de9e on Subscription (MessageType); 
+
+ ALTER TABLE Subscription ADD CONSTRAINT FK2ab2c54171624f148d436eb921fce062 FOREIGN KEY (Client) REFERENCES Client; 
+CREATE INDEX Index4089f1bed36e4e0b97956be25ce3bb94 on Subscription (Client); 
+
+ ALTER TABLE STORMWEBSEARCH ADD CONSTRAINT FKf66c271d5773409c8f1ff5b9454a0453 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+
+ ALTER TABLE STORMFILTERDETAIL ADD CONSTRAINT FKf615ac80d59041f6b251cbd0c92e9fcc FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+
+ ALTER TABLE STORMFILTERLOOKUP ADD CONSTRAINT FKd4a21ca330194551bcec11f0dcdcddbc FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+
+ ALTER TABLE STORMAuEntity ADD CONSTRAINT FK1d1999d4ebec4f26ac1764e4defe0946 FOREIGN KEY (ObjectType_m0) REFERENCES STORMAuObjType; 
+
+ ALTER TABLE STORMAuField ADD CONSTRAINT FK7047ad02497c432b86d33f8825c01c94 FOREIGN KEY (MainChange_m0) REFERENCES STORMAuField; 
+
+ ALTER TABLE STORMAuField ADD CONSTRAINT FKd72662360e30473b8ca62f93bf485cbd FOREIGN KEY (AuditEntity_m0) REFERENCES STORMAuEntity; 
+
+ ALTER TABLE STORMLG ADD CONSTRAINT FK89cd49a36dc94adca423fd06b7a50750 FOREIGN KEY (Group_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMLG ADD CONSTRAINT FKfdebe402eb8046cebc8c668470dd486a FOREIGN KEY (User_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMI ADD CONSTRAINT FK26c9deac0e264bec9c6bd02337f4bb2b FOREIGN KEY (User_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMI ADD CONSTRAINT FK82c8111040424accb321354f2419a342 FOREIGN KEY (Agent_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMP ADD CONSTRAINT FK9ce4409bc94a49f48c4d992b9a8cc11d FOREIGN KEY (Subject_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMP ADD CONSTRAINT FK4b5ede98a6e3482a9cafe8cdcaf2f908 FOREIGN KEY (Agent_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMF ADD CONSTRAINT FK65022bfb54af49269f9486ed91854ebd FOREIGN KEY (Subject_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMAC ADD CONSTRAINT FKe862527248424dc5a2ebc019e4e4f6d0 FOREIGN KEY (Filter_m0) REFERENCES STORMF; 
+
+ ALTER TABLE STORMAC ADD CONSTRAINT FKc6696b1ffc0947829bb509da6b7d537f FOREIGN KEY (Permition_m0) REFERENCES STORMP; 
+
+ ALTER TABLE STORMLO ADD CONSTRAINT FK3220811cc8554ae2bbc80ccc0d05ddfe FOREIGN KEY (Class_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLO ADD CONSTRAINT FK031e02bc0f0a44d6b389bcc16ae92dfe FOREIGN KEY (Operation_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLA ADD CONSTRAINT FK38392823beab452b9f08115731144eb5 FOREIGN KEY (View_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLA ADD CONSTRAINT FKab634f97a8a74ffa9d8671168cfeaaa5 FOREIGN KEY (Attribute_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLV ADD CONSTRAINT FK66da16c657434feb9b52d5f997c50145 FOREIGN KEY (Class_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLV ADD CONSTRAINT FK0f5e1703c7814bf3b2450492d640146d FOREIGN KEY (View_m0) REFERENCES STORMS; 
+
+ ALTER TABLE STORMLR ADD CONSTRAINT FK4ae950ea503d40299d92179e20b54de4 FOREIGN KEY (Agent_m0) REFERENCES STORMAG; 
+
+ ALTER TABLE STORMLR ADD CONSTRAINT FKf9bc5c7e167241c498159f7c7eb4177f FOREIGN KEY (Role_m0) REFERENCES STORMAG; 
+
