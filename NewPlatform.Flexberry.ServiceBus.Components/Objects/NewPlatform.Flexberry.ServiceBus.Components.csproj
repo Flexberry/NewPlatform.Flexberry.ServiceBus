@@ -51,9 +51,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IStatisticsServiceSetter.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="IStatisticsCompressorService.cs">
       <SubType>Code</SubType>
     </Compile>
