@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using MultiTasking;
 
     /// <summary>
@@ -24,11 +23,6 @@
         /// Current time component.
         /// </summary>
         private readonly IStatisticsTimeService _timeService;
-
-        /// <summary>
-        /// Current subscriptions manager.
-        /// </summary>
-        private readonly ISubscriptionsManager _subscriptions;
 
         /// <summary>
         /// Current logger.
@@ -56,9 +50,8 @@
         /// <param name="statSettings">Component for getting statistics settings.</param>
         /// <param name="saveService">Component for saving statistics.</param>
         /// <param name="timeService">Component for getting current time.</param>
-        /// <param name="subscriptions">Subscriptions manager.</param>
         /// <param name="logger">Component for logging.</param>
-        public DefaultStatisticsService(IStatisticsSettings statSettings, IStatisticsSaveService saveService, IStatisticsTimeService timeService, ISubscriptionsManager subscriptions, ILogger logger)
+        public DefaultStatisticsService(IStatisticsSettings statSettings, IStatisticsSaveService saveService, IStatisticsTimeService timeService, ILogger logger)
         {
             if (statSettings == null)
                 throw new ArgumentNullException(nameof(statSettings));
@@ -69,16 +62,12 @@
             if (timeService == null)
                 throw new ArgumentNullException(nameof(timeService));
 
-            if (subscriptions == null)
-                throw new ArgumentNullException(nameof(subscriptions));
-
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
 
             _statSettings = statSettings;
             _saveService = saveService;
             _timeService = timeService;
-            _subscriptions = subscriptions;
             _logger = logger;
 
             _periodicalTimer = new PeriodicalTimer();
@@ -183,132 +172,6 @@
             {
                 GetCurrentStatRecord(subscription).ConnectionCount--;
             }
-        }
-
-        /// <summary>
-        /// Notify statistics component that message has been received.
-        /// </summary>
-        /// <param name="client">Client, recipient of message.</param>
-        /// <param name="messageType">Type of message.</param>
-        public void NotifyMessageReceived(Client client, MessageType messageType)
-        {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            if (messageType == null)
-                throw new ArgumentNullException(nameof(messageType));
-
-            var subscriptions = _subscriptions.GetSubscriptionsForMsgType(messageType.ID, client.ID);
-            if (subscriptions != null && subscriptions.Count() != 0)
-                NotifyMessageReceived(subscriptions.First());
-            else
-                _logger.LogError("Can't find subscription for received message", $"Client: {client.Name} (Id: {client.ID}), Message type: {messageType.Name} (Id: {messageType.ID})");
-        }
-
-        /// <summary>
-        /// Notify statistics component that message has been sent.
-        /// </summary>
-        /// <param name="client">Client, sender of message.</param>
-        /// <param name="messageType">Type of message.</param>
-        public void NotifyMessageSent(Client client, MessageType messageType)
-        {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            if (messageType == null)
-                throw new ArgumentNullException(nameof(messageType));
-
-            var subscriptions = _subscriptions.GetSubscriptionsForMsgType(messageType.ID, client.ID);
-            if (subscriptions != null && subscriptions.Count() != 0)
-                NotifyMessageSent(subscriptions.First());
-            else
-                _logger.LogError("Can't find subscription for sent message", $"Client: {client.Name} (Id: {client.ID}), Message type: {messageType.Name} (Id: {messageType.ID})");
-        }
-
-        /// <summary>
-        /// Notifies that the message has been sent for calc avg time.
-        /// </summary>
-        /// <param name="client">Client, sender of message.</param>
-        /// <param name="messageType">Type of message.</param>
-        /// <param name="time">Time sent message</param>
-        public void NotifyAvgTimeSent(Client client, MessageType messageType, int time)
-        {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            if (messageType == null)
-                throw new ArgumentNullException(nameof(messageType));
-
-            var subscriptions = _subscriptions.GetSubscriptionsForMsgType(messageType.ID, client.ID);
-            if (subscriptions != null && subscriptions.Count() != 0)
-                NotifyAvgTimeSent(subscriptions.First(), time);
-            else
-                _logger.LogError("Can't find subscription for sent message", $"Client: {client.Name} (Id: {client.ID}), Message type: {messageType.Name} (Id: {messageType.ID})");
-
-        }
-
-        /// <summary>
-        /// Notifies calc avg time execute sql.
-        /// </summary>
-        /// <param name="client">Client, sender of message.</param>
-        /// <param name="messageType">Type of message.</param>
-        /// <param name="time">Time execute sql</param>
-        public void NotifyAvgTimeSql(Client client, MessageType messageType, int time, string sql)
-        {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            if (messageType == null)
-                throw new ArgumentNullException(nameof(messageType));
-
-            var subscriptions = _subscriptions.GetSubscriptionsForMsgType(messageType.ID, client.ID);
-            if (subscriptions != null && subscriptions.Count() != 0)
-                NotifyAvgTimeSql(subscriptions.First(), time, sql);
-            else
-                _logger.LogError("Can't find subscription for sent message", $"Client: {client.Name} (Id: {client.ID}), Message type: {messageType.Name} (Id: {messageType.ID})");
-
-        }
-
-        /// <summary>
-        /// Notify statistics component that open connection.
-        /// </summary>
-        /// <param name="client">Client, sender of message.</param>
-        /// <param name="messageType">Type of message.</param>
-        public void NotifyIncConnectionCount(Client client, MessageType messageType)
-        {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            if (messageType == null)
-                throw new ArgumentNullException(nameof(messageType));
-
-            var subscriptions = _subscriptions.GetSubscriptionsForMsgType(messageType.ID, client.ID);
-            if (subscriptions != null && subscriptions.Count() != 0)
-                NotifyIncConnectionCount(subscriptions.First());
-            else
-                _logger.LogError("Can't find subscription for sent message", $"Client: {client.Name} (Id: {client.ID}), Message type: {messageType.Name} (Id: {messageType.ID})");
-
-        }
-
-        /// <summary>
-        /// Notify statistics component that close connection.
-        /// </summary>
-        /// <param name="client">Client, sender of message.</param>
-        /// <param name="messageType">Type of message.</param>
-        public void NotifyDecConnectionCount(Client client, MessageType messageType)
-        {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            if (messageType == null)
-                throw new ArgumentNullException(nameof(messageType));
-
-            var subscriptions = _subscriptions.GetSubscriptionsForMsgType(messageType.ID, client.ID);
-            if (subscriptions != null && subscriptions.Count() != 0)
-                NotifyDecConnectionCount(subscriptions.First());
-            else
-                _logger.LogError("Can't find subscription for sent message", $"Client: {client.Name} (Id: {client.ID}), Message type: {messageType.Name} (Id: {messageType.ID})");
-
         }
 
         /// <summary>
