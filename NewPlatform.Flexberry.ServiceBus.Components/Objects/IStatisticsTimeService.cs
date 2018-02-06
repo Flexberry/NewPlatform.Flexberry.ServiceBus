@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IStatisticsTimeService : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IStatisticsTimeService CustomMembers)
+
+        // *** End programmer edit section *** (IStatisticsTimeService CustomMembers)
+
+        
         /// <summary>
         /// Now.
         /// </summary>

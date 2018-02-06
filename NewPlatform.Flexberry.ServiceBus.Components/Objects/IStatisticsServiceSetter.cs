@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IStatisticsServiceSetter
     {
         
+        // *** Start programmer edit section *** (IStatisticsServiceSetter CustomMembers)
+
+        // *** End programmer edit section *** (IStatisticsServiceSetter CustomMembers)
+
+        
         // *** Start programmer edit section *** (IStatisticsServiceSetter.SetStatisticsService NewPlatform.Flexberry.ServiceBus.Components.IStatisticsService CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsServiceSetter.SetStatisticsService NewPlatform.Flexberry.ServiceBus.Components.IStatisticsService CustomAttributes)

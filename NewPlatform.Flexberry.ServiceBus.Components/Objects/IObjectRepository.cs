@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IObjectRepository : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IObjectRepository CustomMembers)
+
+        // *** End programmer edit section *** (IObjectRepository CustomMembers)
+
+        
         // *** Start programmer edit section *** (IObjectRepository.GetAllServiceBuses CustomAttributes)
 
         // *** End programmer edit section *** (IObjectRepository.GetAllServiceBuses CustomAttributes)

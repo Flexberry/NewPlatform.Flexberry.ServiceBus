@@ -27,5 +27,10 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     // *** End programmer edit section *** (IWebApiService CustomAttributes)
     public interface IWebApiService : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
+        
+        // *** Start programmer edit section *** (IWebApiService CustomMembers)
+
+        // *** End programmer edit section *** (IWebApiService CustomMembers)
+
     }
 }

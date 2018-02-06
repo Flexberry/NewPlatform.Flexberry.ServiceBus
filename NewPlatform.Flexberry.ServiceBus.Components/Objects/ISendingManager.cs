@@ -27,11 +27,17 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     // *** End programmer edit section *** (ISendingManager CustomAttributes)
     public interface ISendingManager : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
-        // *** Start programmer edit section *** (ISendingManager.QueueForSending Message CustomAttributes)
+        
+        // *** Start programmer edit section *** (ISendingManager CustomMembers)
 
-        // *** End programmer edit section *** (ISendingManager.QueueForSending Message CustomAttributes)
-        void QueueForSending(Message msg);
+        // *** End programmer edit section *** (ISendingManager CustomMembers)
 
+        
+        // *** Start programmer edit section *** (ISendingManager.QueueForSending NewPlatform.Flexberry.ServiceBus.Message CustomAttributes)
+
+        // *** End programmer edit section *** (ISendingManager.QueueForSending NewPlatform.Flexberry.ServiceBus.Message CustomAttributes)
+        void QueueForSending(NewPlatform.Flexberry.ServiceBus.Message msg);
+        
         // *** Start programmer edit section *** (ISendingManager.GetCurrentMessageCount System.String CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.GetCurrentMessageCount System.String CustomAttributes)
@@ -65,27 +71,27 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** Start programmer edit section *** (ISendingManager.ReadMessage System.String CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.ReadMessage System.String CustomAttributes)
-        Message ReadMessage(string id);
-
+        NewPlatform.Flexberry.ServiceBus.Message ReadMessage(string id);
+        
         // *** Start programmer edit section *** (ISendingManager.ReadMessage System.String System.String CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.ReadMessage System.String System.String CustomAttributes)
-        Message ReadMessage(string clientId, string messageTypeId);
+        NewPlatform.Flexberry.ServiceBus.Message ReadMessage(string clientId, string messageTypeId);
         
         // *** Start programmer edit section *** (ISendingManager.ReadMessage System.String System.String System.Int32 CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.ReadMessage System.String System.String System.Int32 CustomAttributes)
-        Message ReadMessage(string clientId, string messageTypeId, int index);
+        NewPlatform.Flexberry.ServiceBus.Message ReadMessage(string clientId, string messageTypeId, int index);
         
         // *** Start programmer edit section *** (ISendingManager.ReadMessage System.String System.String System.String CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.ReadMessage System.String System.String System.String CustomAttributes)
-        Message ReadMessage(string clientId, string messageTypeId, string groupName);
+        NewPlatform.Flexberry.ServiceBus.Message ReadMessage(string clientId, string messageTypeId, string groupName);
         
         // *** Start programmer edit section *** (ISendingManager.ReadMessage System.String System.String string[] CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.ReadMessage System.String System.String string[] CustomAttributes)
-        Message ReadMessage(string clientId, string messageTypeId, string[] tags);
+        NewPlatform.Flexberry.ServiceBus.Message ReadMessage(string clientId, string messageTypeId, string[] tags);
         
         // *** Start programmer edit section *** (ISendingManager.CheckEventIsRaised System.String System.String CustomAttributes)
 

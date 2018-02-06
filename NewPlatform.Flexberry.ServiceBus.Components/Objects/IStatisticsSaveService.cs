@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IStatisticsSaveService : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IStatisticsSaveService CustomMembers)
+
+        // *** End programmer edit section *** (IStatisticsSaveService CustomMembers)
+
+        
         // *** Start programmer edit section *** (IStatisticsSaveService.Save System.Collections.Generic.IEnumerable<StatisticsRecord> CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsSaveService.Save System.Collections.Generic.IEnumerable<StatisticsRecord> CustomAttributes)
