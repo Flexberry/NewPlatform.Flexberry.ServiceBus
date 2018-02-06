@@ -13,7 +13,7 @@
     /// <summary>
     /// Component for saving statistics to database.
     /// </summary>
-    internal class DefaultStatisticsSaveService : BaseServiceBusComponent, IStatisticsSaveService, IStatisticsServiceSetter
+    internal class DefaultStatisticsSaveService : BaseServiceBusComponent, IStatisticsSaveService
     {
         private readonly IDataService _dataService;
 
@@ -23,11 +23,6 @@
         /// View to load statistics records.
         /// </summary>
         private static readonly View _statRecordView = new View(typeof(StatisticsRecord), View.ReadType.OnlyThatObject);
-
-        /// <summary>
-        /// Statistics service
-        /// </summary>
-        private static IStatisticsService _statisticsService;
 
         /// <summary>
         /// Constructor for <see cref="DefaultStatisticsSaveService"/>.
@@ -46,14 +41,6 @@
             _logger = logger;
         }
 
-        public void SetStatisticsService(IStatisticsService statisticsService)
-        {
-            if (statisticsService == null)
-                throw new ArgumentNullException(nameof(statisticsService));
-
-            _statisticsService = statisticsService;
-        }
-
         /// <summary>
         /// Save statistics records to database.
         /// </summary>
@@ -65,12 +52,7 @@
             {
                 try
                 {
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
                     _dataService.UpdateObjects(ref objects);
-                    stopwatch.Stop();
-                    long time = stopwatch.ElapsedMilliseconds;
-                    _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultStatisticsSaveService.Save() update StatRecords.");
                 }
                 catch (Exception exception)
                 {
@@ -106,30 +88,14 @@
                         if (firstRecord.StatisticsSetting.Subscription.MessageType != null
                                 && firstRecord.StatisticsSetting.Subscription.Client != null)
                         {
-                            Stopwatch stopwatch = new Stopwatch();
-                            stopwatch.Start();
-
                             var queueLength = _dataService.Query<Message>(Message.Views.MessageEditView)
                                 .Count(x => x.MessageType.__PrimaryKey == firstRecord.StatisticsSetting.Subscription.MessageType.__PrimaryKey
                                 && x.Recipient.__PrimaryKey == firstRecord.StatisticsSetting.Subscription.Client.__PrimaryKey);
-
-                            stopwatch.Stop();
-                            long time = stopwatch.ElapsedMilliseconds;
-                            _statisticsService.NotifyAvgTimeSql(firstRecord.StatisticsSetting.Subscription, (int)time, "DefaultStatisticsSaveService.PrepareStatsForSaving() load count messages.");
-
-
-                            stopwatch = new Stopwatch();
-                            stopwatch.Start();
 
                             var errorLenth = _dataService.Query<Message>(Message.Views.MessageEditView)
                                  .Count(x => x.MessageType.__PrimaryKey == firstRecord.StatisticsSetting.Subscription.MessageType.__PrimaryKey
                                  && x.Recipient.__PrimaryKey == firstRecord.StatisticsSetting.Subscription.Client.__PrimaryKey
                                  && x.ErrorCount > 0);
-
-                            stopwatch.Stop();
-                            time = stopwatch.ElapsedMilliseconds;
-                            _statisticsService.NotifyAvgTimeSql(firstRecord.StatisticsSetting.Subscription, (int)time, "DefaultStatisticsSaveService.PrepareStatsForSaving() load count messages with error.");
-
 
                             foreach (var rec in statRecords)
                             {
@@ -147,12 +113,7 @@
                             DataObject[] existedStatRecords = null;
                             try
                             {
-                                stopwatch = new Stopwatch();
-                                stopwatch.Start();
                                 existedStatRecords = _dataService.LoadObjects(lcs);
-                                stopwatch.Stop();
-                                time = stopwatch.ElapsedMilliseconds;
-                                _statisticsService.NotifyAvgTimeSql(firstRecord.StatisticsSetting.Subscription, (int)time, "DefaultStatisticsSaveService.PrepareStatsForSaving() load existed stat record.");
                             }
                             catch (Exception exception)
                             {
@@ -184,23 +145,8 @@
                         statRecords = statRecords.Where(x => x.SentCount > 0 || x.ReceivedCount > 0 || x.ErrorsCount > 0 || x.UniqueErrorsCount > 0 || x.QueueLength > 0).ToList();
                         if (statRecords.Count > 0)
                         {
-                            Stopwatch stopwatch = new Stopwatch();
-                            stopwatch.Start();
-
                             var queueLength = _dataService.Query<Message>(Message.Views.MessageEditView).Count();
-
-                            stopwatch.Stop();
-                            long time = stopwatch.ElapsedMilliseconds;
-                            _statisticsService.NotifyAvgTimeSql(firstRecord.StatisticsSetting.Subscription, (int)time, "DefaultStatisticsSaveService.PrepareStatsForSaving() load count messages for summary.");
-
-                            stopwatch = new Stopwatch();
-                            stopwatch.Start();
-
                             var errorLenth = _dataService.Query<Message>(Message.Views.MessageEditView).Count(x => x.ErrorCount > 0);
-
-                            stopwatch.Stop();
-                            time = stopwatch.ElapsedMilliseconds;
-                            _statisticsService.NotifyAvgTimeSql(firstRecord.StatisticsSetting.Subscription, (int)time, "DefaultStatisticsSaveService.PrepareStatsForSaving() load count messages wirh errors for summary.");
 
                             foreach (var rec in statRecords)
                             {

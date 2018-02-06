@@ -21,7 +21,6 @@
             var dataServiceMock = repo.Create<IDataService>();
             var loggerMock = repo.Create<ILogger>();
             var service = new DefaultStatisticsSettings(dataServiceMock.Object, loggerMock.Object);
-            service.SetStatisticsService(GetMockStatisticsService());
 
             // Act.
             RunSBComponentFullCycle(service);

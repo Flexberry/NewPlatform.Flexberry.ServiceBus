@@ -93,7 +93,6 @@
                 .Returns(new DataObject[] { new StatisticsRecord() { SentCount = 20, ReceivedCount = 10, StatisticsSetting = setting } });
 
             var service = new DefaultStatisticsSaveService(dataServiceMock.Object, loggerMock.Object);
-            service.SetStatisticsService(GetMockStatisticsService());
 
             // Act && Assert.
             service.Save(new[]
