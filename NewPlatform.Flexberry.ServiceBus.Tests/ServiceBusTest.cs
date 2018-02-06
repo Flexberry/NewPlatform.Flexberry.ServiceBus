@@ -305,7 +305,6 @@
                 new Mock<IStatisticsSettings>().Object,
                 new Mock<IStatisticsSaveService>().Object,
                 new Mock<IStatisticsTimeService>().Object,
-                GetMockSubscriptionManager(),
                 GetMockLogger());
         }
 

@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IRerouterService : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IRerouterService CustomMembers)
+
+        // *** End programmer edit section *** (IRerouterService CustomMembers)
+
+        
         /// <summary>
         /// Enabled.
         /// </summary>

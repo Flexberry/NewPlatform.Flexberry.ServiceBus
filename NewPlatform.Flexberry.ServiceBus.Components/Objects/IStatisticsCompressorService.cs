@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IStatisticsCompressorService : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IStatisticsCompressorService CustomMembers)
+
+        // *** End programmer edit section *** (IStatisticsCompressorService CustomMembers)
+
+        
         // *** Start programmer edit section *** (IStatisticsCompressorService.CompressStatistics CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsCompressorService.CompressStatistics CustomAttributes)

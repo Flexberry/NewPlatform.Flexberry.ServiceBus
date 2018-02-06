@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface ICrossBusCommunicationService : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (ICrossBusCommunicationService CustomMembers)
+
+        // *** End programmer edit section *** (ICrossBusCommunicationService CustomMembers)
+
+        
         /// <summary>
         /// Enabled.
         /// </summary>

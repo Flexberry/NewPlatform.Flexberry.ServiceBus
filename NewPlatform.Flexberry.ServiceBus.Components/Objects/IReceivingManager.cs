@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IReceivingManager : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IReceivingManager CustomMembers)
+
+        // *** End programmer edit section *** (IReceivingManager CustomMembers)
+
+        
         // *** Start programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.MessageForESB CustomAttributes)
 
         // *** End programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.MessageForESB CustomAttributes)

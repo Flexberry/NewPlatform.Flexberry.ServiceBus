@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IMailScanningServiceSettings : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IMailScanningServiceSettings CustomMembers)
+
+        // *** End programmer edit section *** (IMailScanningServiceSettings CustomMembers)
+
+        
         /// <summary>
         /// CheckMail.
         /// </summary>
