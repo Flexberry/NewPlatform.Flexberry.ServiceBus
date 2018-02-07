@@ -288,7 +288,7 @@
             Subscription subscription = _subscriptionsManager
                 .GetSubscriptions(сообщ.Recipient.ID)
                 .FirstOrDefault(x => x.MessageType.ID == сообщ.MessageType.ID);
-            _statisticsService.NotifyIncConnectionCount(subscription);
+            _statisticsService.NotifyDecConnectionCount(subscription);
 
             var message = (Message)messageObject;
 
