@@ -23,16 +23,14 @@
                 IStatisticsSettings statisticsSettings = new Mock<IStatisticsSettings>().Object;
                 IStatisticsSaveService statisticsSaveService = new Mock<IStatisticsSaveService>().Object;
                 IStatisticsTimeService statisticsTimeService = new Mock<IStatisticsTimeService>().Object;
-                ISubscriptionsManager subscriptionsManager = new Mock<ISubscriptionsManager>().Object;
                 ILogger logger = new Mock<ILogger>().Object;
 
                 return new[]
                 {
-                    new object[] { null, statisticsSaveService, statisticsTimeService, subscriptionsManager, logger },
-                    new object[] { statisticsSettings, null, statisticsTimeService, subscriptionsManager, logger },
-                    new object[] { statisticsSettings, statisticsSaveService, null, subscriptionsManager, logger },
-                    new object[] { statisticsSettings, statisticsSaveService, statisticsTimeService, null, logger },
-                    new object[] { statisticsSettings, statisticsSaveService, statisticsTimeService, subscriptionsManager, null },
+                    new object[] { null, statisticsSaveService, statisticsTimeService, logger },
+                    new object[] { statisticsSettings, null, statisticsTimeService, logger },
+                    new object[] { statisticsSettings, statisticsSaveService, null, logger },
+                    new object[] { statisticsSettings, statisticsSaveService, statisticsTimeService, null },
             };
             }
         }
@@ -57,7 +55,7 @@
         /// </param>
         [Theory]
         [MemberData(nameof(ConstructorParametersData))]
-        public void TestConstructorMissingParameters(IStatisticsSettings statSettings, IStatisticsSaveService saveService, IStatisticsTimeService timeService, ISubscriptionsManager subscriptions, ILogger logger)
+        public void TestConstructorMissingParameters(IStatisticsSettings statSettings, IStatisticsSaveService saveService, IStatisticsTimeService timeService, ILogger logger)
         {
             // Arrange.
             bool check = false;
@@ -65,7 +63,7 @@
             // Act.
             try
             {
-                var service = new DefaultStatisticsService(statSettings, saveService, timeService, subscriptions, logger);
+                var service = new DefaultStatisticsService(statSettings, saveService, timeService, logger);
             }
             catch (ArgumentNullException)
             {
@@ -85,7 +83,7 @@
             var statSettings = new Mock<IStatisticsSettings>().Object;
             var saveService = new Mock<IStatisticsSaveService>().Object;
             var timeService = new Mock<IStatisticsTimeService>().Object;
-            var service = new DefaultStatisticsService(statSettings, saveService, timeService, GetMockSubscriptionManager(), GetMockLogger());
+            var service = new DefaultStatisticsService(statSettings, saveService, timeService, GetMockLogger());
 
             RunSBComponentFullCycle(service);
         }
@@ -100,7 +98,7 @@
             var statSettings = new Mock<IStatisticsSettings>().Object;
             var saveServiceMock = new Mock<IStatisticsSaveService>();
             var timeService = new Mock<IStatisticsTimeService>().Object;
-            var service = new DefaultStatisticsService(statSettings, saveServiceMock.Object, timeService, GetMockSubscriptionManager(), GetMockLogger());
+            var service = new DefaultStatisticsService(statSettings, saveServiceMock.Object, timeService, GetMockLogger());
 
             // Act.
             RunSBComponentFullCycle(service);
@@ -137,7 +135,7 @@
                 .Setup(ds => ds.GetSubscriptionSB())
                 .Returns(Guid.NewGuid());
 
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timeService, GetMockSubscriptionManager(), GetMockLogger());
+            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timeService, GetMockLogger());
 
             // Act.
             RunSBComponentAfterStart(
@@ -204,7 +202,7 @@
                         }
                     });
            
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timeService, GetMockSubscriptionManager(), GetMockLogger());
+            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timeService, GetMockLogger());
 
             // Act.
             RunSBComponentAfterStart(
@@ -264,7 +262,7 @@
 
             timerServiceMock.Setup(ts => ts.Now).Returns(() => new DateTime(2000, 01, 01, 00, 00, 00, 00));
 
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, GetMockSubscriptionManager(), GetMockLogger());
+            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, GetMockLogger());
 
             // Act && Assert.
             RunSBComponentAfterStart(
@@ -344,7 +342,7 @@
 
             timerServiceMock.Setup(ts => ts.Now).Returns(() => DateTime.Now);
 
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, GetMockSubscriptionManager(), GetMockLogger());
+            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, GetMockLogger());
 
             // Act.
             RunSBComponentAfterStart(
@@ -418,7 +416,7 @@
                         Assert.Equal(2, srs.Last().ErrorsCount);
                     });
 
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, GetMockSubscriptionManager(), GetMockLogger());
+            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, GetMockLogger());
 
             // Act.
             RunSBComponentAfterStart(
@@ -435,135 +433,7 @@
         }
 
         /// <summary>
-        /// Message recieved for Client and Message Type.
-        /// </summary>
-        [Fact]
-        public void TestNotifyMessageReceived()
-        {
-            // Arrange.
-            var repo = new MockRepository(MockBehavior.Default);
-            var statSettingsMock = repo.Create<IStatisticsSettings>();
-            var saveServiceMock = repo.Create<IStatisticsSaveService>();
-            var timerServiceMock = repo.Create<IStatisticsTimeService>();
-            var subscriptionsManagerMock = repo.Create<ISubscriptionsManager>();
-            var loggerMock = repo.Create<ILogger>();
-
-            var client = new Client();
-            var subscription = new Subscription();
-            var messageType = new MessageType();
-
-            var settings = new StatisticsSetting() { Subscription = subscription };
-
-            statSettingsMock
-                .Setup(ds => ds.GetSetting(It.IsAny<Subscription>()))
-                .Returns<Subscription>(sub => settings);
-
-            statSettingsMock
-                .Setup(ds => ds.GetSubscriptionSB())
-                .Returns(Guid.NewGuid());
-
-            saveServiceMock
-                .Setup(ds => ds.Save(It.IsAny<IEnumerable<StatisticsRecord>>()))
-                .Callback<IEnumerable<StatisticsRecord>>(
-                    srs =>
-                    {
-                        Assert.Equal(2, srs.Count());
-                        var firstSrs = srs.First();
-                        Assert.Equal(subscription, firstSrs.StatisticsSetting?.Subscription);
-                        Assert.Equal(1, firstSrs.ReceivedCount);
-                        Assert.Equal(0, firstSrs.SentCount);
-                        Assert.Equal(0, firstSrs.ErrorsCount);
-                        Assert.Equal(0, firstSrs.UniqueErrorsCount);
-                    });
-
-            timerServiceMock.Setup(ts => ts.Now).Returns(() => DateTime.Now);
-
-            subscriptionsManagerMock
-                .Setup(sm => sm.GetSubscriptionsForMsgType(messageType.ID, client.ID))
-                .Returns(new[] { subscription });
-
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, subscriptionsManagerMock.Object, loggerMock.Object);
-
-            // Act.
-            RunSBComponentAfterStart(
-                service,
-                c =>
-                {
-                    c.NotifyMessageReceived(client, messageType);
-                });
-
-            // Assert.
-            saveServiceMock.Verify(ds => ds.Save(It.IsAny<IEnumerable<StatisticsRecord>>()), Times.Once);
-            loggerMock.Verify(l => l.LogError(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Message>()), Times.Never);
-            repo.Verify();
-        }
-
-        /// <summary>
-        /// Message sent for Client and Message Type.
-        /// </summary>
-        [Fact]
-        public void TestNotifyMessageSent()
-        {
-            // Arrange.
-            var repo = new MockRepository(MockBehavior.Default);
-            var statSettingsMock = repo.Create<IStatisticsSettings>();
-            var saveServiceMock = repo.Create<IStatisticsSaveService>();
-            var timerServiceMock = repo.Create<IStatisticsTimeService>();
-            var subscriptionsManagerMock = repo.Create<ISubscriptionsManager>();
-            var loggerMock = repo.Create<ILogger>();
-
-            var client = new Client();
-            var subscription = new Subscription();
-            var messageType = new MessageType();
-
-            var settings = new StatisticsSetting() { Subscription = subscription };
-
-            statSettingsMock
-                .Setup(ds => ds.GetSetting(It.IsAny<Subscription>()))
-                .Returns<Subscription>(sub => settings);
-
-            statSettingsMock
-                .Setup(ds => ds.GetSubscriptionSB())
-                .Returns(Guid.NewGuid());
-
-            saveServiceMock
-                .Setup(ds => ds.Save(It.IsAny<IEnumerable<StatisticsRecord>>()))
-                .Callback<IEnumerable<StatisticsRecord>>(
-                    srs =>
-                    {
-                        Assert.Equal(2, srs.Count());
-                        var firstSrs = srs.First();
-                        Assert.Equal(subscription, firstSrs.StatisticsSetting.Subscription);
-                        Assert.Equal(0, firstSrs.ReceivedCount);
-                        Assert.Equal(1, firstSrs.SentCount);
-                        Assert.Equal(0, firstSrs.ErrorsCount);
-                        Assert.Equal(0, firstSrs.UniqueErrorsCount);
-                    });
-
-            timerServiceMock.Setup(ts => ts.Now).Returns(() => DateTime.Now);
-
-            subscriptionsManagerMock
-                .Setup(sm => sm.GetSubscriptionsForMsgType(messageType.ID, client.ID))
-                .Returns(new[] { subscription });
-
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, subscriptionsManagerMock.Object, loggerMock.Object);
-
-            // Act.
-            RunSBComponentAfterStart(
-                service,
-                c =>
-                {
-                    c.NotifyMessageSent(client, messageType);
-                });
-
-            // Assert.
-            saveServiceMock.Verify(ds => ds.Save(It.IsAny<IEnumerable<StatisticsRecord>>()), Times.Once);
-            loggerMock.Verify(l => l.LogError(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Message>()), Times.Never);
-            repo.Verify();
-        }
-
-        /// <summary>
-        /// Calc avg time sent for Client and Message Type.
+        /// Calc avg time sent.
         /// </summary>
         [Fact]
         public void TestNotifyAvgTimeSent()
@@ -573,7 +443,6 @@
             var statSettingsMock = repo.Create<IStatisticsSettings>();
             var saveServiceMock = repo.Create<IStatisticsSaveService>();
             var timerServiceMock = repo.Create<IStatisticsTimeService>();
-            var subscriptionsManagerMock = repo.Create<ISubscriptionsManager>();
             var loggerMock = repo.Create<ILogger>();
 
             var client = new Client();
@@ -607,19 +476,15 @@
 
             timerServiceMock.Setup(ts => ts.Now).Returns(() => DateTime.Now);
 
-            subscriptionsManagerMock
-                .Setup(sm => sm.GetSubscriptionsForMsgType(messageType.ID, client.ID))
-                .Returns(new[] { subscription });
-
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, subscriptionsManagerMock.Object, loggerMock.Object);
+            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, loggerMock.Object);
 
             // Act.
             RunSBComponentAfterStart(
                 service,
                 c =>
                 {
-                    c.NotifyAvgTimeSent(client, messageType, 100);
-                    c.NotifyAvgTimeSent(client, messageType, 60);
+                    c.NotifyAvgTimeSent(subscription, 100);
+                    c.NotifyAvgTimeSent(subscription, 60);
                 });
 
             // Assert.
@@ -639,7 +504,6 @@
             var statSettingsMock = repo.Create<IStatisticsSettings>();
             var saveServiceMock = repo.Create<IStatisticsSaveService>();
             var timerServiceMock = repo.Create<IStatisticsTimeService>();
-            var subscriptionsManagerMock = repo.Create<ISubscriptionsManager>();
             var loggerMock = repo.Create<ILogger>();
 
             var client = new Client();
@@ -673,19 +537,15 @@
 
             timerServiceMock.Setup(ts => ts.Now).Returns(() => DateTime.Now);
 
-            subscriptionsManagerMock
-                .Setup(sm => sm.GetSubscriptionsForMsgType(messageType.ID, client.ID))
-                .Returns(new[] { subscription });
-
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, subscriptionsManagerMock.Object, loggerMock.Object);
+            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, loggerMock.Object);
 
             // Act.
             RunSBComponentAfterStart(
                 service,
                 c =>
                 {
-                    c.NotifyAvgTimeSql(client, messageType, 100, string.Empty);
-                    c.NotifyAvgTimeSql(client, messageType, 60, string.Empty);
+                    c.NotifyAvgTimeSql(subscription, 100, string.Empty);
+                    c.NotifyAvgTimeSql(subscription, 60, string.Empty);
                 });
 
             // Assert.
@@ -705,7 +565,6 @@
             var statSettingsMock = repo.Create<IStatisticsSettings>();
             var saveServiceMock = repo.Create<IStatisticsSaveService>();
             var timerServiceMock = repo.Create<IStatisticsTimeService>();
-            var subscriptionsManagerMock = repo.Create<ISubscriptionsManager>();
             var loggerMock = repo.Create<ILogger>();
 
             var client = new Client();
@@ -739,21 +598,17 @@
 
             timerServiceMock.Setup(ts => ts.Now).Returns(() => DateTime.Now);
 
-            subscriptionsManagerMock
-                .Setup(sm => sm.GetSubscriptionsForMsgType(messageType.ID, client.ID))
-                .Returns(new[] { subscription });
-
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, subscriptionsManagerMock.Object, loggerMock.Object);
+            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, loggerMock.Object);
 
             // Act.
             RunSBComponentAfterStart(
                 service,
                 c =>
                 {
-                    c.NotifyIncConnectionCount(client, messageType);
-                    c.NotifyIncConnectionCount(client, messageType);
-                    c.NotifyIncConnectionCount(client, messageType);
-                    c.NotifyDecConnectionCount(client, messageType);
+                    c.NotifyIncConnectionCount(subscription);
+                    c.NotifyIncConnectionCount(subscription);
+                    c.NotifyIncConnectionCount(subscription);
+                    c.NotifyDecConnectionCount(subscription);
                 });
 
             // Assert.

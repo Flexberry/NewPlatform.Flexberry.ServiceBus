@@ -28,69 +28,44 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IStatisticsService : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
-        // *** Start programmer edit section *** (IStatisticsService.NotifyMessageReceived Subscription CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsService CustomMembers)
 
-        // *** End programmer edit section *** (IStatisticsService.NotifyMessageReceived Subscription CustomAttributes)
-        void NotifyMessageReceived(Subscription subscription);
+        // *** End programmer edit section *** (IStatisticsService CustomMembers)
+
         
-        // *** Start programmer edit section *** (IStatisticsService.NotifyMessageSent Subscription CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsService.NotifyMessageReceived NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
-        // *** End programmer edit section *** (IStatisticsService.NotifyMessageSent Subscription CustomAttributes)
-        void NotifyMessageSent(Subscription subscription);
+        // *** End programmer edit section *** (IStatisticsService.NotifyMessageReceived NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
+        void NotifyMessageReceived(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
         
-        // *** Start programmer edit section *** (IStatisticsService.NotifyErrorOccurred Subscription CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsService.NotifyMessageSent NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
-        // *** End programmer edit section *** (IStatisticsService.NotifyErrorOccurred Subscription CustomAttributes)
-        void NotifyErrorOccurred(Subscription subscription);
+        // *** End programmer edit section *** (IStatisticsService.NotifyMessageSent NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
+        void NotifyMessageSent(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
         
-        // *** Start programmer edit section *** (IStatisticsService.NotifyAvgTimeSent Subscription System.Int32 CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsService.NotifyErrorOccurred NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
-        // *** End programmer edit section *** (IStatisticsService.NotifyAvgTimeSent Subscription System.Int32 CustomAttributes)
-        void NotifyAvgTimeSent(Subscription subscription, int time);
+        // *** End programmer edit section *** (IStatisticsService.NotifyErrorOccurred NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
+        void NotifyErrorOccurred(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
         
-        // *** Start programmer edit section *** (IStatisticsService.NotifyAvgTimeSql Subscription System.Int32 System.String CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsService.NotifyAvgTimeSent NewPlatform.Flexberry.ServiceBus.Subscription System.Int32 CustomAttributes)
 
-        // *** End programmer edit section *** (IStatisticsService.NotifyAvgTimeSql Subscription System.Int32 System.String CustomAttributes)
-        void NotifyAvgTimeSql(Subscription subscription, int time, string sql);
+        // *** End programmer edit section *** (IStatisticsService.NotifyAvgTimeSent NewPlatform.Flexberry.ServiceBus.Subscription System.Int32 CustomAttributes)
+        void NotifyAvgTimeSent(NewPlatform.Flexberry.ServiceBus.Subscription subscription, int time);
         
-        // *** Start programmer edit section *** (IStatisticsService.NotifyIncConnectionCount Subscription CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsService.NotifyAvgTimeSql NewPlatform.Flexberry.ServiceBus.Subscription System.Int32 System.String CustomAttributes)
 
-        // *** End programmer edit section *** (IStatisticsService.NotifyIncConnectionCount Subscription CustomAttributes)
-        void NotifyIncConnectionCount(Subscription subscription);
+        // *** End programmer edit section *** (IStatisticsService.NotifyAvgTimeSql NewPlatform.Flexberry.ServiceBus.Subscription System.Int32 System.String CustomAttributes)
+        void NotifyAvgTimeSql(NewPlatform.Flexberry.ServiceBus.Subscription subscription, int time, string sql);
         
-        // *** Start programmer edit section *** (IStatisticsService.NotifyDecConnectionCount Subscription CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
-        // *** End programmer edit section *** (IStatisticsService.NotifyDecConnectionCount Subscription CustomAttributes)
-        void NotifyDecConnectionCount(Subscription subscription);
+        // *** End programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
+        void NotifyIncConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
         
-        // *** Start programmer edit section *** (IStatisticsService.NotifyMessageReceived Client MessageType CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
-        // *** End programmer edit section *** (IStatisticsService.NotifyMessageReceived Client MessageType CustomAttributes)
-        void NotifyMessageReceived(Client client, MessageType messageType);
-        
-        // *** Start programmer edit section *** (IStatisticsService.NotifyMessageSent Client MessageType CustomAttributes)
-
-        // *** End programmer edit section *** (IStatisticsService.NotifyMessageSent Client MessageType CustomAttributes)
-        void NotifyMessageSent(Client client, MessageType messageType);
-        
-        // *** Start programmer edit section *** (IStatisticsService.NotifyAvgTimeSent Client MessageType System.Int32 CustomAttributes)
-
-        // *** End programmer edit section *** (IStatisticsService.NotifyAvgTimeSent Client MessageType System.Int32 CustomAttributes)
-        void NotifyAvgTimeSent(Client client, MessageType messageType, int time);
-        
-        // *** Start programmer edit section *** (IStatisticsService.NotifyAvgTimeSql Client MessageType System.Int32 System.String CustomAttributes)
-
-        // *** End programmer edit section *** (IStatisticsService.NotifyAvgTimeSql Client MessageType System.Int32 System.String CustomAttributes)
-        void NotifyAvgTimeSql(Client client, MessageType messageType, int time, string sql);
-        
-        // *** Start programmer edit section *** (IStatisticsService.NotifyIncConnectionCount Client MessageType CustomAttributes)
-
-        // *** End programmer edit section *** (IStatisticsService.NotifyIncConnectionCount Client MessageType CustomAttributes)
-        void NotifyIncConnectionCount(Client client, MessageType messageType);
-        
-        // *** Start programmer edit section *** (IStatisticsService.NotifyDecConnectionCount Client MessageType CustomAttributes)
-
-        // *** End programmer edit section *** (IStatisticsService.NotifyDecConnectionCount Client MessageType CustomAttributes)
-        void NotifyDecConnectionCount(Client client, MessageType messageType);
+        // *** End programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
+        void NotifyDecConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
     }
 }

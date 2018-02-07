@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface ISubscriptionsManager : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (ISubscriptionsManager CustomMembers)
+
+        // *** End programmer edit section *** (ISubscriptionsManager CustomMembers)
+
+        
         // *** Start programmer edit section *** (ISubscriptionsManager.CreateClient System.String System.String System.String CustomAttributes)
 
         // *** End programmer edit section *** (ISubscriptionsManager.CreateClient System.String System.String System.String CustomAttributes)

@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface ICacheable
     {
         
+        // *** Start programmer edit section *** (ICacheable CustomMembers)
+
+        // *** End programmer edit section *** (ICacheable CustomMembers)
+
+        
         // *** Start programmer edit section *** (ICacheable.ClearCache CustomAttributes)
 
         // *** End programmer edit section *** (ICacheable.ClearCache CustomAttributes)

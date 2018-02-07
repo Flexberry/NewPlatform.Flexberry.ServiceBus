@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IWcfService : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IWcfService CustomMembers)
+
+        // *** End programmer edit section *** (IWcfService CustomMembers)
+
+        
         /// <summary>
         /// UseWcfSettingsFromConfig.
         /// </summary>

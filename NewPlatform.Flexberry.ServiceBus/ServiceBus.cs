@@ -45,11 +45,8 @@
 
             try
             {
-                IStatisticsService ss = (IStatisticsService)_settings.Components.Where(x => x is IStatisticsService).FirstOrDefault();
                 foreach (IServiceBusComponent component in _settings.Components)
                 {
-                    if (component is IStatisticsServiceSetter)
-                        ((IStatisticsServiceSetter)component).SetStatisticsService(ss);
                     _logger.LogDebugMessage(nameof(ServiceBus), $"Preparing module {component.GetType().FullName}");
                     component.Prepare();
                 }

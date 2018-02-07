@@ -12,7 +12,7 @@
     /// <summary>
     /// Service Bus component for keeping and periodicaly actualizing statistics settings.
     /// </summary>
-    internal class DefaultStatisticsSettings : BaseServiceBusComponent, IStatisticsSettings, IStatisticsServiceSetter
+    internal class DefaultStatisticsSettings : BaseServiceBusComponent, IStatisticsSettings
     {
         /// <summary>
         /// View to load statistics settings.
@@ -50,11 +50,6 @@
         public int UpdatePeriodMilliseconds { get; set; } = 60000;
 
         /// <summary>
-        /// Statistics service
-        /// </summary>
-        private static IStatisticsService _statisticsService;
-
-        /// <summary>
         /// Key for statistics SB
         /// </summary>
         private static Guid? _subscriptionSB;
@@ -78,26 +73,11 @@
             _periodicalTimer = new PeriodicalTimer();
         }
 
-        public void SetStatisticsService(IStatisticsService statisticsService)
-        {
-            if (statisticsService == null)
-                throw new ArgumentNullException(nameof(statisticsService));
-
-            _statisticsService = statisticsService;
-        }
-
         public Guid? GetSubscriptionSB()
         {
             if (_subscriptionSB == null)
             {
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-
                 var statSetting = _dataService.Query<StatisticsSetting>(_view).Where(x => x.Subscription == null).FirstOrDefault();
-
-                stopwatch.Stop();
-                var time = stopwatch.ElapsedMilliseconds;
-                _statisticsService?.NotifyAvgTimeSql(null, (int)time, "DefaultStatisticsSettings.GetSubscriptionSB() load StatSetting");
 
                 if
                     (statSetting == null)
@@ -201,26 +181,10 @@
             try
             {
                 var settingsToSave = _statSettings.Values.Where(x => x.GetStatus() == ObjectStatus.Created).Cast<DataObject>().ToArray();
-
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-
                 _dataService.UpdateObjects(ref settingsToSave);
 
-                stopwatch.Stop();
-                long time = stopwatch.ElapsedMilliseconds;
-                _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultStatisticsSettings.Process() update  StatSetting");
-
                 LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(StatisticsSetting), _view);
-
-                stopwatch = new Stopwatch();
-                stopwatch.Start();
-
                 DataObject[] statSettings = _dataService.LoadObjects(lcs);
-
-                stopwatch.Stop();
-                time = stopwatch.ElapsedMilliseconds;
-                _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultStatisticsSettings.Process() load  StatSetting");
 
                 lock (_statSettingsLock)
                 {

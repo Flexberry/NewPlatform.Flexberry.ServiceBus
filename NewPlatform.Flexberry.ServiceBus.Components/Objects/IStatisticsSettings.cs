@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IStatisticsSettings : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IStatisticsSettings CustomMembers)
+
+        // *** End programmer edit section *** (IStatisticsSettings CustomMembers)
+
+        
         // *** Start programmer edit section *** (IStatisticsSettings.GetSubscriptionSB CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsSettings.GetSubscriptionSB CustomAttributes)
@@ -38,14 +43,14 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** End programmer edit section *** (IStatisticsSettings.GetSettings CustomAttributes)
         System.Collections.Generic.IEnumerable<StatisticsSetting> GetSettings();
         
-        // *** Start programmer edit section *** (IStatisticsSettings.GetSetting Subscription CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsSettings.GetSetting NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
-        // *** End programmer edit section *** (IStatisticsSettings.GetSetting Subscription CustomAttributes)
-        StatisticsSetting GetSetting(Subscription subscription);
+        // *** End programmer edit section *** (IStatisticsSettings.GetSetting NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
+        NewPlatform.Flexberry.ServiceBus.StatisticsSetting GetSetting(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
         
-        // *** Start programmer edit section *** (IStatisticsSettings.CreateSetting Subscription CustomAttributes)
+        // *** Start programmer edit section *** (IStatisticsSettings.CreateSetting NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
-        // *** End programmer edit section *** (IStatisticsSettings.CreateSetting Subscription CustomAttributes)
-        StatisticsSetting CreateSetting(Subscription subscription);
+        // *** End programmer edit section *** (IStatisticsSettings.CreateSetting NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
+        NewPlatform.Flexberry.ServiceBus.StatisticsSetting CreateSetting(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
     }
 }
