@@ -6,15 +6,14 @@
     using Flexberry.ServiceBus.Components;
     using ICSSoft.STORMNET.Business;
     using Moq;
-    using ORM.TestingTools;
 
     /// <summary>
     /// Base class for service bus integrated tests.
     /// </summary>
-    public abstract class BaseServiceBusIntegratedTest : BaseOrmIntegratedTest
+    public abstract class BaseServiceBusIntegratedTest : BaseIntegratedTest
     {
         public BaseServiceBusIntegratedTest(string tmpDbNamePrefix)
-            : base(tmpDbNamePrefix, ConfigurationManager.AppSettings["NewPlatform.Flexberry.ServiceBus.IntegratedTests"])
+            : base(tmpDbNamePrefix)
         {
         }
 
