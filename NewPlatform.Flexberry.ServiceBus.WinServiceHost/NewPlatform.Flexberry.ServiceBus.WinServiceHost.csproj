@@ -113,12 +113,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Flexberry Service Bus\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="ICSSoft.Services.CurrentUserService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=087bc7ccdc1b0bb4, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.Services.CurrentUserService.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSSoft.Services.UnityFactory, Version=1.0.0.1, Culture=neutral, PublicKeyToken=6389c2e26f4059bc, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.Services.UnityFactory.dll</HintPath>
-    </Reference>
     <Reference Include="ICSSoft.STORMNET.Business, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c17bb360f7843f45, processorArchitecture=MSIL">
       <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
     </Reference>

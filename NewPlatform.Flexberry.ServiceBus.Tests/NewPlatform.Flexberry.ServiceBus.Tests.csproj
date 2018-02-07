@@ -71,14 +71,6 @@
       <HintPath>..\Flexberry Service Bus\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.Services.CurrentUserService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=087bc7ccdc1b0bb4, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.Services.CurrentUserService.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ICSSoft.Services.UnityFactory, Version=1.0.0.1, Culture=neutral, PublicKeyToken=6389c2e26f4059bc, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.Services.UnityFactory.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="ICSSoft.STORMNET.AzManBridge, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68fa18c590f08613, processorArchitecture=MSIL">
       <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\ICSSoft.STORMNET.AzManBridge.dll</HintPath>
       <Private>True</Private>
