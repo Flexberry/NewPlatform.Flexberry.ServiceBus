@@ -46,9 +46,7 @@
       <HintPath>System.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.XML">
-      <HintPath>System.XML.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IStatisticsCompressorService.cs">
