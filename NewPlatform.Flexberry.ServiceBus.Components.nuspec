@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Components interfaces for Flexberry Service Bus.</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright © New Platform Ltd. 2017</copyright>
+    <copyright>Copyright © New Platform Ltd. 2018</copyright>
     <tags>Flexberry Service Bus</tags>
     <dependencies>
       <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="1.0.0-alpha02" />

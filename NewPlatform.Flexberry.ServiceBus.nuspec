@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Flexberry Service Bus.</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright © New Platform Ltd. 2017</copyright>
+    <copyright>Copyright © New Platform Ltd. 2018</copyright>
     <tags>Flexberry Service Bus</tags>
     <dependencies>
       <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="1.0.0-alpha02" />
@@ -20,7 +20,7 @@
       <dependency id="NewPlatform.Flexberry.ServiceBus.Objects" version="1.0.0-alpha02" />
       <dependency id="log4net" version="2.0.3" />
       <dependency id="EnterpriseLibrary.Logging" version="5.0.505.0" />
-      <dependency id="NewPlatform.Flexberry.ORM" version="4.0.0-beta03" />
+      <dependency id="NewPlatform.Flexberry.ORM" version="4.0.0" />
 
       <!-- WebAPI -->
       <dependency id="Microsoft.AspNet.WebApi" version="5.2.3" />

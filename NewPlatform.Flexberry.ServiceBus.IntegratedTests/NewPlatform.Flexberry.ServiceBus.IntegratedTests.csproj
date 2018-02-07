@@ -53,85 +53,93 @@
       <HintPath>..\Flexberry Service Bus\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ChangesToSqlBTMonitor, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e5ad39f116a43e0b, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
+    <Reference Include="ChangesToSqlBTMonitor">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CheckingLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f5217598140e5d0f, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\CheckingLibrary.dll</HintPath>
+    <Reference Include="CheckingLibrary">
+      <HintPath>..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\CheckingLibrary.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ExternalLangDef.dll</HintPath>
+    <Reference Include="ExternalLangDef">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ExternalLangDef.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\Flexberry Service Bus\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.AzManBridge, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68fa18c590f08613, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\ICSSoft.STORMNET.AzManBridge.dll</HintPath>
+    <Reference Include="ICSSoft.Services.CurrentUserService">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.Services.CurrentUserService.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c17bb360f7843f45, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
+    <Reference Include="ICSSoft.Services.UnityFactory">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.Services.UnityFactory.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.DRDataService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cef244157a7f77f7, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.DRDataService.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.AzManBridge">
+      <HintPath>..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\ICSSoft.STORMNET.AzManBridge.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.LINQProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=68e48bb6f6293778, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.LINQProvider.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.Business">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Business.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.LockService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=68ac0e47b5ef94d8, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.LockService.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.Business.DRDataService">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Business.DRDataService.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.MSSQLDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=49b42003269a4a66, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.MSSQLDataService.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.Business.LINQProvider">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Business.LINQProvider.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.ODBCDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=4c6916a347bdf8b1, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.ODBCDataService.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.Business.LockService">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Business.LockService.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.OracleDataService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=b24b342e1d86de22, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.OracleDataService.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.Business.MSSQLDataService">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Business.MSSQLDataService.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Business.PostgresDataService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c1da4b21bda90afe, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Business.PostgresDataService.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.Business.ODBCDataService">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Business.ODBCDataService.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=898f36b7a907d804, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Collections.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.Business.OracleDataService">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Business.OracleDataService.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.DataObject, Version=1.0.0.1, Culture=neutral, PublicKeyToken=023a90c13b0ca8dc, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.DataObject.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.Business.PostgresDataService">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Business.PostgresDataService.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.FunctionalLanguage, Version=1.0.0.1, Culture=neutral, PublicKeyToken=88efc6f76e5cd161, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.FunctionalLanguage.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.Collections">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Collections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.RightManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=2f453919c28176ba, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\ICSSoft.STORMNET.RightManager.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.DataObject">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.DataObject.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.Tools, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c824f5305b237be9, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.Tools.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.FunctionalLanguage">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.FunctionalLanguage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSSoft.STORMNET.UserDataTypes, Version=1.0.0.1, Culture=neutral, PublicKeyToken=bc478021255def29, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.ORM.4.0.0-beta03\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
+    <Reference Include="ICSSoft.STORMNET.RightManager">
+      <HintPath>..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\ICSSoft.STORMNET.RightManager.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Interop.ActiveDs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=96924c19c47317a6, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\Interop.ActiveDs.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="ICSSoft.STORMNET.Tools">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.Tools.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSSoft.STORMNET.UserDataTypes">
+      <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0-beta15\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Interop.ActiveDs">
+      <HintPath>..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\Interop.ActiveDs.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\Flexberry Service Bus\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
@@ -141,9 +149,9 @@
       <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.LogService.1.1.0\lib\net45\LogService.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Interop.Security.AzRoles, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\Microsoft.Interop.Security.AzRoles.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+    <Reference Include="Microsoft.Interop.Security.AzRoles">
+      <HintPath>..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\Microsoft.Interop.Security.AzRoles.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\Flexberry Service Bus\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -185,6 +193,10 @@
       <HintPath>..\Flexberry Service Bus\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Spatial">
+      <HintPath>..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\Flexberry Service Bus\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
       <Private>True</Private>
@@ -197,16 +209,16 @@
       <HintPath>..\Flexberry Service Bus\packages\Moq.4.6.38-alpha\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NewPlatform.Flexberry.Security, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b04c483e14c0d306, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\NewPlatform.Flexberry.Security.dll</HintPath>
+    <Reference Include="NewPlatform.Flexberry.Security">
+      <HintPath>..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\NewPlatform.Flexberry.Security.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NewPlatform.Flexberry.Security.BusinessServers, Version=1.0.0.1, Culture=neutral, PublicKeyToken=2a87ddf394e1b26a, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\NewPlatform.Flexberry.Security.BusinessServers.dll</HintPath>
+    <Reference Include="NewPlatform.Flexberry.Security.BusinessServers">
+      <HintPath>..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\NewPlatform.Flexberry.Security.BusinessServers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NewPlatform.Flexberry.Security.Objects, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e9e142aba0117561, processorArchitecture=MSIL">
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\NewPlatform.Flexberry.Security.Objects.dll</HintPath>
+    <Reference Include="NewPlatform.Flexberry.Security.Objects">
+      <HintPath>..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\NewPlatform.Flexberry.Security.Objects.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Npgsql, Version=2.2.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
@@ -233,9 +245,8 @@
       <HintPath>..\Flexberry Service Bus\packages\Remotion.Linq.1.13.183.0\lib\net35\Remotion.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\Flexberry Service Bus\packages\NewPlatform.Flexberry.Security.1.7.0-alpha04\lib\net35\stdole.dll</HintPath>
+    <Reference Include="stdole">
+      <HintPath>..\packages\NewPlatform.Flexberry.Security.1.7.0\lib\net35\stdole.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
