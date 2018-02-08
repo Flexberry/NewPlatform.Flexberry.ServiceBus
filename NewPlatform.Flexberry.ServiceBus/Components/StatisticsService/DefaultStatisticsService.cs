@@ -171,14 +171,14 @@
                 {
                     if (CollectBusStatistics)
                     {
-                        var obj = GetCurrentStatRecord(subscription);
-                        obj.QueryAvgTime = time;
+                        var objSB = GetCurrentStatRecord(null);
+                        objSB.QueryAvgTime = time;
                     }
 
                     if (subscription != null)
                     {
-                        var objSB = GetCurrentStatRecord(subscription);
-                        objSB.QueryAvgTime = time;
+                        var obj = GetCurrentStatRecord(subscription);
+                        obj.QueryAvgTime = time;
                     }
                 }
 
@@ -197,6 +197,8 @@
                 lock (_lock)
                 {
                     GetCurrentStatRecord(subscription).ConnectionCount++;
+                    if (CollectBusStatistics)
+                        GetCurrentStatRecord(null).ConnectionCount++;
                 }
             }
         }
@@ -212,6 +214,8 @@
                 lock (_lock)
                 {
                     GetCurrentStatRecord(subscription).ConnectionCount--;
+                    if (CollectBusStatistics)
+                        GetCurrentStatRecord(null).ConnectionCount--;
                 }
             }
         }

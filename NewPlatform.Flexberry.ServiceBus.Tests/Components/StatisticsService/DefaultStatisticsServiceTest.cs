@@ -544,7 +544,14 @@
 
             timerServiceMock.Setup(ts => ts.Now).Returns(() => DateTime.Now);
 
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, loggerMock.Object);
+            var service = new DefaultStatisticsService(
+                statSettingsMock.Object,
+                saveServiceMock.Object,
+                timerServiceMock.Object,
+                loggerMock.Object)
+            {
+                CollectBusStatistics = false,
+            };
 
             // Act.
             RunSBComponentAfterStart(
@@ -605,7 +612,14 @@
 
             timerServiceMock.Setup(ts => ts.Now).Returns(() => DateTime.Now);
 
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, loggerMock.Object);
+            var service = new DefaultStatisticsService(
+                statSettingsMock.Object,
+                saveServiceMock.Object,
+                timerServiceMock.Object,
+                loggerMock.Object)
+            {
+                CollectBusStatistics = false,
+            };
 
             // Act.
             RunSBComponentAfterStart(
