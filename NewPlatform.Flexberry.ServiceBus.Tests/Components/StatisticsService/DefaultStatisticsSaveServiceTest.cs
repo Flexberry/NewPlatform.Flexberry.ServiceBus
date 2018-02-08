@@ -45,8 +45,8 @@
             DataObject[] dObjs = { };
 
             dataServiceMock
-                .Setup(ds => ds.UpdateObjects(ref dObjs))
-                .RefCallback((ref DataObject[] objects) => calls++);
+                .Setup(ds => ds.UpdateObjects(ref dObjs, true))
+                .RefValCallback((ref DataObject[] objects, bool alwaysThrowException) => calls++);
 
             var service = new DefaultStatisticsSaveService(dataServiceMock.Object, loggerMock.Object);
 
@@ -80,8 +80,8 @@
             DataObject[] dObjs = It.IsAny<DataObject[]>();
 
             dataServiceMock
-                .Setup(ds => ds.UpdateObjects(ref dObjs))
-                .RefCallback((ref DataObject[] objects) =>
+                .Setup(ds => ds.UpdateObjects(ref dObjs, true))
+                .RefValCallback((ref DataObject[] objects, bool alwaysThrowException) =>
                 {
                     called = true;
 

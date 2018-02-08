@@ -50,14 +50,7 @@
             DataObject[] objects = PrepareStatsForSaving(stats);
             if (objects.Length != 0)
             {
-                try
-                {
-                    _dataService.UpdateObjects(ref objects);
-                }
-                catch (Exception exception)
-                {
-                    _logger.LogError("Save statistics error", exception.ToString());
-                }
+                _dataService.UpdateObjects(ref objects, true);
             }
         }
 

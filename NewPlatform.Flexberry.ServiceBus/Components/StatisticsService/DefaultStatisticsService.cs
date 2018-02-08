@@ -10,6 +10,21 @@
     internal class DefaultStatisticsService : BaseServiceBusComponent, IStatisticsService
     {
         /// <summary>
+        /// Indicates whether to collect statistics on the bus.
+        /// </summary>
+        public bool CollectBusStatistics { get; set; } = true;
+
+        /// <summary>
+        /// Indicates whether to collect advanced statistics (AvgTimeSent, AvgTimeSql, ConnectionCount).
+        /// </summary>
+        public bool CollectAdvancedStatistics { get; set; } = true;
+
+        /// <summary>
+        /// Periodicity of statistics saving to DB in milliseconds.
+        /// </summary>
+        public int StatisticsSavingPeriod { get; set; } = 10000;
+
+        /// <summary>
         /// Current statistics settings component.
         /// </summary>
         private readonly IStatisticsSettings _statSettings;
@@ -38,6 +53,11 @@
         /// Statistics data.
         /// </summary>
         private readonly Dictionary<DateTime, Dictionary<Guid?, StatisticsRecord>> _statData = new Dictionary<DateTime, Dictionary<Guid?, StatisticsRecord>>();
+
+        /// <summary>
+        /// Stores until the next attempt to save, statistics records, during saving at of which errors occurred.
+        /// </summary>
+        private List<StatisticsRecord> _unsavedStatistics = new List<StatisticsRecord>();
 
         /// <summary>
         /// Timer for periodical update of data.
@@ -82,7 +102,8 @@
             lock (_lock)
             {
                 GetCurrentStatRecord(subscription).ReceivedCount++;
-                GetCurrentStatRecord(null).ReceivedCount++;
+                if (CollectBusStatistics)
+                    GetCurrentStatRecord(null).ReceivedCount++;
             }
         }
 
@@ -95,7 +116,8 @@
             lock (_lock)
             {
                 GetCurrentStatRecord(subscription).SentCount++;
-                GetCurrentStatRecord(null).SentCount++;
+                if (CollectBusStatistics)
+                    GetCurrentStatRecord(null).SentCount++;
             }
         }
 
@@ -108,7 +130,8 @@
             lock (_lock)
             {
                 GetCurrentStatRecord(subscription).ErrorsCount++;
-                GetCurrentStatRecord(null).ErrorsCount++;
+                if (CollectBusStatistics)
+                    GetCurrentStatRecord(null).ErrorsCount++;
             }
         }
 
@@ -119,13 +142,19 @@
         /// <param name="time">Time sent message</param>
         public void NotifyAvgTimeSent(Subscription subscription, int time)
         {
-            lock (_lock)
+            if (CollectAdvancedStatistics)
             {
-                var obj = GetCurrentStatRecord(subscription);
-                obj.SentAvgTime = time;
+                lock (_lock)
+                {
+                    var obj = GetCurrentStatRecord(subscription);
+                    obj.SentAvgTime = time;
 
-                var objSB = GetCurrentStatRecord(null);
-                objSB.SentAvgTime = time;
+                    if (CollectBusStatistics)
+                    {
+                        var objSB = GetCurrentStatRecord(null);
+                        objSB.SentAvgTime = time;
+                    }
+                }
             }
         }
 
@@ -136,18 +165,25 @@
         /// <param name="time">Time execute sql</param>
         public void NotifyAvgTimeSql(Subscription subscription, int time, string sql)
         {
-            lock (_lock)
+            if (CollectAdvancedStatistics)
             {
-                var obj = GetCurrentStatRecord(subscription);
-                obj.QueryAvgTime = time;
-
-                if (subscription != null)
+                lock (_lock)
                 {
-                    var objSB = GetCurrentStatRecord(subscription);
-                    objSB.QueryAvgTime = time;
+                    if (CollectBusStatistics)
+                    {
+                        var objSB = GetCurrentStatRecord(null);
+                        objSB.QueryAvgTime = time;
+                    }
+
+                    if (subscription != null)
+                    {
+                        var obj = GetCurrentStatRecord(subscription);
+                        obj.QueryAvgTime = time;
+                    }
                 }
+
+                _logger.LogDebugMessage("Time execute sql", string.Format("{0} : {1}", time, sql));
             }
-            _logger.LogInformation("Time execute sql", string.Format("{0} : {1}", time, sql));
         }
 
         /// <summary>
@@ -156,9 +192,14 @@
         /// <param name="subscription">Subscription for message.</param>
         public void NotifyIncConnectionCount(Subscription subscription)
         {
-            lock (_lock)
+            if (CollectAdvancedStatistics)
             {
-                GetCurrentStatRecord(subscription).ConnectionCount++;
+                lock (_lock)
+                {
+                    GetCurrentStatRecord(subscription).ConnectionCount++;
+                    if (CollectBusStatistics)
+                        GetCurrentStatRecord(null).ConnectionCount++;
+                }
             }
         }
 
@@ -168,9 +209,14 @@
         /// <param name="subscription">Subscription for message.</param>
         public void NotifyDecConnectionCount(Subscription subscription)
         {
-            lock (_lock)
+            if (CollectAdvancedStatistics)
             {
-                GetCurrentStatRecord(subscription).ConnectionCount--;
+                lock (_lock)
+                {
+                    GetCurrentStatRecord(subscription).ConnectionCount--;
+                    if (CollectBusStatistics)
+                        GetCurrentStatRecord(null).ConnectionCount--;
+                }
             }
         }
 
@@ -181,7 +227,7 @@
         {
             base.Start();
             if (_periodicalTimer.State != PeriodicalTimer.TimerState.Working)
-                _periodicalTimer.Start(Process, 1000);
+                _periodicalTimer.Start(Process, StatisticsSavingPeriod);
         }
 
         /// <summary>
@@ -216,7 +262,8 @@
         /// <param name="saveAll">Current time interval would not be saved if false.</param>
         private void SaveStatistics(bool saveAll)
         {
-            var stats = new List<StatisticsRecord>();
+            var stats = new List<StatisticsRecord>(_unsavedStatistics);
+            _unsavedStatistics.Clear();
 
             lock (_lock)
             {
@@ -237,7 +284,17 @@
             }
 
             if (stats.Count != 0)
-                _saveService.Save(stats);
+            {
+                try
+                {
+                    _saveService.Save(stats);
+                }
+                catch (Exception exception)
+                {
+                    _unsavedStatistics.AddRange(stats);
+                    _logger.LogError("Error of statistics saving, we try to next time...", exception.ToString());
+                }
+            }
         }
 
         /// <summary>
