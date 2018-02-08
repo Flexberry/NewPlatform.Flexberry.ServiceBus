@@ -143,7 +143,9 @@
                     foreach (var setting in compressionSettings)
                     {
                         var recordsToCompress = LoadRecordsForCompression(setting);
-                        do
+                        while (recordsToCompress
+                            .GroupBy(r => GetStartOfInterval(r.Since, setting.CompressTo))
+                            .Any(g => g.Count() > 1 || (g.Count() == 1 && g.First().StatisticsInterval != setting.CompressTo)))
                         {
                             var compressedRecords = CompressRecords(recordsToCompress, setting);
 
@@ -151,21 +153,16 @@
                             foreach (var oldRecord in recordsToCompress)
                                 oldRecord.SetStatus(ObjectStatus.Deleted);
 
-                            // Настройку сжатия тоже следует обновить.
-                            setting.LastCompressTime = _timeService.Now;
-                            setting.NextCompressTime = AddTimeUnitsToDate(setting.NextCompressTime, setting.CompressFrequencyUnits, setting.CompressFrequencyCount);
-
                             // Обновление записей в таблице.
                             var recordsToUpdate = recordsToCompress
                                 .Concat(compressedRecords)
                                 .Cast<DataObject>()
-                                .Concat(new[] { (DataObject)setting })
                                 .ToArray();
 
                             Stopwatch stopwatch = new Stopwatch();
                             stopwatch.Start();
 
-                            _dataService.UpdateObjects(ref recordsToUpdate);
+                            _dataService.UpdateObjects(ref recordsToUpdate, true);
 
                             stopwatch.Stop();
                             long time = stopwatch.ElapsedMilliseconds;
@@ -173,7 +170,11 @@
 
                             recordsToCompress = LoadRecordsForCompression(setting);
                         }
-                        while (recordsToCompress.Count > 0);
+
+                        // Настройку сжатия тоже следует обновить.
+                        setting.NextCompressTime = AddTimeUnitsToDate(_timeService.Now, setting.CompressFrequencyUnits, setting.CompressFrequencyCount);
+                        setting.LastCompressTime = _timeService.Now;
+                        _dataService.UpdateObject(setting);
                     }
                 }
             }
@@ -248,7 +249,7 @@
                     throw new Exception("Неизвестный интервал статистики: " + compressSetting.CompressTo.ToString());
             }
 
-            recordsQuery = recordsQuery.Where(x => x.StatisticsSetting.__PrimaryKey == compressSetting.StatisticsSetting.__PrimaryKey && x.To <= timeEnd);
+            recordsQuery = recordsQuery.Where(x => x.StatisticsSetting.__PrimaryKey == compressSetting.StatisticsSetting.__PrimaryKey && x.To <= timeEnd).OrderBy(x => x.Since);
             if (MaxRecordsForOneCompression > 0)
                 recordsQuery = recordsQuery.Take(MaxRecordsForOneCompression);
 
