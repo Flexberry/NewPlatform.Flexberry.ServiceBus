@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (StatisticsCompressionSetting CustomAttributes)
 
     // *** End programmer edit section *** (StatisticsCompressionSetting CustomAttributes)
+    [ClassStorage("CompressionSetting")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
@@ -131,7 +132,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         
         private System.DateTime fNextCompressTime = System.DateTime.Now;
         
-        private System.DateTime? fLastCompressTime;
+        private DateTime? fLastCompressTime;
         
         private System.Nullable<System.DateTime> fCreateTime;
         
@@ -154,6 +155,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsCompressionSetting.CompressTo CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsCompressionSetting.CompressTo CustomAttributes)
+        [PropertyStorage("TargetCompression")]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.StatisticsInterval CompressTo
         {
@@ -186,6 +188,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsCompressionSetting.StatisticsAgeCount CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsCompressionSetting.StatisticsAgeCount CustomAttributes)
+        [PropertyStorage("LifetimeLimit")]
         [NotNull()]
         public virtual int StatisticsAgeCount
         {
@@ -218,6 +221,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsCompressionSetting.StatisticsAgeUnits CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsCompressionSetting.StatisticsAgeUnits CustomAttributes)
+        [PropertyStorage("LifetimeUnits")]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.TimeUnit StatisticsAgeUnits
         {
@@ -276,6 +280,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsCompressionSetting.CompressFrequencyCount CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsCompressionSetting.CompressFrequencyCount CustomAttributes)
+        [PropertyStorage("Period")]
         [NotNull()]
         public virtual int CompressFrequencyCount
         {
@@ -308,6 +313,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsCompressionSetting.CompressFrequencyUnits CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsCompressionSetting.CompressFrequencyUnits CustomAttributes)
+        [PropertyStorage("PeriodUnits")]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.TimeUnit CompressFrequencyUnits
         {
@@ -367,6 +373,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsCompressionSetting.NextCompressTime CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsCompressionSetting.NextCompressTime CustomAttributes)
+        [PropertyStorage("NextCompressionTime")]
         [NotNull()]
         public virtual System.DateTime NextCompressTime
         {
@@ -399,14 +406,15 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsCompressionSetting.LastCompressTime CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsCompressionSetting.LastCompressTime CustomAttributes)
-        public virtual System.DateTime? LastCompressTime
+        [PropertyStorage("LastCompressionTime")]
+        public virtual DateTime? LastCompressTime
         {
             get
             {
                 // *** Start programmer edit section *** (StatisticsCompressionSetting.LastCompressTime Get start)
 
                 // *** End programmer edit section *** (StatisticsCompressionSetting.LastCompressTime Get start)
-                System.DateTime? result = this.fLastCompressTime;
+                DateTime? result = this.fLastCompressTime;
                 // *** Start programmer edit section *** (StatisticsCompressionSetting.LastCompressTime Get end)
 
                 // *** End programmer edit section *** (StatisticsCompressionSetting.LastCompressTime Get end)
@@ -559,7 +567,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         [Agregator()]
         [NotNull()]
         [PropertyStorage(new string[] {
-                "StatisticsSetting"})]
+                "StatSetting"})]
         public virtual NewPlatform.Flexberry.ServiceBus.StatisticsSetting StatisticsSetting
         {
             get

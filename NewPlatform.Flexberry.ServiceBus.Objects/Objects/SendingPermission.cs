@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (SendingPermission CustomAttributes)
 
     // *** End programmer edit section *** (SendingPermission CustomAttributes)
+    [ClassStorage("OutboundMessageTypeRestriction")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
@@ -200,7 +201,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (SendingPermission.MessageType CustomAttributes)
         [PropertyStorage(new string[] {
-                "MessageType"})]
+                "ТипСообщения"})]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.MessageType MessageType
         {
@@ -236,7 +237,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         [Agregator()]
         [NotNull()]
         [PropertyStorage(new string[] {
-                "Client"})]
+                "Клиент"})]
         [TypeUsage(new string[] {
                 "NewPlatform.Flexberry.ServiceBus.Client"})]
         public virtual NewPlatform.Flexberry.ServiceBus.Client Client

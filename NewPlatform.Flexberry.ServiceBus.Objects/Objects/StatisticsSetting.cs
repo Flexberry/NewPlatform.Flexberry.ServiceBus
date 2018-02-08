@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (StatisticsSetting CustomAttributes)
 
     // *** End programmer edit section *** (StatisticsSetting CustomAttributes)
+    [ClassStorage("StatSetting")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
@@ -233,7 +234,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (StatisticsSetting.Subscription CustomAttributes)
         [PropertyStorage(new string[] {
-                "Subscription"})]
+                "Подписка"})]
         public virtual NewPlatform.Flexberry.ServiceBus.Subscription Subscription
         {
             get

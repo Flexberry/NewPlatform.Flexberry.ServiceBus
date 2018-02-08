@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (Bus CustomAttributes)
 
     // *** End programmer edit section *** (Bus CustomAttributes)
+    [ClassStorage("Шина")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
@@ -68,6 +69,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Bus.ManagerAddress CustomAttributes)
 
         // *** End programmer edit section *** (Bus.ManagerAddress CustomAttributes)
+        [PropertyStorage("InteropАдрес")]
         [StrLen(255)]
         [NotNull()]
         public virtual string ManagerAddress

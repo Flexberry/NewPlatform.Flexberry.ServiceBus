@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (SubscriptionStatisticsMonitor CustomAttributes)
 
     // *** End programmer edit section *** (SubscriptionStatisticsMonitor CustomAttributes)
+    [ClassStorage("SubStatisticsMonitor")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
@@ -92,6 +93,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (SubscriptionStatisticsMonitor.Number CustomAttributes)
 
         // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Number CustomAttributes)
+        [PropertyStorage("Код")]
         [NotNull()]
         [Order()]
         public virtual int Number
@@ -125,6 +127,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (SubscriptionStatisticsMonitor.Category CustomAttributes)
 
         // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Category CustomAttributes)
+        [PropertyStorage("Категория")]
         [StrLen(255)]
         public virtual string Category
         {
@@ -157,6 +160,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (SubscriptionStatisticsMonitor.Name CustomAttributes)
 
         // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Name CustomAttributes)
+        [PropertyStorage("Наименование")]
         [StrLen(255)]
         public virtual string Name
         {
@@ -316,7 +320,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Subscription CustomAttributes)
         [PropertyStorage(new string[] {
-                "Subscription"})]
+                "Подписка"})]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.Subscription Subscription
         {

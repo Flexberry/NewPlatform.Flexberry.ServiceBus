@@ -26,6 +26,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (Message CustomAttributes)
 
     // *** End programmer edit section *** (Message CustomAttributes)
+    [ClassStorage("Сообщение")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("EditView", new string[] {
@@ -142,18 +143,19 @@ namespace NewPlatform.Flexberry.ServiceBus
         private NewPlatform.Flexberry.ServiceBus.MessageType fMessageType;
         
         private NewPlatform.Flexberry.ServiceBus.Client fRecipient;
-        
+
         // *** Start programmer edit section *** (Message CustomMembers)
         private byte[] binaryAttachment = null;
         // *** End programmer edit section *** (Message CustomMembers)
 
-        
+
         /// <summary>
         /// SendingTime.
         /// </summary>
         // *** Start programmer edit section *** (Message.SendingTime CustomAttributes)
 
         // *** End programmer edit section *** (Message.SendingTime CustomAttributes)
+        [PropertyStorage("ВремяСледующейОтправки")]
         [NotNull()]
         public virtual System.DateTime SendingTime
         {
@@ -186,6 +188,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.ReceivingTime CustomAttributes)
 
         // *** End programmer edit section *** (Message.ReceivingTime CustomAttributes)
+        [PropertyStorage("ВремяФормирования")]
         [NotNull()]
         public virtual System.DateTime ReceivingTime
         {
@@ -218,6 +221,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.IsSending CustomAttributes)
 
         // *** End programmer edit section *** (Message.IsSending CustomAttributes)
+        [PropertyStorage("Отправляется")]
         public virtual bool IsSending
         {
             get
@@ -249,6 +253,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.ErrorCount CustomAttributes)
 
         // *** End programmer edit section *** (Message.ErrorCount CustomAttributes)
+        [PropertyStorage("FailsCount")]
         public virtual int ErrorCount
         {
             get
@@ -280,6 +285,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.Sender CustomAttributes)
 
         // *** End programmer edit section *** (Message.Sender CustomAttributes)
+        [PropertyStorage("Отправитель")]
         [StrLen(255)]
         public virtual string Sender
         {
@@ -312,6 +318,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.Body CustomAttributes)
 
         // *** End programmer edit section *** (Message.Body CustomAttributes)
+        [PropertyStorage("Тело")]
         public virtual string Body
         {
             get
@@ -343,6 +350,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.Attachment CustomAttributes)
 
         // *** End programmer edit section *** (Message.Attachment CustomAttributes)
+        [PropertyStorage("ВложениеДляБазы")]
         public virtual string Attachment
         {
             get
@@ -408,6 +416,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.Priority CustomAttributes)
 
         // *** End programmer edit section *** (Message.Priority CustomAttributes)
+        [PropertyStorage("Приоритет")]
         public virtual int Priority
         {
             get
@@ -439,6 +448,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.Group CustomAttributes)
 
         // *** End programmer edit section *** (Message.Group CustomAttributes)
+        [PropertyStorage("ИмяГруппы")]
         [StrLen(255)]
         public virtual string Group
         {
@@ -471,6 +481,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.Tags CustomAttributes)
 
         // *** End programmer edit section *** (Message.Tags CustomAttributes)
+        [PropertyStorage("Тэги")]
         public virtual string Tags
         {
             get
@@ -502,6 +513,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Message.Logs CustomAttributes)
 
         // *** End programmer edit section *** (Message.Logs CustomAttributes)
+        [PropertyStorage("LogMessages")]
         public virtual string Logs
         {
             get
@@ -534,7 +546,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (Message.MessageType CustomAttributes)
         [PropertyStorage(new string[] {
-                "MessageType"})]
+                "ТипСообщения_m0"})]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.MessageType MessageType
         {
@@ -568,7 +580,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (Message.Recipient CustomAttributes)
         [PropertyStorage(new string[] {
-                "Recipient"})]
+                "Получатель_m0"})]
         [TypeUsage(new string[] {
                 "NewPlatform.Flexberry.ServiceBus.Client"})]
         [NotNull()]

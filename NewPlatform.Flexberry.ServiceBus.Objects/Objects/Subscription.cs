@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (Subscription CustomAttributes)
 
     // *** End programmer edit section *** (Subscription CustomAttributes)
+    [ClassStorage("Подписка")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
@@ -90,6 +91,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "MessageType.ID",
             "MessageType.Name"})]
     [View("SendingByCallbackView", new string[] {
+            "Description",
             "ExpiryDate",
             "IsCallback",
             "TransportType",
@@ -142,6 +144,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Subscription.Description CustomAttributes)
 
         // *** End programmer edit section *** (Subscription.Description CustomAttributes)
+        [PropertyStorage("Описание")]
         public virtual string Description
         {
             get
@@ -241,6 +244,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (Subscription.TransportType CustomAttributes)
 
         // *** End programmer edit section *** (Subscription.TransportType CustomAttributes)
+        [PropertyStorage("ПередаватьПо")]
         public virtual NewPlatform.Flexberry.ServiceBus.TransportType TransportType
         {
             get
@@ -399,7 +403,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (Subscription.MessageType CustomAttributes)
         [PropertyStorage(new string[] {
-                "MessageType"})]
+                "ТипСообщения_m0"})]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.MessageType MessageType
         {
@@ -435,7 +439,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         [Agregator()]
         [NotNull()]
         [PropertyStorage(new string[] {
-                "Client"})]
+                "Клиент_m0"})]
         [TypeUsage(new string[] {
                 "NewPlatform.Flexberry.ServiceBus.Client"})]
         public virtual NewPlatform.Flexberry.ServiceBus.Client Client

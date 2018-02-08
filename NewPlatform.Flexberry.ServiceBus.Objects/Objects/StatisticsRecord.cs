@@ -26,6 +26,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (StatisticsRecord CustomAttributes)
 
     // *** End programmer edit section *** (StatisticsRecord CustomAttributes)
+    [ClassStorage("StatRecord")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("CompressView", new string[] {
@@ -132,7 +133,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         private int fQueryAvgTime;
         
         private NewPlatform.Flexberry.ServiceBus.StatisticsSetting fStatisticsSetting;
-        
+
         // *** Start programmer edit section *** (StatisticsRecord CustomMembers)
         private int sentCount = 0;
         private int sentSumTime = 0;
@@ -140,7 +141,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         private int querySumTime = 0;
         // *** End programmer edit section *** (StatisticsRecord CustomMembers)
 
-        
+
         /// <summary>
         /// Since.
         /// </summary>
@@ -211,6 +212,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsRecord.StatisticsInterval CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsRecord.StatisticsInterval CustomAttributes)
+        [PropertyStorage("StatInterval")]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.StatisticsInterval StatisticsInterval
         {
@@ -429,6 +431,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsRecord.SentAvgTime CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsRecord.SentAvgTime CustomAttributes)
+        [PropertyStorage("AvgTimeSent")]
         public virtual int SentAvgTime
         {
             get
@@ -462,6 +465,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsRecord.QueryAvgTime CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsRecord.QueryAvgTime CustomAttributes)
+        [PropertyStorage("AvgTimeSql")]
         public virtual int QueryAvgTime
         {
             get
@@ -498,7 +502,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         [Agregator()]
         [NotNull()]
         [PropertyStorage(new string[] {
-                "StatisticsSetting"})]
+                "StatSetting"})]
         public virtual NewPlatform.Flexberry.ServiceBus.StatisticsSetting StatisticsSetting
         {
             get

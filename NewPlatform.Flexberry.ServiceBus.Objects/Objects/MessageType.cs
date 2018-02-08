@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (MessageType CustomAttributes)
 
     // *** End programmer edit section *** (MessageType CustomAttributes)
+    [ClassStorage("ТипСообщения")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
@@ -69,6 +70,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (MessageType.ID CustomAttributes)
 
         // *** End programmer edit section *** (MessageType.ID CustomAttributes)
+        [PropertyStorage("Ид")]
         [StrLen(255)]
         public virtual string ID
         {
@@ -102,6 +104,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (MessageType.Name CustomAttributes)
 
         // *** End programmer edit section *** (MessageType.Name CustomAttributes)
+        [PropertyStorage("Наименование")]
         [StrLen(255)]
         public virtual string Name
         {
@@ -134,6 +137,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (MessageType.Description CustomAttributes)
 
         // *** End programmer edit section *** (MessageType.Description CustomAttributes)
+        [PropertyStorage("Комментарий")]
         public virtual string Description
         {
             get

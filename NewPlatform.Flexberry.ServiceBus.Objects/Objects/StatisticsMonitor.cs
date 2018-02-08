@@ -76,6 +76,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsMonitor.Owner CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsMonitor.Owner CustomAttributes)
+        [PropertyStorage("Логин")]
         [StrLen(255)]
         public virtual string Owner
         {
@@ -108,6 +109,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsMonitor.Name CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsMonitor.Name CustomAttributes)
+        [PropertyStorage("Наименование")]
         [StrLen(255)]
         [NotNull()]
         public virtual string Name
@@ -141,6 +143,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (StatisticsMonitor.Public CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsMonitor.Public CustomAttributes)
+        [PropertyStorage("ДоступенДругимПользователям")]
         public virtual bool Public
         {
             get
