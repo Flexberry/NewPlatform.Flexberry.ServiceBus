@@ -10,6 +10,16 @@
     internal class DefaultStatisticsService : BaseServiceBusComponent, IStatisticsService
     {
         /// <summary>
+        /// Indicates whether to collect statistics on the bus.
+        /// </summary>
+        public bool CollectBusStatistics { get; set; } = true;
+
+        /// <summary>
+        /// Indicates whether to collect advanced statistics (AvgTimeSent, AvgTimeSql, ConnectionCount).
+        /// </summary>
+        public bool CollectAdvancedStatistics { get; set; } = true;
+
+        /// <summary>
         /// Periodicity of statistics saving to DB in milliseconds.
         /// </summary>
         public int StatisticsSavingPeriod { get; set; } = 10000;
@@ -92,7 +102,8 @@
             lock (_lock)
             {
                 GetCurrentStatRecord(subscription).ReceivedCount++;
-                GetCurrentStatRecord(null).ReceivedCount++;
+                if (CollectBusStatistics)
+                    GetCurrentStatRecord(null).ReceivedCount++;
             }
         }
 
@@ -105,7 +116,8 @@
             lock (_lock)
             {
                 GetCurrentStatRecord(subscription).SentCount++;
-                GetCurrentStatRecord(null).SentCount++;
+                if (CollectBusStatistics)
+                    GetCurrentStatRecord(null).SentCount++;
             }
         }
 
@@ -118,7 +130,8 @@
             lock (_lock)
             {
                 GetCurrentStatRecord(subscription).ErrorsCount++;
-                GetCurrentStatRecord(null).ErrorsCount++;
+                if (CollectBusStatistics)
+                    GetCurrentStatRecord(null).ErrorsCount++;
             }
         }
 
@@ -129,13 +142,19 @@
         /// <param name="time">Time sent message</param>
         public void NotifyAvgTimeSent(Subscription subscription, int time)
         {
-            lock (_lock)
+            if (CollectAdvancedStatistics)
             {
-                var obj = GetCurrentStatRecord(subscription);
-                obj.SentAvgTime = time;
+                lock (_lock)
+                {
+                    var obj = GetCurrentStatRecord(subscription);
+                    obj.SentAvgTime = time;
 
-                var objSB = GetCurrentStatRecord(null);
-                objSB.SentAvgTime = time;
+                    if (CollectBusStatistics)
+                    {
+                        var objSB = GetCurrentStatRecord(null);
+                        objSB.SentAvgTime = time;
+                    }
+                }
             }
         }
 
@@ -146,18 +165,25 @@
         /// <param name="time">Time execute sql</param>
         public void NotifyAvgTimeSql(Subscription subscription, int time, string sql)
         {
-            lock (_lock)
+            if (CollectAdvancedStatistics)
             {
-                var obj = GetCurrentStatRecord(subscription);
-                obj.QueryAvgTime = time;
-
-                if (subscription != null)
+                lock (_lock)
                 {
-                    var objSB = GetCurrentStatRecord(subscription);
-                    objSB.QueryAvgTime = time;
+                    if (CollectBusStatistics)
+                    {
+                        var obj = GetCurrentStatRecord(subscription);
+                        obj.QueryAvgTime = time;
+                    }
+
+                    if (subscription != null)
+                    {
+                        var objSB = GetCurrentStatRecord(subscription);
+                        objSB.QueryAvgTime = time;
+                    }
                 }
+
+                _logger.LogDebugMessage("Time execute sql", string.Format("{0} : {1}", time, sql));
             }
-            _logger.LogInformation("Time execute sql", string.Format("{0} : {1}", time, sql));
         }
 
         /// <summary>
@@ -166,9 +192,12 @@
         /// <param name="subscription">Subscription for message.</param>
         public void NotifyIncConnectionCount(Subscription subscription)
         {
-            lock (_lock)
+            if (CollectAdvancedStatistics)
             {
-                GetCurrentStatRecord(subscription).ConnectionCount++;
+                lock (_lock)
+                {
+                    GetCurrentStatRecord(subscription).ConnectionCount++;
+                }
             }
         }
 
@@ -178,9 +207,12 @@
         /// <param name="subscription">Subscription for message.</param>
         public void NotifyDecConnectionCount(Subscription subscription)
         {
-            lock (_lock)
+            if (CollectAdvancedStatistics)
             {
-                GetCurrentStatRecord(subscription).ConnectionCount--;
+                lock (_lock)
+                {
+                    GetCurrentStatRecord(subscription).ConnectionCount--;
+                }
             }
         }
 
