@@ -13,8 +13,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     using System;
     using System.Xml;
     using ICSSoft.STORMNET;
-    
-    
+
+
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -28,36 +28,36 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (TransportType CustomAttributes)
     public enum TransportType
     {
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         // *** Start programmer edit section *** (TransportType.WCF CustomAttributes)
 
         // *** End programmer edit section *** (TransportType.WCF CustomAttributes)
         [Caption("WCF")]
         WCF,
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         // *** Start programmer edit section *** (TransportType.WEB CustomAttributes)
 
         // *** End programmer edit section *** (TransportType.WEB CustomAttributes)
         [Caption("WEB")]
         WEB,
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         // *** Start programmer edit section *** (TransportType.MAIL CustomAttributes)
 
         // *** End programmer edit section *** (TransportType.MAIL CustomAttributes)
         [Caption("MAIL")]
         MAIL,
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         // *** Start programmer edit section *** (TransportType.HTTP CustomAttributes)
 
