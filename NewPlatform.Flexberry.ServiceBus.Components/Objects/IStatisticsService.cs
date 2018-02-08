@@ -61,11 +61,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** Start programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
-        void NotifyIncConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
+        void NotifyIncConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, Message message = null);
         
         // *** Start programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
-        void NotifyDecConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
+        void NotifyDecConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, Message message = null);
     }
 }

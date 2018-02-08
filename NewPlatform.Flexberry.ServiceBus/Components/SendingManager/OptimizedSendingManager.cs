@@ -146,7 +146,7 @@
                 _statisticsService.NotifyAvgTimeSql(subscription, (int)time, "OptimizedSendingManager.TryEnqueue() update message.");
 
                 Interlocked.Increment(ref _sendingTasksCount);
-                _statisticsService.NotifyIncConnectionCount(subscription);
+                _statisticsService.NotifyIncConnectionCount(subscription, message);
                 Task<bool>.Factory.StartNew(SendMessage, new SendingTaskParam { Message = message, Subscription = subscription }, TaskCreationOptions.PreferFairness)
                     .ContinueWith(SendingTaskContinuation, message);
 
