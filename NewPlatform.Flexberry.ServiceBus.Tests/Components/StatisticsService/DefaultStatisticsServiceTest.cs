@@ -262,7 +262,14 @@
 
             timerServiceMock.Setup(ts => ts.Now).Returns(() => new DateTime(2000, 01, 01, 00, 00, 00, 00));
 
-            var service = new DefaultStatisticsService(statSettingsMock.Object, saveServiceMock.Object, timerServiceMock.Object, GetMockLogger());
+            var service = new DefaultStatisticsService(
+                statSettingsMock.Object,
+                saveServiceMock.Object,
+                timerServiceMock.Object,
+                GetMockLogger())
+            {
+                StatisticsSavingPeriod = 1000,
+            };
 
             // Act && Assert.
             RunSBComponentAfterStart(

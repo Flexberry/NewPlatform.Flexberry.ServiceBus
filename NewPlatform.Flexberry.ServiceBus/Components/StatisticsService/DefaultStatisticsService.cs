@@ -10,6 +10,11 @@
     internal class DefaultStatisticsService : BaseServiceBusComponent, IStatisticsService
     {
         /// <summary>
+        /// Periodicity of statistics saving to DB in milliseconds.
+        /// </summary>
+        public int StatisticsSavingPeriod { get; set; } = 10000;
+
+        /// <summary>
         /// Current statistics settings component.
         /// </summary>
         private readonly IStatisticsSettings _statSettings;
@@ -38,6 +43,11 @@
         /// Statistics data.
         /// </summary>
         private readonly Dictionary<DateTime, Dictionary<Guid?, StatisticsRecord>> _statData = new Dictionary<DateTime, Dictionary<Guid?, StatisticsRecord>>();
+
+        /// <summary>
+        /// Stores until the next attempt to save, statistics records, during saving at of which errors occurred.
+        /// </summary>
+        private List<StatisticsRecord> _unsavedStatistics = new List<StatisticsRecord>();
 
         /// <summary>
         /// Timer for periodical update of data.
@@ -181,7 +191,7 @@
         {
             base.Start();
             if (_periodicalTimer.State != PeriodicalTimer.TimerState.Working)
-                _periodicalTimer.Start(Process, 1000);
+                _periodicalTimer.Start(Process, StatisticsSavingPeriod);
         }
 
         /// <summary>
@@ -216,7 +226,8 @@
         /// <param name="saveAll">Current time interval would not be saved if false.</param>
         private void SaveStatistics(bool saveAll)
         {
-            var stats = new List<StatisticsRecord>();
+            var stats = new List<StatisticsRecord>(_unsavedStatistics);
+            _unsavedStatistics.Clear();
 
             lock (_lock)
             {
@@ -237,7 +248,17 @@
             }
 
             if (stats.Count != 0)
-                _saveService.Save(stats);
+            {
+                try
+                {
+                    _saveService.Save(stats);
+                }
+                catch (Exception exception)
+                {
+                    _unsavedStatistics.AddRange(stats);
+                    _logger.LogError("Error of statistics saving, we try to next time...", exception.ToString());
+                }
+            }
         }
 
         /// <summary>
