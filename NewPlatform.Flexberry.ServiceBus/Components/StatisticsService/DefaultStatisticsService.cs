@@ -170,7 +170,7 @@
                 }
                 _currentState[message.__PrimaryKey].Add("clientAddress", message.Recipient.Address);
                 _currentState[message.__PrimaryKey].Add("clientName", message.Recipient.Name);
-                _currentState[message.__PrimaryKey].Add("timeStart", message.SendingTime);
+                _currentState[message.__PrimaryKey].Add("timeStart", message.SendingTime.ToString());
             }
         }
 
