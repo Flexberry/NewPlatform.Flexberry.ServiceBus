@@ -11,7 +11,7 @@ RUN mono --version && \
 
 FROM flexberry/hwsb
 
-COPY --from=mono /Flexberry/NewPlatform.Flexberry.ServiceBus/NewPlatform.Flexberry.ServiceBus.WinServiceHost/bin/Release/ /opt/
+COPY --from=mono /Flexberry/NewPlatform.Flexberry.ServiceBus/NewPlatform.Flexberry.ServiceBus.WinServiceHost/bin/Release/ /opt/Release/
 COPY host/prepareConf.sh /opt/
 COPY host/NewPlatform.Flexberry.HighwaySB.WinServiceHost.exe.config /opt/Release/
 
