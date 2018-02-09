@@ -13,8 +13,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     using System;
     using System.Xml;
     using ICSSoft.STORMNET;
-    
-    
+
+
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -28,45 +28,45 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (TimeUnit CustomAttributes)
     public enum TimeUnit
     {
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         // *** Start programmer edit section *** (TimeUnit.Minute CustomAttributes)
 
         // *** End programmer edit section *** (TimeUnit.Minute CustomAttributes)
         [Caption("Minute")]
         Minute,
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         // *** Start programmer edit section *** (TimeUnit.Hour CustomAttributes)
 
         // *** End programmer edit section *** (TimeUnit.Hour CustomAttributes)
         [Caption("Hour")]
         Hour,
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         // *** Start programmer edit section *** (TimeUnit.Day CustomAttributes)
 
         // *** End programmer edit section *** (TimeUnit.Day CustomAttributes)
         [Caption("Day")]
         Day,
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         // *** Start programmer edit section *** (TimeUnit.Month CustomAttributes)
 
         // *** End programmer edit section *** (TimeUnit.Month CustomAttributes)
         [Caption("Month")]
         Month,
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         // *** Start programmer edit section *** (TimeUnit.Year CustomAttributes)
 
