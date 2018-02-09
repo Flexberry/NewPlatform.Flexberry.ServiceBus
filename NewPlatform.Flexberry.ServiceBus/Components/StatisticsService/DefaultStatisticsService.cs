@@ -164,8 +164,13 @@
         {
             lock (_lock)
             {
-                _currentState.Add(message.__PrimaryKey, new Dictionary<string, string>());
-                _
+                GetCurrentStatRecord(subscription).ConnectionCount++;
+                if (_currentState[message.__PrimaryKey] == null) {
+                    _currentState.Add(message.__PrimaryKey, new Dictionary<string, string>());
+                }
+                _currentState[message.__PrimaryKey].Add("clientAddress", message.Recipient.Address);
+                _currentState[message.__PrimaryKey].Add("clientName", message.Recipient.Name);
+                _currentState[message.__PrimaryKey].Add("timeStart", message.SendingTime);
             }
         }
 
@@ -179,7 +184,7 @@
             lock (_lock)
             {
                 GetCurrentStatRecord(subscription).ConnectionCount--;
-                _currentState = null;
+                _currentState[message.__PrimaryKey] = null;
             }
         }
 
@@ -290,6 +295,11 @@
             }
 
             return statRecord;
+        }
+
+        public Dictionary<object, Dictionary<string, string>> GetStats()
+        {
+            return this._currentState;
         }
     }
 }
