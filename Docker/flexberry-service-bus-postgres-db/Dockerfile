@@ -2,7 +2,8 @@ FROM flexberry/alt.p8-postgresql9.6-ru
 
 
 COPY . /docker/
-ADD ../../Flexberry Service Bus/SQL/PostgreSQL/CreateNewDB.sql /docker/host/
+ADD http://example.com/big.tar.xz /docker/host/
+ADD https://github.com/Flexberry/NewPlatform.Flexberry.ServiceBus/blob/develop/Flexberry%20Service%20Bus/SQL/PostgreSQL/CreateNewDB.sql /docker/host/
 
 RUN /bin/sh /docker/host/createdb.sh
 
