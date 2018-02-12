@@ -15,8 +15,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business.Audit;
     using ICSSoft.STORMNET.Business.Audit.Objects;
-    
-    
+
+
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (SubscriptionStatisticsMonitor CustomAttributes)
 
     // *** End programmer edit section *** (SubscriptionStatisticsMonitor CustomAttributes)
+    [ClassStorage("SubStatisticsMonitor")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
@@ -62,36 +63,37 @@ namespace NewPlatform.Flexberry.ServiceBus
     [MasterViewDefineAttribute("DetailView", "Subscription", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Description")]
     public class SubscriptionStatisticsMonitor : ICSSoft.STORMNET.DataObject, IDataObjectWithAuditFields
     {
-        
+
         private int fNumber;
-        
+
         private string fCategory;
-        
+
         private string fName;
-        
+
         private System.Nullable<System.DateTime> fCreateTime;
-        
+
         private string fCreator;
-        
+
         private System.Nullable<System.DateTime> fEditTime;
-        
+
         private string fEditor;
-        
+
         private NewPlatform.Flexberry.ServiceBus.Subscription fSubscription;
-        
+
         private NewPlatform.Flexberry.ServiceBus.StatisticsMonitor fStatisticsMonitor;
-        
+
         // *** Start programmer edit section *** (SubscriptionStatisticsMonitor CustomMembers)
 
         // *** End programmer edit section *** (SubscriptionStatisticsMonitor CustomMembers)
 
-        
+
         /// <summary>
         /// Number.
         /// </summary>
         // *** Start programmer edit section *** (SubscriptionStatisticsMonitor.Number CustomAttributes)
 
         // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Number CustomAttributes)
+        [PropertyStorage("Код")]
         [NotNull()]
         [Order()]
         public virtual int Number
@@ -118,13 +120,14 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Number Set end)
             }
         }
-        
+
         /// <summary>
         /// Category.
         /// </summary>
         // *** Start programmer edit section *** (SubscriptionStatisticsMonitor.Category CustomAttributes)
 
         // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Category CustomAttributes)
+        [PropertyStorage("Категория")]
         [StrLen(255)]
         public virtual string Category
         {
@@ -150,13 +153,14 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Category Set end)
             }
         }
-        
+
         /// <summary>
         /// Name.
         /// </summary>
         // *** Start programmer edit section *** (SubscriptionStatisticsMonitor.Name CustomAttributes)
 
         // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Name CustomAttributes)
+        [PropertyStorage("Наименование")]
         [StrLen(255)]
         public virtual string Name
         {
@@ -182,7 +186,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Name Set end)
             }
         }
-        
+
         /// <summary>
         /// Время создания объекта.
         /// </summary>
@@ -213,7 +217,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (SubscriptionStatisticsMonitor.CreateTime Set end)
             }
         }
-        
+
         /// <summary>
         /// Создатель объекта.
         /// </summary>
@@ -245,7 +249,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Creator Set end)
             }
         }
-        
+
         /// <summary>
         /// Время последнего редактирования объекта.
         /// </summary>
@@ -276,7 +280,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (SubscriptionStatisticsMonitor.EditTime Set end)
             }
         }
-        
+
         /// <summary>
         /// Последний редактор объекта.
         /// </summary>
@@ -308,7 +312,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Editor Set end)
             }
         }
-        
+
         /// <summary>
         /// SubscriptionStatisticsMonitor.
         /// </summary>
@@ -316,7 +320,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Subscription CustomAttributes)
         [PropertyStorage(new string[] {
-                "Subscription"})]
+                "Подписка"})]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.Subscription Subscription
         {
@@ -342,7 +346,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (SubscriptionStatisticsMonitor.Subscription Set end)
             }
         }
-        
+
         /// <summary>
         /// мастеровая ссылка на шапку NewPlatform.Flexberry.ServiceBus.StatisticsMonitor.
         /// </summary>
@@ -377,13 +381,13 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (SubscriptionStatisticsMonitor.StatisticsMonitor Set end)
             }
         }
-        
+
         /// <summary>
         /// Class views container.
         /// </summary>
         public class Views
         {
-            
+
             /// <summary>
             /// "AuditView" view.
             /// </summary>
@@ -394,7 +398,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("AuditView", typeof(NewPlatform.Flexberry.ServiceBus.SubscriptionStatisticsMonitor));
                 }
             }
-            
+
             /// <summary>
             /// "DetailView" view.
             /// </summary>
@@ -406,100 +410,100 @@ namespace NewPlatform.Flexberry.ServiceBus
                 }
             }
         }
-        
+
         /// <summary>
         /// Audit class settings.
         /// </summary>
         public class AuditSettings
         {
-            
+
             /// <summary>
             /// Включён ли аудит для класса.
             /// </summary>
             public static bool AuditEnabled = true;
-            
+
             /// <summary>
             /// Использовать имя представления для аудита по умолчанию.
             /// </summary>
             public static bool UseDefaultView = false;
-            
+
             /// <summary>
             /// Включён ли аудит операции чтения.
             /// </summary>
             public static bool SelectAudit = false;
-            
+
             /// <summary>
             /// Имя представления для аудирования операции чтения.
             /// </summary>
             public static string SelectAuditViewName = "AuditView";
-            
+
             /// <summary>
             /// Включён ли аудит операции создания.
             /// </summary>
             public static bool InsertAudit = true;
-            
+
             /// <summary>
             /// Имя представления для аудирования операции создания.
             /// </summary>
             public static string InsertAuditViewName = "AuditView";
-            
+
             /// <summary>
             /// Включён ли аудит операции изменения.
             /// </summary>
             public static bool UpdateAudit = true;
-            
+
             /// <summary>
             /// Имя представления для аудирования операции изменения.
             /// </summary>
             public static string UpdateAuditViewName = "AuditView";
-            
+
             /// <summary>
             /// Включён ли аудит операции удаления.
             /// </summary>
             public static bool DeleteAudit = true;
-            
+
             /// <summary>
             /// Имя представления для аудирования операции удаления.
             /// </summary>
             public static string DeleteAuditViewName = "AuditView";
-            
+
             /// <summary>
             /// Путь к форме просмотра результатов аудита.
             /// </summary>
             public static string FormUrl = "";
-            
+
             /// <summary>
             /// Режим записи данных аудита (синхронный или асинхронный).
             /// </summary>
             public static ICSSoft.STORMNET.Business.Audit.Objects.tWriteMode WriteMode = ICSSoft.STORMNET.Business.Audit.Objects.tWriteMode.Synchronous;
-            
+
             /// <summary>
             /// Максимальная длина сохраняемого значения поля (если 0, то строка обрезаться не будет).
             /// </summary>
             public static int PrunningLength = 0;
-            
+
             /// <summary>
             /// Показывать ли пользователям в изменениях первичные ключи.
             /// </summary>
             public static bool ShowPrimaryKey = false;
-            
+
             /// <summary>
             /// Сохранять ли старое значение.
             /// </summary>
             public static bool KeepOldValue = true;
-            
+
             /// <summary>
             /// Сжимать ли сохраняемые значения.
             /// </summary>
             public static bool Compress = false;
-            
+
             /// <summary>
             /// Сохранять ли все значения атрибутов, а не только изменяемые.
             /// </summary>
             public static bool KeepAllValues = false;
         }
     }
-    
+
     /// <summary>
     /// Detail array of SubscriptionStatisticsMonitor.
     /// </summary>
@@ -508,12 +512,12 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (DetailArrayDetailArrayOfSubscriptionStatisticsMonitor CustomAttributes)
     public class DetailArrayOfSubscriptionStatisticsMonitor : ICSSoft.STORMNET.DetailArray
     {
-        
+
         // *** Start programmer edit section *** (NewPlatform.Flexberry.ServiceBus.DetailArrayOfSubscriptionStatisticsMonitor members)
 
         // *** End programmer edit section *** (NewPlatform.Flexberry.ServiceBus.DetailArrayOfSubscriptionStatisticsMonitor members)
 
-        
+
         /// <summary>
         /// Construct detail array.
         /// </summary>
@@ -523,11 +527,11 @@ namespace NewPlatform.Flexberry.ServiceBus
         /// <summary>
         /// Adds object with type SubscriptionStatisticsMonitor.
         /// </summary>
-        public DetailArrayOfSubscriptionStatisticsMonitor(NewPlatform.Flexberry.ServiceBus.StatisticsMonitor fStatisticsMonitor) : 
+        public DetailArrayOfSubscriptionStatisticsMonitor(NewPlatform.Flexberry.ServiceBus.StatisticsMonitor fStatisticsMonitor) :
                 base(typeof(SubscriptionStatisticsMonitor), ((ICSSoft.STORMNET.DataObject)(fStatisticsMonitor)))
         {
         }
-        
+
         public NewPlatform.Flexberry.ServiceBus.SubscriptionStatisticsMonitor this[int index]
         {
             get
@@ -535,7 +539,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 return ((NewPlatform.Flexberry.ServiceBus.SubscriptionStatisticsMonitor)(this.ItemByIndex(index)));
             }
         }
-        
+
         public virtual void Add(NewPlatform.Flexberry.ServiceBus.SubscriptionStatisticsMonitor dataobject)
         {
             this.AddObject(((ICSSoft.STORMNET.DataObject)(dataobject)));

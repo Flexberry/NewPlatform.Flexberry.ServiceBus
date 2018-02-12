@@ -3,6 +3,7 @@
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
+    using System.ServiceModel.Description;
     using ClientTools;
 
     /// <summary>
@@ -55,6 +56,14 @@
         public Binding Binding { get; set; }
 
         /// <summary>
+        /// Publish WSDL.
+        /// </summary>
+        /// <remarks>
+        /// Used only when <see cref="UseWcfSettingsFromConfig"/> is <c>false</c>.
+        /// </remarks>
+        public bool PublishWSDL { get; set; } = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WcfService"/> class.
         /// </summary>
         /// <param name="subscriptionsManager">The subscriptions manager.</param>
@@ -104,6 +113,16 @@
                 _wcfServiceHost.AddServiceEndpoint(typeof(IServiceBusService), Binding, Address);
                 _wcfServiceHost.AddServiceEndpoint(typeof(IServiceBusInterop), Binding, Address);
                 _wcfServiceHost.AddServiceEndpoint(typeof(ICallbackSubscriber), Binding, Address);
+
+                if (PublishWSDL)
+                {
+                    _wcfServiceHost.Description.Behaviors.Remove<ServiceMetadataBehavior>();
+                    _wcfServiceHost.Description.Behaviors.Add(new ServiceMetadataBehavior()
+                    {
+                        HttpGetUrl = Address,
+                        HttpGetEnabled = true,
+                    });
+                }
             }
 
             _logger.LogDebugMessage(nameof(WcfService), "Opening WCF host");

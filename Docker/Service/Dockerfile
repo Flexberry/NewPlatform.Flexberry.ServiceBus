@@ -1,18 +1,25 @@
-FROM flexberry/hwsb-base
+FROM mono:latest as mono
 
-COPY . /docker/
+RUN mono --version && \
+    apt update && \
+	apt install -y git && \
+	git clone --depth=50 --branch=develop https://github.com/Flexberry/NewPlatform.Flexberry.ServiceBus.git /Flexberry/NewPlatform.Flexberry.ServiceBus && \
+	msbuild /version && \
+	cd /Flexberry/NewPlatform.Flexberry.ServiceBus && \
+	nuget restore NewPlatform.Flexberry.ServiceBus.sln && \
+	msbuild /p:Configuration=Release NewPlatform.Flexberry.ServiceBus.sln
+
+FROM flexberry/hwsb
+
+COPY --from=mono /Flexberry/NewPlatform.Flexberry.ServiceBus/NewPlatform.Flexberry.ServiceBus.WinServiceHost/bin/Release/ /opt/Release/
 COPY host/prepareConf.sh /opt/
-COPY host/NewPlatform.Flexberry.HighwaySB.WinServiceHost.exe.config /opt/flexberry-hwsb/
+COPY host/NewPlatform.Flexberry.HighwaySB.WinServiceHost.exe.config /opt/Release/
+
+RUN mv /opt/flexberry-hwsb /opt/flexberry-hwsb.old && \
+    mv /opt/Release /opt/flexberry-hwsb
 
 MAINTAINER mail@flexberry.net
 
 USER root
-
-RUN export http_proxy=http://10.120.252.2:8080;\
-  bzip2 -d /var/lib/rpm/*.bz2; \
-  apt-get update && \
-  apt-get install -y mc htop && \
-  rm -f /var/cache/apt/archives/*.rpm /var/cache/apt/*.bin /var/lib/apt/lists/*.*; \
-  bzip2 -9 /var/lib/rpm/* 
 
 CMD echo "DOCKER_HOSTNAME=$DOCKER_HOSTNAME"; sh -x /opt/prepareConf.sh ; su -l -c /opt/startFlexberry-hwsb.sh highway

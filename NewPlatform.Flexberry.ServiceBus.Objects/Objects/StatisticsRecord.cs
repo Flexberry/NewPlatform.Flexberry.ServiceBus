@@ -13,8 +13,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     using System;
     using System.Xml;
     using ICSSoft.STORMNET;
-    
-    
+
+
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -26,6 +26,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (StatisticsRecord CustomAttributes)
 
     // *** End programmer edit section *** (StatisticsRecord CustomAttributes)
+    [ClassStorage("StatRecord")]
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("CompressView", new string[] {
@@ -108,31 +109,31 @@ namespace NewPlatform.Flexberry.ServiceBus
             "StatisticsSetting.Subscription.MessageType.Name"})]
     public class StatisticsRecord : ICSSoft.STORMNET.DataObject
     {
-        
+
         private System.DateTime fSince;
-        
+
         private System.DateTime fTo;
-        
+
         private NewPlatform.Flexberry.ServiceBus.StatisticsInterval fStatisticsInterval;
-        
+
         private int fSentCount;
-        
+
         private int fReceivedCount;
-        
+
         private int fErrorsCount;
-        
+
         private int fUniqueErrorsCount;
-        
+
         private int fConnectionCount;
-        
+
         private int fQueueLength;
-        
+
         private int fSentAvgTime;
-        
+
         private int fQueryAvgTime;
-        
+
         private NewPlatform.Flexberry.ServiceBus.StatisticsSetting fStatisticsSetting;
-        
+
         // *** Start programmer edit section *** (StatisticsRecord CustomMembers)
         private int sentCount = 0;
         private int sentSumTime = 0;
@@ -140,7 +141,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         private int querySumTime = 0;
         // *** End programmer edit section *** (StatisticsRecord CustomMembers)
 
-        
+
         /// <summary>
         /// Since.
         /// </summary>
@@ -172,7 +173,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.Since Set end)
             }
         }
-        
+
         /// <summary>
         /// To.
         /// </summary>
@@ -204,13 +205,14 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.To Set end)
             }
         }
-        
+
         /// <summary>
         /// StatisticsInterval.
         /// </summary>
         // *** Start programmer edit section *** (StatisticsRecord.StatisticsInterval CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsRecord.StatisticsInterval CustomAttributes)
+        [PropertyStorage("StatInterval")]
         [NotNull()]
         public virtual NewPlatform.Flexberry.ServiceBus.StatisticsInterval StatisticsInterval
         {
@@ -236,7 +238,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.StatisticsInterval Set end)
             }
         }
-        
+
         /// <summary>
         /// SentCount.
         /// </summary>
@@ -267,7 +269,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.SentCount Set end)
             }
         }
-        
+
         /// <summary>
         /// ReceivedCount.
         /// </summary>
@@ -298,7 +300,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.ReceivedCount Set end)
             }
         }
-        
+
         /// <summary>
         /// ErrorsCount.
         /// </summary>
@@ -329,7 +331,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.ErrorsCount Set end)
             }
         }
-        
+
         /// <summary>
         /// UniqueErrorsCount.
         /// </summary>
@@ -360,7 +362,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.UniqueErrorsCount Set end)
             }
         }
-        
+
         /// <summary>
         /// ConnectionCount.
         /// </summary>
@@ -391,7 +393,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.ConnectionCount Set end)
             }
         }
-        
+
         /// <summary>
         /// QueueLength.
         /// </summary>
@@ -422,13 +424,14 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.QueueLength Set end)
             }
         }
-        
+
         /// <summary>
         /// SentAvgTime.
         /// </summary>
         // *** Start programmer edit section *** (StatisticsRecord.SentAvgTime CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsRecord.SentAvgTime CustomAttributes)
+        [PropertyStorage("AvgTimeSent")]
         public virtual int SentAvgTime
         {
             get
@@ -455,13 +458,14 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.SentAvgTime Set end)
             }
         }
-        
+
         /// <summary>
         /// QueryAvgTime.
         /// </summary>
         // *** Start programmer edit section *** (StatisticsRecord.QueryAvgTime CustomAttributes)
 
         // *** End programmer edit section *** (StatisticsRecord.QueryAvgTime CustomAttributes)
+        [PropertyStorage("AvgTimeSql")]
         public virtual int QueryAvgTime
         {
             get
@@ -488,7 +492,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.QueryAvgTime Set end)
             }
         }
-        
+
         /// <summary>
         /// мастеровая ссылка на шапку NewPlatform.Flexberry.ServiceBus.StatisticsSetting.
         /// </summary>
@@ -498,7 +502,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         [Agregator()]
         [NotNull()]
         [PropertyStorage(new string[] {
-                "StatisticsSetting"})]
+                "StatSetting"})]
         public virtual NewPlatform.Flexberry.ServiceBus.StatisticsSetting StatisticsSetting
         {
             get
@@ -523,13 +527,13 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.StatisticsSetting Set end)
             }
         }
-        
+
         /// <summary>
         /// Class views container.
         /// </summary>
         public class Views
         {
-            
+
             /// <summary>
             /// "CompressView" view.
             /// </summary>
@@ -540,7 +544,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("CompressView", typeof(NewPlatform.Flexberry.ServiceBus.StatisticsRecord));
                 }
             }
-            
+
             /// <summary>
             /// "DetailView" view.
             /// </summary>
@@ -551,7 +555,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("DetailView", typeof(NewPlatform.Flexberry.ServiceBus.StatisticsRecord));
                 }
             }
-            
+
             /// <summary>
             /// "EditView" view.
             /// </summary>
@@ -562,7 +566,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("EditView", typeof(NewPlatform.Flexberry.ServiceBus.StatisticsRecord));
                 }
             }
-            
+
             /// <summary>
             /// "ListView" view.
             /// </summary>
@@ -575,7 +579,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             }
         }
     }
-    
+
     /// <summary>
     /// Detail array of StatisticsRecord.
     /// </summary>
@@ -584,12 +588,12 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (DetailArrayDetailArrayOfStatisticsRecord CustomAttributes)
     public class DetailArrayOfStatisticsRecord : ICSSoft.STORMNET.DetailArray
     {
-        
+
         // *** Start programmer edit section *** (NewPlatform.Flexberry.ServiceBus.DetailArrayOfStatisticsRecord members)
 
         // *** End programmer edit section *** (NewPlatform.Flexberry.ServiceBus.DetailArrayOfStatisticsRecord members)
 
-        
+
         /// <summary>
         /// Construct detail array.
         /// </summary>
@@ -599,11 +603,11 @@ namespace NewPlatform.Flexberry.ServiceBus
         /// <summary>
         /// Adds object with type StatisticsRecord.
         /// </summary>
-        public DetailArrayOfStatisticsRecord(NewPlatform.Flexberry.ServiceBus.StatisticsSetting fStatisticsSetting) : 
+        public DetailArrayOfStatisticsRecord(NewPlatform.Flexberry.ServiceBus.StatisticsSetting fStatisticsSetting) :
                 base(typeof(StatisticsRecord), ((ICSSoft.STORMNET.DataObject)(fStatisticsSetting)))
         {
         }
-        
+
         public NewPlatform.Flexberry.ServiceBus.StatisticsRecord this[int index]
         {
             get
@@ -611,7 +615,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 return ((NewPlatform.Flexberry.ServiceBus.StatisticsRecord)(this.ItemByIndex(index)));
             }
         }
-        
+
         public virtual void Add(NewPlatform.Flexberry.ServiceBus.StatisticsRecord dataobject)
         {
             this.AddObject(((ICSSoft.STORMNET.DataObject)(dataobject)));
