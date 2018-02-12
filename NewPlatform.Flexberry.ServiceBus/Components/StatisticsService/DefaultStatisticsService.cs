@@ -65,6 +65,11 @@
         private readonly PeriodicalTimer _periodicalTimer;
 
         /// <summary>
+        /// Contains current state of SB.
+        /// </summary>
+        private Dictionary<object, Dictionary<string, string>> _currentState;
+
+        /// <summary>
         /// Constructor for <see cref="DefaultStatisticsService"/>.
         /// </summary>
         /// <param name="statSettings">Component for getting statistics settings.</param>
@@ -190,7 +195,8 @@
         /// Notify statistics component that open connection.
         /// </summary>
         /// <param name="subscription">Subscription for message.</param>
-        public void NotifyIncConnectionCount(Subscription subscription)
+        /// <param name="message">Message itself.</param>
+        public void NotifyIncConnectionCount(Subscription subscription, Message message)
         {
             if (CollectAdvancedStatistics)
             {
@@ -199,6 +205,15 @@
                     GetCurrentStatRecord(subscription).ConnectionCount++;
                     if (CollectBusStatistics)
                         GetCurrentStatRecord(null).ConnectionCount++;
+
+                    if (_currentState[message.__PrimaryKey] == null)
+                    {
+                        _currentState.Add(message.__PrimaryKey, new Dictionary<string, string>());
+                    }
+
+                    _currentState[message.__PrimaryKey].Add("clientAddress", message.Recipient.Address);
+                    _currentState[message.__PrimaryKey].Add("clientName", message.Recipient.Name);
+                    _currentState[message.__PrimaryKey].Add("timeStart", message.SendingTime.ToString());
                 }
             }
         }
@@ -207,7 +222,8 @@
         /// Notify statistics component that close connection.
         /// </summary>
         /// <param name="subscription">Subscription for message.</param>
-        public void NotifyDecConnectionCount(Subscription subscription)
+        /// <param name="message">Message itself.</param>
+        public void NotifyDecConnectionCount(Subscription subscription, Message message)
         {
             if (CollectAdvancedStatistics)
             {
@@ -216,6 +232,11 @@
                     GetCurrentStatRecord(subscription).ConnectionCount--;
                     if (CollectBusStatistics)
                         GetCurrentStatRecord(null).ConnectionCount--;
+
+                    if (_currentState[message.__PrimaryKey] != null)
+                    {
+                        _currentState[message.__PrimaryKey] = null;
+                    }
                 }
             }
         }
