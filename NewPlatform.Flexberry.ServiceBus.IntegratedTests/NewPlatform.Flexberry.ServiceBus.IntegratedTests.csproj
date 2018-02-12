@@ -219,7 +219,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="NewPlatform.Flexberry.ServiceBus.IntegratedTests.snk" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus.ClientTools\Objects\NewPlatform.Flexberry.ServiceBus.ClientTools.csproj">
