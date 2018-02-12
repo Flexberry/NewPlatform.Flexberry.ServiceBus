@@ -1,5 +1,5 @@
 set -x
-export confFile=/opt/flexberry-hwsb/NewPlatform.Flexberry.HighwaySB.WinServiceHost.exe.config
+export confFile=/opt/flexberry-hwsb/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
 export newConfFile=/tmp/conf.$$
 export tmpFile=/tmp/tmp_$$
 cp $confFile $newConfFile 

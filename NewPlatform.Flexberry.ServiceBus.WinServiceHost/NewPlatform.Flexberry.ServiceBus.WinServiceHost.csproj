@@ -323,6 +323,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="App.Docker.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="NewPlatform.Flexberry.ServiceBus.WinServiceHost.snk" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

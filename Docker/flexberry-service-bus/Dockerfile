@@ -13,10 +13,11 @@ FROM flexberry/hwsb
 
 COPY --from=mono /Flexberry/NewPlatform.Flexberry.ServiceBus/NewPlatform.Flexberry.ServiceBus.WinServiceHost/bin/Release/ /opt/Release/
 COPY host/prepareConf.sh /opt/
-COPY host/NewPlatform.Flexberry.HighwaySB.WinServiceHost.exe.config /opt/Release/
 
 RUN mv /opt/flexberry-hwsb /opt/flexberry-hwsb.old && \
-    mv /opt/Release /opt/flexberry-hwsb
+    mv /opt/Release /opt/flexberry-hwsb && \
+	rm /opt/flexberry-hwsb/Mono.Security.dll
+	cp /opt/flexberry-hwsb/App.Docker.config /opt/flexberry-hwsb/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
 
 MAINTAINER mail@flexberry.net
 
