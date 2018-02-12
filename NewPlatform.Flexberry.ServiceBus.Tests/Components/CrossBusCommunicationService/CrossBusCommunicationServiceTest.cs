@@ -43,7 +43,7 @@
                     new Subscription() { MessageType = new MessageType() { ID = "Third" } }
                 });
 
-            var wcfService = new WcfService(externalSubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger())
+            var wcfService = new WcfService(externalSubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),
@@ -92,7 +92,7 @@
             // External bus with WCF service with specified address.
             const string clientId = "myid";
             var externalSubManager = new Mock<ISubscriptionsManager>();
-            var wcfService = new WcfService(externalSubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger())
+            var wcfService = new WcfService(externalSubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),

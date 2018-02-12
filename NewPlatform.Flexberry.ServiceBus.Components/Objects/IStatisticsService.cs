@@ -12,10 +12,10 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Xml;
-    
-    
-    // *** Start programmer edit section *** (Using statements)
 
+
+    // *** Start programmer edit section *** (Using statements)
+    using System.Collections.Generic;
     // *** End programmer edit section *** (Using statements)
 
 
@@ -61,11 +61,15 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** Start programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
-        void NotifyIncConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, Message message = null);
-        
+        void NotifyIncConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, Message message);
+        void NotifyIncConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
+
         // *** Start programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
-        void NotifyDecConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, Message message = null);
+        void NotifyDecConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, Message message);
+        void NotifyDecConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
+
+        Dictionary<object, Dictionary<string, string>> GetStats();
     }
 }

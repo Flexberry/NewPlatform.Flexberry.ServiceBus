@@ -12,10 +12,10 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Xml;
-    
-    
-    // *** Start programmer edit section *** (Using statements)
 
+
+    // *** Start programmer edit section *** (Using statements)
+    using System.Collections.Generic;
     // *** End programmer edit section *** (Using statements)
 
 

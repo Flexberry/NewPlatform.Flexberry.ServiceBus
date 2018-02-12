@@ -57,5 +57,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusInterop.UpdateClientSubscribesForMsgs System.String CustomAttributes)
         void UpdateClientSubscribesForMsgs([MessageParameter(Name = "ClientID")] string clientId);
+
+        
     }
 }

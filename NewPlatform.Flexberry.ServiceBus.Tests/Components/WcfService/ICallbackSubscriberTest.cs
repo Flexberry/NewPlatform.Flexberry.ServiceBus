@@ -21,7 +21,7 @@
             // Arrange.
             var address = new Uri("http://localhost:12346/CallbackSubscriber");
             RecManager = new Mock<IReceivingManager>();
-            service = new WcfService(GetMockSubscriptionManager(), GetMockSendingManager(), RecManager.Object, GetMockLogger())
+            service = new WcfService(GetMockSubscriptionManager(), GetMockSendingManager(), RecManager.Object, GetMockLogger(), GetMockStatisticsService())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),

@@ -219,6 +219,23 @@
         }
 
         /// <summary>
+        /// Notify statistics component that open connection.
+        /// </summary>
+        /// <param name="subscription">Subscription for message.</param>
+        public void NotifyIncConnectionCount(Subscription subscription)
+        {
+            if (CollectAdvancedStatistics)
+            {
+                lock (_lock)
+                {
+                    GetCurrentStatRecord(subscription).ConnectionCount++;
+                    if (CollectBusStatistics)
+                        GetCurrentStatRecord(null).ConnectionCount++;
+                }
+            }
+        }
+
+        /// <summary>
         /// Notify statistics component that close connection.
         /// </summary>
         /// <param name="subscription">Subscription for message.</param>
@@ -241,6 +258,22 @@
             }
         }
 
+        /// <summary>
+        /// Notify statistics component that close connection.
+        /// </summary>
+        /// <param name="subscription">Subscription for message.</param>
+        public void NotifyDecConnectionCount(Subscription subscription)
+        {
+            if (CollectAdvancedStatistics)
+            {
+                lock (_lock)
+                {
+                    GetCurrentStatRecord(subscription).ConnectionCount--;
+                    if (CollectBusStatistics)
+                        GetCurrentStatRecord(null).ConnectionCount--;
+                }
+            }
+        }
         /// <summary>
         /// Start work.
         /// </summary>
@@ -359,6 +392,14 @@
             }
 
             return statRecord;
+        }
+        /// <summary>
+        /// Returns current stats.
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<object, Dictionary<string, string>> GetStats()
+        {
+            return this._currentState;
         }
     }
 }

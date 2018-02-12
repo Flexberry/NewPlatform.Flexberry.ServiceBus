@@ -28,7 +28,7 @@
                         MessageType = new MessageType() { ID = TestNCS.Id, Description = TestNCS.Comment, Name = TestNCS.Name }
                     }
                 });
-            service = new WcfService(SubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger())
+            service = new WcfService(SubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),
