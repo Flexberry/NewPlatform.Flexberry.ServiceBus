@@ -19,7 +19,7 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -65,15 +65,15 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests {
         ///
         ///
         ///
-        ///CREATE TABLE [SubscriptionStatisticsMonitor] (
+        ///CREATE TABLE [SubStatisticsMonitor] (
         ///
         ///	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
         ///
-        ///	 [Number] INT  NOT NULL,
+        ///	 [Код] INT  NOT NULL,
         ///
-        ///	 [Category] VARCHAR(255)  NULL,
+        ///	 [Категория] VARCHAR(255)  NULL,
         ///
-        ///	 [Name] VARCHAR(255)  NULL,
+        ///	 [Наименование] VARCHAR(255)  NULL,
         ///
         ///	 [CreateTime] DATETIME  NULL,
         ///
@@ -83,16 +83,16 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests {
         ///
         ///	 [Editor] VARCHAR(255)  NULL,
         ///
-        ///	 [Subscription] UNIQUEIDENTIFIER  NOT NULL,
+        ///	 [Подписка] UNIQUEIDENTIFIER  NOT NULL,
         ///
         ///	 [StatisticsMonitor] UNIQUEIDENTIFIER  NOT NULL,
         ///
         ///	 PRIMARY KEY ([primaryKey]))
         ///
         ///
-        ///CREATE TABLE [Bus] (
+        ///CREATE TABLE [Шина] (
         ///
-        ///	 [primaryKey] U [rest of string was truncated]&quot;;.
+        ///	 [primaryKey] UNIQUEI [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MssqlScript {
             get {
@@ -105,15 +105,15 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests {
         ///
         ///
         ///
-        ///CREATE TABLE SubscriptionStatisticsMonitor (
+        ///CREATE TABLE SubStatisticsMonitor (
         ///
         /// primaryKey UUID NOT NULL,
         ///
-        /// Number INT NOT NULL,
+        /// Код INT NOT NULL,
         ///
-        /// Category VARCHAR(255) NULL,
+        /// Категория VARCHAR(255) NULL,
         ///
-        /// Name VARCHAR(255) NULL,
+        /// Наименование VARCHAR(255) NULL,
         ///
         /// CreateTime TIMESTAMP(3) NULL,
         ///
@@ -123,20 +123,20 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests {
         ///
         /// Editor VARCHAR(255) NULL,
         ///
-        /// Subscription UUID NOT NULL,
+        /// Подписка UUID NOT NULL,
         ///
         /// StatisticsMonitor UUID NOT NULL,
         ///
         /// PRIMARY KEY (primaryKey));
         ///
         ///
-        ///CREATE TABLE Bus (
+        ///CREATE TABLE Шина (
         ///
         /// primaryKey UUID NOT NULL,
         ///
-        /// ManagerAddress VARCHAR(255) NOT NULL,
+        /// InteropАдрес VARCHAR(255) NOT NULL,
         ///
-        /// CreateTime TIMEST [rest of string was truncated]&quot;;.
+        /// CreateTime TIMESTAMP(3) N [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string PostgresScript {
             get {
