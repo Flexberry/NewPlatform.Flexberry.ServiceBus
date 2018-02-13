@@ -25,4 +25,4 @@ MAINTAINER mail@flexberry.net
 
 USER root
 
-CMD echo "DOCKER_HOSTNAME=$DOCKER_HOSTNAME"; sh -x /opt/prepareConf.sh ; su -l -c /opt/startFlexberry-hwsb.sh highway
+CMD echo "DOCKER_HOSTNAME=$DOCKER_HOSTNAME"; sh -x /opt/prepareConf.sh ; su -l -c "sh /opt/startFlexberry-hwsb.sh" highway
