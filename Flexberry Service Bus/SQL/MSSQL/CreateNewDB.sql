@@ -6,15 +6,15 @@ Create permissions for Administrator.
 
 */
 
-CREATE TABLE [SubscriptionStatisticsMonitor] (
+CREATE TABLE [SubStatisticsMonitor] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [Number] INT  NOT NULL,
+	 [Код] INT  NOT NULL,
 
-	 [Category] VARCHAR(255)  NULL,
+	 [Категория] VARCHAR(255)  NULL,
 
-	 [Name] VARCHAR(255)  NULL,
+	 [Наименование] VARCHAR(255)  NULL,
 
 	 [CreateTime] DATETIME  NULL,
 
@@ -24,18 +24,18 @@ CREATE TABLE [SubscriptionStatisticsMonitor] (
 
 	 [Editor] VARCHAR(255)  NULL,
 
-	 [Subscription] UNIQUEIDENTIFIER  NOT NULL,
+	 [Подписка] UNIQUEIDENTIFIER  NOT NULL,
 
 	 [StatisticsMonitor] UNIQUEIDENTIFIER  NOT NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
 
-CREATE TABLE [Bus] (
+CREATE TABLE [Шина] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [ManagerAddress] VARCHAR(255)  NOT NULL,
+	 [InteropАдрес] VARCHAR(255)  NOT NULL,
 
 	 [CreateTime] DATETIME  NULL,
 
@@ -45,11 +45,11 @@ CREATE TABLE [Bus] (
 
 	 [Editor] VARCHAR(255)  NULL,
 
-	 [ID] VARCHAR(255)  NULL,
+	 [Ид] VARCHAR(255)  NULL,
 
-	 [Name] VARCHAR(255)  NULL,
+	 [Наименование] VARCHAR(255)  NULL,
 
-	 [Address] VARCHAR(255)  NULL,
+	 [Адрес] VARCHAR(255)  NULL,
 
 	 [DnsIdentity] VARCHAR(255)  NULL,
 
@@ -58,7 +58,7 @@ CREATE TABLE [Bus] (
 	 PRIMARY KEY ([primaryKey]))
 
 
-CREATE TABLE [StatisticsRecord] (
+CREATE TABLE [StatRecord] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
@@ -66,7 +66,7 @@ CREATE TABLE [StatisticsRecord] (
 
 	 [To] DATETIME  NOT NULL,
 
-	 [StatisticsInterval] VARCHAR(12)  NOT NULL,
+	 [StatInterval] VARCHAR(12)  NOT NULL,
 
 	 [SentCount] INT  NULL,
 
@@ -80,16 +80,16 @@ CREATE TABLE [StatisticsRecord] (
 
 	 [QueueLength] INT  NULL,
 
-	 [SentAvgTime] INT  NULL,
+	 [AvgTimeSent] INT  NULL,
 
-	 [QueryAvgTime] INT  NULL,
+	 [AvgTimeSql] INT  NULL,
 
-	 [StatisticsSetting] UNIQUEIDENTIFIER  NOT NULL,
+	 [StatSetting] UNIQUEIDENTIFIER  NOT NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
 
-CREATE TABLE [StatisticsSetting] (
+CREATE TABLE [StatSetting] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
@@ -101,20 +101,20 @@ CREATE TABLE [StatisticsSetting] (
 
 	 [Editor] VARCHAR(255)  NULL,
 
-	 [Subscription] UNIQUEIDENTIFIER  NULL,
+	 [Подписка] UNIQUEIDENTIFIER  NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
 
-CREATE TABLE [Client] (
+CREATE TABLE [Клиент] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [ID] VARCHAR(255)  NULL,
+	 [Ид] VARCHAR(255)  NULL,
 
-	 [Name] VARCHAR(255)  NULL,
+	 [Наименование] VARCHAR(255)  NULL,
 
-	 [Address] VARCHAR(255)  NULL,
+	 [Адрес] VARCHAR(255)  NULL,
 
 	 [DnsIdentity] VARCHAR(255)  NULL,
 
@@ -131,23 +131,23 @@ CREATE TABLE [Client] (
 	 PRIMARY KEY ([primaryKey]))
 
 
-CREATE TABLE [StatisticsCompressionSetting] (
+CREATE TABLE [CompressionSetting] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [CompressTo] VARCHAR(12)  NOT NULL,
+	 [TargetCompression] VARCHAR(12)  NOT NULL,
 
-	 [StatisticsAgeCount] INT  NOT NULL,
+	 [LifetimeLimit] INT  NOT NULL,
 
-	 [StatisticsAgeUnits] VARCHAR(6)  NOT NULL,
+	 [LifetimeUnits] VARCHAR(6)  NOT NULL,
 
-	 [CompressFrequencyCount] INT  NOT NULL,
+	 [Period] INT  NOT NULL,
 
-	 [CompressFrequencyUnits] VARCHAR(6)  NOT NULL,
+	 [PeriodUnits] VARCHAR(6)  NOT NULL,
 
-	 [NextCompressTime] DATETIME  NOT NULL,
+	 [NextCompressionTime] DATETIME  NOT NULL,
 
-	 [LastCompressTime] DATETIME  NULL,
+	 [LastCompressionTime] DATETIME  NULL,
 
 	 [CreateTime] DATETIME  NULL,
 
@@ -157,45 +157,45 @@ CREATE TABLE [StatisticsCompressionSetting] (
 
 	 [Editor] VARCHAR(255)  NULL,
 
-	 [StatisticsSetting] UNIQUEIDENTIFIER  NOT NULL,
+	 [StatSetting] UNIQUEIDENTIFIER  NOT NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
 
-CREATE TABLE [Message] (
+CREATE TABLE [Сообщение] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [SendingTime] DATETIME  NOT NULL,
+	 [ВремяСледующейОтправки] DATETIME  NOT NULL,
 
-	 [ReceivingTime] DATETIME  NOT NULL,
+	 [ВремяФормирования] DATETIME  NOT NULL,
 
-	 [IsSending] BIT  NULL,
+	 [Отправляется] BIT  NULL,
 
-	 [ErrorCount] INT  NULL,
+	 [FailsCount] INT  NULL,
 
-	 [Sender] VARCHAR(255)  NULL,
+	 [Отправитель] VARCHAR(255)  NULL,
 
-	 [Body] TEXT  NULL,
+	 [Тело] TEXT  NULL,
 
-	 [Attachment] TEXT  NULL,
+	 [ВложениеДляБазы] TEXT  NULL,
 
-	 [Priority] INT  NULL,
+	 [Приоритет] INT  NULL,
 
-	 [Group] VARCHAR(255)  NULL,
+	 [ИмяГруппы] VARCHAR(255)  NULL,
 
-	 [Tags] VARCHAR(MAX)  NULL,
+	 [Тэги] VARCHAR(MAX)  NULL,
 
-	 [Logs] VARCHAR(MAX)  NULL,
+	 [LogMessages] VARCHAR(MAX)  NULL,
 
-	 [MessageType] UNIQUEIDENTIFIER  NOT NULL,
+	 [ТипСообщения_m0] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [Recipient] UNIQUEIDENTIFIER  NOT NULL,
+	 [Получатель_m0] UNIQUEIDENTIFIER  NOT NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
 
-CREATE TABLE [SendingPermission] (
+CREATE TABLE [OutboundMessageTypeRestriction] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
@@ -207,24 +207,24 @@ CREATE TABLE [SendingPermission] (
 
 	 [Editor] VARCHAR(255)  NULL,
 
-	 [MessageType] UNIQUEIDENTIFIER  NOT NULL,
+	 [ТипСообщения] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [Client] UNIQUEIDENTIFIER  NOT NULL,
+	 [Клиент] UNIQUEIDENTIFIER  NOT NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
 
-CREATE TABLE [Subscription] (
+CREATE TABLE [Подписка] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [Description] TEXT  NULL,
+	 [Описание] TEXT  NULL,
 
 	 [ExpiryDate] DATETIME  NOT NULL,
 
 	 [IsCallback] BIT  NULL,
 
-	 [TransportType] VARCHAR(4)  NULL,
+	 [ПередаватьПо] VARCHAR(4)  NULL,
 
 	 [CreateTime] DATETIME  NULL,
 
@@ -234,9 +234,9 @@ CREATE TABLE [Subscription] (
 
 	 [Editor] VARCHAR(255)  NULL,
 
-	 [MessageType] UNIQUEIDENTIFIER  NOT NULL,
+	 [ТипСообщения_m0] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [Client] UNIQUEIDENTIFIER  NOT NULL,
+	 [Клиент_m0] UNIQUEIDENTIFIER  NOT NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
@@ -245,11 +245,11 @@ CREATE TABLE [StatisticsMonitor] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [Owner] VARCHAR(255)  NULL,
+	 [Логин] VARCHAR(255)  NULL,
 
-	 [Name] VARCHAR(255)  NOT NULL,
+	 [Наименование] VARCHAR(255)  NOT NULL,
 
-	 [Public] BIT  NULL,
+	 [ДоступенДругимПользователям] BIT  NULL,
 
 	 [CreateTime] DATETIME  NULL,
 
@@ -262,15 +262,15 @@ CREATE TABLE [StatisticsMonitor] (
 	 PRIMARY KEY ([primaryKey]))
 
 
-CREATE TABLE [MessageType] (
+CREATE TABLE [ТипСообщения] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [ID] VARCHAR(255)  NULL,
+	 [Ид] VARCHAR(255)  NULL,
 
-	 [Name] VARCHAR(255)  NULL,
+	 [Наименование] VARCHAR(255)  NULL,
 
-	 [Description] TEXT  NULL,
+	 [Комментарий] TEXT  NULL,
 
 	 [CreateTime] DATETIME  NULL,
 
@@ -771,38 +771,38 @@ CREATE TABLE [STORMLR] (
 
 
 
- ALTER TABLE [SubscriptionStatisticsMonitor] ADD CONSTRAINT [SubscriptionStatisticsMonitor_FSubscription_0] FOREIGN KEY ([Subscription]) REFERENCES [Subscription]
-CREATE INDEX SubscriptionStatisticsMonitor_ISubscription on [SubscriptionStatisticsMonitor] ([Subscription])
+ ALTER TABLE [SubStatisticsMonitor] ADD CONSTRAINT [SubStatisticsMonitor_FПодписка_0] FOREIGN KEY ([Подписка]) REFERENCES [Подписка]
+CREATE INDEX SubStatisticsMonitor_IПодписка on [SubStatisticsMonitor] ([Подписка])
 
- ALTER TABLE [SubscriptionStatisticsMonitor] ADD CONSTRAINT [SubscriptionStatisticsMonitor_FStatisticsMonitor_0] FOREIGN KEY ([StatisticsMonitor]) REFERENCES [StatisticsMonitor]
-CREATE INDEX SubscriptionStatisticsMonitor_IStatisticsMonitor on [SubscriptionStatisticsMonitor] ([StatisticsMonitor])
+ ALTER TABLE [SubStatisticsMonitor] ADD CONSTRAINT [SubStatisticsMonitor_FStatisticsMonitor_0] FOREIGN KEY ([StatisticsMonitor]) REFERENCES [StatisticsMonitor]
+CREATE INDEX SubStatisticsMonitor_IStatisticsMonitor on [SubStatisticsMonitor] ([StatisticsMonitor])
 
- ALTER TABLE [StatisticsRecord] ADD CONSTRAINT [StatisticsRecord_FStatisticsSetting_0] FOREIGN KEY ([StatisticsSetting]) REFERENCES [StatisticsSetting]
-CREATE INDEX StatisticsRecord_IStatisticsSetting on [StatisticsRecord] ([StatisticsSetting])
+ ALTER TABLE [StatRecord] ADD CONSTRAINT [StatRecord_FStatSetting_0] FOREIGN KEY ([StatSetting]) REFERENCES [StatSetting]
+CREATE INDEX StatRecord_IStatSetting on [StatRecord] ([StatSetting])
 
- ALTER TABLE [StatisticsSetting] ADD CONSTRAINT [StatisticsSetting_FSubscription_0] FOREIGN KEY ([Subscription]) REFERENCES [Subscription]
-CREATE INDEX StatisticsSetting_ISubscription on [StatisticsSetting] ([Subscription])
+ ALTER TABLE [StatSetting] ADD CONSTRAINT [StatSetting_FПодписка_0] FOREIGN KEY ([Подписка]) REFERENCES [Подписка]
+CREATE INDEX StatSetting_IПодписка on [StatSetting] ([Подписка])
 
- ALTER TABLE [StatisticsCompressionSetting] ADD CONSTRAINT [StatisticsCompressionSetting_FStatisticsSetting_0] FOREIGN KEY ([StatisticsSetting]) REFERENCES [StatisticsSetting]
-CREATE INDEX StatisticsCompressionSetting_IStatisticsSetting on [StatisticsCompressionSetting] ([StatisticsSetting])
+ ALTER TABLE [CompressionSetting] ADD CONSTRAINT [CompressionSetting_FStatSetting_0] FOREIGN KEY ([StatSetting]) REFERENCES [StatSetting]
+CREATE INDEX CompressionSetting_IStatSetting on [CompressionSetting] ([StatSetting])
 
- ALTER TABLE [Message] ADD CONSTRAINT [Message_FMessageType_0] FOREIGN KEY ([MessageType]) REFERENCES [MessageType]
-CREATE INDEX Message_IMessageType on [Message] ([MessageType])
+ ALTER TABLE [Сообщение] ADD CONSTRAINT [Сообщение_FТипСообщения_0] FOREIGN KEY ([ТипСообщения_m0]) REFERENCES [ТипСообщения]
+CREATE INDEX Сообщение_IТипСообщения_m0 on [Сообщение] ([ТипСообщения_m0])
 
- ALTER TABLE [Message] ADD CONSTRAINT [Message_FClient_0] FOREIGN KEY ([Recipient]) REFERENCES [Client]
-CREATE INDEX Message_IRecipient on [Message] ([Recipient])
+ ALTER TABLE [Сообщение] ADD CONSTRAINT [Сообщение_FКлиент_0] FOREIGN KEY ([Получатель_m0]) REFERENCES [Клиент]
+CREATE INDEX Сообщение_IПолучатель_m0 on [Сообщение] ([Получатель_m0])
 
- ALTER TABLE [SendingPermission] ADD CONSTRAINT [SendingPermission_FMessageType_0] FOREIGN KEY ([MessageType]) REFERENCES [MessageType]
-CREATE INDEX SendingPermission_IMessageType on [SendingPermission] ([MessageType])
+ ALTER TABLE [OutboundMessageTypeRestriction] ADD CONSTRAINT [OutboundMessageTypeRestriction_FТипСообщения_0] FOREIGN KEY ([ТипСообщения]) REFERENCES [ТипСообщения]
+CREATE INDEX OutboundMessageTypeRestriction_IТипСообщения on [OutboundMessageTypeRestriction] ([ТипСообщения])
 
- ALTER TABLE [SendingPermission] ADD CONSTRAINT [SendingPermission_FClient_0] FOREIGN KEY ([Client]) REFERENCES [Client]
-CREATE INDEX SendingPermission_IClient on [SendingPermission] ([Client])
+ ALTER TABLE [OutboundMessageTypeRestriction] ADD CONSTRAINT [OutboundMessageTypeRestriction_FКлиент_0] FOREIGN KEY ([Клиент]) REFERENCES [Клиент]
+CREATE INDEX OutboundMessageTypeRestriction_IКлиент on [OutboundMessageTypeRestriction] ([Клиент])
 
- ALTER TABLE [Subscription] ADD CONSTRAINT [Subscription_FMessageType_0] FOREIGN KEY ([MessageType]) REFERENCES [MessageType]
-CREATE INDEX Subscription_IMessageType on [Subscription] ([MessageType])
+ ALTER TABLE [Подписка] ADD CONSTRAINT [Подписка_FТипСообщения_0] FOREIGN KEY ([ТипСообщения_m0]) REFERENCES [ТипСообщения]
+CREATE INDEX Подписка_IТипСообщения_m0 on [Подписка] ([ТипСообщения_m0])
 
- ALTER TABLE [Subscription] ADD CONSTRAINT [Subscription_FClient_0] FOREIGN KEY ([Client]) REFERENCES [Client]
-CREATE INDEX Subscription_IClient on [Subscription] ([Client])
+ ALTER TABLE [Подписка] ADD CONSTRAINT [Подписка_FКлиент_0] FOREIGN KEY ([Клиент_m0]) REFERENCES [Клиент]
+CREATE INDEX Подписка_IКлиент_m0 on [Подписка] ([Клиент_m0])
 
  ALTER TABLE [STORMWEBSEARCH] ADD CONSTRAINT [STORMWEBSEARCH_FSTORMFILTERSETTING_0] FOREIGN KEY ([FilterSetting_m0]) REFERENCES [STORMFILTERSETTING]
 

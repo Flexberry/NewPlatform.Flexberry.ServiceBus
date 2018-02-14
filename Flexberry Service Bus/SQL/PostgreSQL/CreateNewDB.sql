@@ -6,15 +6,15 @@ Create permissions for Administrator.
 
 */
 
-CREATE TABLE SubscriptionStatisticsMonitor (
+CREATE TABLE SubStatisticsMonitor (
 
  primaryKey UUID NOT NULL,
 
- Number INT NOT NULL,
+ Код INT NOT NULL,
 
- Category VARCHAR(255) NULL,
+ Категория VARCHAR(255) NULL,
 
- Name VARCHAR(255) NULL,
+ Наименование VARCHAR(255) NULL,
 
  CreateTime TIMESTAMP(3) NULL,
 
@@ -24,18 +24,18 @@ CREATE TABLE SubscriptionStatisticsMonitor (
 
  Editor VARCHAR(255) NULL,
 
- Subscription UUID NOT NULL,
+ Подписка UUID NOT NULL,
 
  StatisticsMonitor UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
 
 
-CREATE TABLE Bus (
+CREATE TABLE Шина (
 
  primaryKey UUID NOT NULL,
 
- ManagerAddress VARCHAR(255) NOT NULL,
+ InteropАдрес VARCHAR(255) NOT NULL,
 
  CreateTime TIMESTAMP(3) NULL,
 
@@ -45,11 +45,11 @@ CREATE TABLE Bus (
 
  Editor VARCHAR(255) NULL,
 
- ID VARCHAR(255) NULL,
+ Ид VARCHAR(255) NULL,
 
- Name VARCHAR(255) NULL,
+ Наименование VARCHAR(255) NULL,
 
- Address VARCHAR(255) NULL,
+ Адрес VARCHAR(255) NULL,
 
  DnsIdentity VARCHAR(255) NULL,
 
@@ -58,7 +58,7 @@ CREATE TABLE Bus (
  PRIMARY KEY (primaryKey));
 
 
-CREATE TABLE StatisticsRecord (
+CREATE TABLE StatRecord (
 
  primaryKey UUID NOT NULL,
 
@@ -66,7 +66,7 @@ CREATE TABLE StatisticsRecord (
 
  "To" TIMESTAMP(3) NOT NULL,
 
- StatisticsInterval VARCHAR(12) NOT NULL,
+ StatInterval VARCHAR(12) NOT NULL,
 
  SentCount INT NULL,
 
@@ -80,16 +80,16 @@ CREATE TABLE StatisticsRecord (
 
  QueueLength INT NULL,
 
- SentAvgTime INT NULL,
+ AvgTimeSent INT NULL,
 
- QueryAvgTime INT NULL,
+ AvgTimeSql INT NULL,
 
- StatisticsSetting UUID NOT NULL,
+ StatSetting UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
 
 
-CREATE TABLE StatisticsSetting (
+CREATE TABLE StatSetting (
 
  primaryKey UUID NOT NULL,
 
@@ -101,20 +101,20 @@ CREATE TABLE StatisticsSetting (
 
  Editor VARCHAR(255) NULL,
 
- Subscription UUID NULL,
+ Подписка UUID NULL,
 
  PRIMARY KEY (primaryKey));
 
 
-CREATE TABLE Client (
+CREATE TABLE Клиент (
 
  primaryKey UUID NOT NULL,
 
- ID VARCHAR(255) NULL,
+ Ид VARCHAR(255) NULL,
 
- Name VARCHAR(255) NULL,
+ Наименование VARCHAR(255) NULL,
 
- Address VARCHAR(255) NULL,
+ Адрес VARCHAR(255) NULL,
 
  DnsIdentity VARCHAR(255) NULL,
 
@@ -131,23 +131,23 @@ CREATE TABLE Client (
  PRIMARY KEY (primaryKey));
 
 
-CREATE TABLE StatisticsCompressionSetting (
+CREATE TABLE CompressionSetting (
 
  primaryKey UUID NOT NULL,
 
- CompressTo VARCHAR(12) NOT NULL,
+ TargetCompression VARCHAR(12) NOT NULL,
 
- StatisticsAgeCount INT NOT NULL,
+ LifetimeLimit INT NOT NULL,
 
- StatisticsAgeUnits VARCHAR(6) NOT NULL,
+ LifetimeUnits VARCHAR(6) NOT NULL,
 
- CompressFrequencyCount INT NOT NULL,
+ Period INT NOT NULL,
 
- CompressFrequencyUnits VARCHAR(6) NOT NULL,
+ PeriodUnits VARCHAR(6) NOT NULL,
 
- NextCompressTime TIMESTAMP(3) NOT NULL,
+ NextCompressionTime TIMESTAMP(3) NOT NULL,
 
- LastCompressTime TIMESTAMP(3) NULL,
+ LastCompressionTime TIMESTAMP(3) NULL,
 
  CreateTime TIMESTAMP(3) NULL,
 
@@ -157,45 +157,45 @@ CREATE TABLE StatisticsCompressionSetting (
 
  Editor VARCHAR(255) NULL,
 
- StatisticsSetting UUID NOT NULL,
+ StatSetting UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
 
 
-CREATE TABLE Message (
+CREATE TABLE Сообщение (
 
  primaryKey UUID NOT NULL,
 
- SendingTime TIMESTAMP(3) NOT NULL,
+ ВремяСледующейОтправки TIMESTAMP(3) NOT NULL,
 
- ReceivingTime TIMESTAMP(3) NOT NULL,
+ ВремяФормирования TIMESTAMP(3) NOT NULL,
 
- IsSending BOOLEAN NULL,
+ Отправляется BOOLEAN NULL,
 
- ErrorCount INT NULL,
+ FailsCount INT NULL,
 
- Sender VARCHAR(255) NULL,
+ Отправитель VARCHAR(255) NULL,
 
- Body TEXT NULL,
+ Тело TEXT NULL,
 
- Attachment TEXT NULL,
+ ВложениеДляБазы TEXT NULL,
 
- Priority INT NULL,
+ Приоритет INT NULL,
 
- "Group" VARCHAR(255) NULL,
+ ИмяГруппы VARCHAR(255) NULL,
 
- Tags VARCHAR NULL,
+ Тэги VARCHAR NULL,
 
- Logs VARCHAR NULL,
+ LogMessages VARCHAR NULL,
 
- MessageType UUID NOT NULL,
+ ТипСообщения_m0 UUID NOT NULL,
 
- Recipient UUID NOT NULL,
+ Получатель_m0 UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
 
 
-CREATE TABLE SendingPermission (
+CREATE TABLE OutboundMessageTypeRestriction (
 
  primaryKey UUID NOT NULL,
 
@@ -207,24 +207,24 @@ CREATE TABLE SendingPermission (
 
  Editor VARCHAR(255) NULL,
 
- MessageType UUID NOT NULL,
+ ТипСообщения UUID NOT NULL,
 
- Client UUID NOT NULL,
+ Клиент UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
 
 
-CREATE TABLE Subscription (
+CREATE TABLE Подписка (
 
  primaryKey UUID NOT NULL,
 
- Description TEXT NULL,
+ Описание TEXT NULL,
 
  ExpiryDate TIMESTAMP(3) NOT NULL,
 
  IsCallback BOOLEAN NULL,
 
- TransportType VARCHAR(4) NULL,
+ ПередаватьПо VARCHAR(4) NULL,
 
  CreateTime TIMESTAMP(3) NULL,
 
@@ -234,9 +234,9 @@ CREATE TABLE Subscription (
 
  Editor VARCHAR(255) NULL,
 
- MessageType UUID NOT NULL,
+ ТипСообщения_m0 UUID NOT NULL,
 
- Client UUID NOT NULL,
+ Клиент_m0 UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
 
@@ -245,11 +245,11 @@ CREATE TABLE StatisticsMonitor (
 
  primaryKey UUID NOT NULL,
 
- Owner VARCHAR(255) NULL,
+ Логин VARCHAR(255) NULL,
 
- Name VARCHAR(255) NOT NULL,
+ Наименование VARCHAR(255) NOT NULL,
 
- Public BOOLEAN NULL,
+ ДоступенДругимПользователям BOOLEAN NULL,
 
  CreateTime TIMESTAMP(3) NULL,
 
@@ -262,15 +262,15 @@ CREATE TABLE StatisticsMonitor (
  PRIMARY KEY (primaryKey));
 
 
-CREATE TABLE MessageType (
+CREATE TABLE ТипСообщения (
 
  primaryKey UUID NOT NULL,
 
- ID VARCHAR(255) NULL,
+ Ид VARCHAR(255) NULL,
 
- Name VARCHAR(255) NULL,
+ Наименование VARCHAR(255) NULL,
 
- Description TEXT NULL,
+ Комментарий TEXT NULL,
 
  CreateTime TIMESTAMP(3) NULL,
 
@@ -771,38 +771,38 @@ CREATE TABLE STORMLR (
 
 
 
- ALTER TABLE SubscriptionStatisticsMonitor ADD CONSTRAINT FKd4374d44e65744f8b58148f4b5fa2332 FOREIGN KEY (Subscription) REFERENCES Subscription; 
-CREATE INDEX Indexa55ebc15dd1947b082b099a038b24db2 on SubscriptionStatisticsMonitor (Subscription); 
+ ALTER TABLE SubStatisticsMonitor ADD CONSTRAINT FK8a6a2b4b3a9444639b4fd5141a7ec704 FOREIGN KEY (Подписка) REFERENCES Подписка; 
+CREATE INDEX Index41cd22aa89dc4b2c9d67e82fb2112eae on SubStatisticsMonitor (Подписка); 
 
- ALTER TABLE SubscriptionStatisticsMonitor ADD CONSTRAINT FK016be8ef844b463faf17c8eb3da75fd8 FOREIGN KEY (StatisticsMonitor) REFERENCES StatisticsMonitor; 
-CREATE INDEX Index8f3857ad21dc4ce6be2481d9f697f1df on SubscriptionStatisticsMonitor (StatisticsMonitor); 
+ ALTER TABLE SubStatisticsMonitor ADD CONSTRAINT FK74e37725d4c047d58570033fdcf1ea59 FOREIGN KEY (StatisticsMonitor) REFERENCES StatisticsMonitor; 
+CREATE INDEX Indexb8ac335353a2453d9288aefcaac24d8e on SubStatisticsMonitor (StatisticsMonitor); 
 
- ALTER TABLE StatisticsRecord ADD CONSTRAINT FK7079fee5c3e64d7c86325e7f9b1e1012 FOREIGN KEY (StatisticsSetting) REFERENCES StatisticsSetting; 
-CREATE INDEX Indexbf939527cca846aabaa95176dbda2b17 on StatisticsRecord (StatisticsSetting); 
+ ALTER TABLE StatRecord ADD CONSTRAINT FK04e3af39ebd040608ee40fe06cc46dbb FOREIGN KEY (StatSetting) REFERENCES StatSetting; 
+CREATE INDEX Indexae2b72fce5be4f32b86361063c4da916 on StatRecord (StatSetting); 
 
- ALTER TABLE StatisticsSetting ADD CONSTRAINT FKffb8d12b55c3485f9a9e5f141d553db1 FOREIGN KEY (Subscription) REFERENCES Subscription; 
-CREATE INDEX Indexbad4b655694d440d934100402990c750 on StatisticsSetting (Subscription); 
+ ALTER TABLE StatSetting ADD CONSTRAINT FK5727b3a8084a4ed78629920e414cb587 FOREIGN KEY (Подписка) REFERENCES Подписка; 
+CREATE INDEX Indexd3dbabd961e54d4cb4547d74443d2650 on StatSetting (Подписка); 
 
- ALTER TABLE StatisticsCompressionSetting ADD CONSTRAINT FK4a665b3aa8fb4188b2ab951c57b9d51d FOREIGN KEY (StatisticsSetting) REFERENCES StatisticsSetting; 
-CREATE INDEX Index52df4e5d6027476080a195c1ec179973 on StatisticsCompressionSetting (StatisticsSetting); 
+ ALTER TABLE CompressionSetting ADD CONSTRAINT FK4dc3421968c8449ba61dfade856d9581 FOREIGN KEY (StatSetting) REFERENCES StatSetting; 
+CREATE INDEX Index9bea919738a04b7aa2d8839e68266a7e on CompressionSetting (StatSetting); 
 
- ALTER TABLE Message ADD CONSTRAINT FKa538fdb6d3894859a7693cfd6e72148c FOREIGN KEY (MessageType) REFERENCES MessageType; 
-CREATE INDEX Index5045749503ab4da6a2adc838120f11f3 on Message (MessageType); 
+ ALTER TABLE Сообщение ADD CONSTRAINT FKe14fae1656244b66ac3e5bb5e7e3c926 FOREIGN KEY (ТипСообщения_m0) REFERENCES ТипСообщения; 
+CREATE INDEX Indexe268a65845da4067896b10eae38be2d7 on Сообщение (ТипСообщения_m0); 
 
- ALTER TABLE Message ADD CONSTRAINT FK59dec5cdcdb941aa8e018aebce8619d6 FOREIGN KEY (Recipient) REFERENCES Client; 
-CREATE INDEX Index218471e3a95d4ea08471caf517692499 on Message (Recipient); 
+ ALTER TABLE Сообщение ADD CONSTRAINT FKbc8d7040a74b41cd9b377153bd332910 FOREIGN KEY (Получатель_m0) REFERENCES Клиент; 
+CREATE INDEX Index83f028fbaf0f45ff8a5382637f051b51 on Сообщение (Получатель_m0); 
 
- ALTER TABLE SendingPermission ADD CONSTRAINT FK02da36c6d9534bde91a698bfbaa7b055 FOREIGN KEY (MessageType) REFERENCES MessageType; 
-CREATE INDEX Index98bd33160d364930bac5ad30601fe5d6 on SendingPermission (MessageType); 
+ ALTER TABLE OutboundMessageTypeRestriction ADD CONSTRAINT FKc95ff00794304667b360604f946d0283 FOREIGN KEY (ТипСообщения) REFERENCES ТипСообщения; 
+CREATE INDEX Indexb75f93e5af19413cb5f6ef6884a3b1c6 on OutboundMessageTypeRestriction (ТипСообщения); 
 
- ALTER TABLE SendingPermission ADD CONSTRAINT FK9edc789d53a04fd48d84368bac65e885 FOREIGN KEY (Client) REFERENCES Client; 
-CREATE INDEX Index0b830256aa4c4d2bb8bd8d6533b6e0cb on SendingPermission (Client); 
+ ALTER TABLE OutboundMessageTypeRestriction ADD CONSTRAINT FKa3ceae544fa94d32b165c6082735e64b FOREIGN KEY (Клиент) REFERENCES Клиент; 
+CREATE INDEX Index23dac33a56ab42eabd8926308ffeb2a9 on OutboundMessageTypeRestriction (Клиент); 
 
- ALTER TABLE Subscription ADD CONSTRAINT FK00831bba4ec94c4881e50ce0bc67e70d FOREIGN KEY (MessageType) REFERENCES MessageType; 
-CREATE INDEX Index293400ab4910480daba5f0a78b873b87 on Subscription (MessageType); 
+ ALTER TABLE Подписка ADD CONSTRAINT FKdc3c6041a1d845498e2f17170759315d FOREIGN KEY (ТипСообщения_m0) REFERENCES ТипСообщения; 
+CREATE INDEX Indexecbfde96a74d41a69582a43fd4481d5b on Подписка (ТипСообщения_m0); 
 
- ALTER TABLE Subscription ADD CONSTRAINT FK0caeecdd5d24425a941a372f58a1e521 FOREIGN KEY (Client) REFERENCES Client; 
-CREATE INDEX Index37a2d86d45c24b328f9bf95fa8454e4a on Subscription (Client); 
+ ALTER TABLE Подписка ADD CONSTRAINT FKdc6e2fc1509244928f90b66f1b1c4666 FOREIGN KEY (Клиент_m0) REFERENCES Клиент; 
+CREATE INDEX Indexa4afd486ce2a43f3bad76e57d264051a on Подписка (Клиент_m0); 
 
  ALTER TABLE STORMWEBSEARCH ADD CONSTRAINT FKaeb0ff228056437fa5002b4e429bc05d FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
 

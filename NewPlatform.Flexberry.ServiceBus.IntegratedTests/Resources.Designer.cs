@@ -61,9 +61,13 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
+        ///   Looks up a localized string similar to /*
         ///
+        ///Create tables.
+        ///Create user Administrator (login=admin, password=admin).
+        ///Create permissions for Administrator.
         ///
+        ///*/
         ///
         ///CREATE TABLE [SubStatisticsMonitor] (
         ///
@@ -85,14 +89,7 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests {
         ///
         ///	 [Подписка] UNIQUEIDENTIFIER  NOT NULL,
         ///
-        ///	 [StatisticsMonitor] UNIQUEIDENTIFIER  NOT NULL,
-        ///
-        ///	 PRIMARY KEY ([primaryKey]))
-        ///
-        ///
-        ///CREATE TABLE [Шина] (
-        ///
-        ///	 [primaryKey] UNIQUEI [rest of string was truncated]&quot;;.
+        ///	 [StatisticsMonitor] UNIQUEIDENTIFIER  NOT  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string MssqlScript {
             get {
@@ -101,9 +98,13 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
+        ///   Looks up a localized string similar to /*
         ///
+        ///Create tables.
+        ///Create user Administrator (login=admin, password=admin).
+        ///Create permissions for Administrator.
         ///
+        ///*/
         ///
         ///CREATE TABLE SubStatisticsMonitor (
         ///
@@ -132,11 +133,7 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests {
         ///
         ///CREATE TABLE Шина (
         ///
-        /// primaryKey UUID NOT NULL,
-        ///
-        /// InteropАдрес VARCHAR(255) NOT NULL,
-        ///
-        /// CreateTime TIMESTAMP(3) N [rest of string was truncated]&quot;;.
+        /// primaryKey  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string PostgresScript {
             get {

@@ -259,8 +259,6 @@
     <Content Include="Components\SendingManager\RequestTemplates\WebRequestTemplate.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SqlScripts\MssqlScript.sql" />
-    <Content Include="SqlScripts\PostgresScript.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
