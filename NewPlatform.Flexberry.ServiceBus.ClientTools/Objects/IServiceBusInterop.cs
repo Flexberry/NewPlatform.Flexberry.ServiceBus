@@ -16,6 +16,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     
     // *** Start programmer edit section *** (Using statements)
     using System.ServiceModel;
+    using System.Collections.Generic;
+
     // *** End programmer edit section *** (Using statements)
 
 
@@ -58,6 +60,6 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** End programmer edit section *** (IServiceBusInterop.UpdateClientSubscribesForMsgs System.String CustomAttributes)
         void UpdateClientSubscribesForMsgs([MessageParameter(Name = "ClientID")] string clientId);
 
-        
+        Dictionary<object, Dictionary<string, string>> GetStats();
     }
 }
