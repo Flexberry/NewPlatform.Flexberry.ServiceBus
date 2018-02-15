@@ -44,8 +44,10 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AssociatedDetailViewAttribute("EditView", "SubscriptionStatisticsMonitor", "DetailView", true, "", "Subscriptions statistics monitor", true, new string[] {
             ""})]
     [View("ListView", new string[] {
+            "Owner as \'Owner\'",
             "Name as \'Name\'",
-            "Public as \'Public\'"})]
+            "Public as \'Public\'"}, Hidden = new string[] {
+            "Owner"})]
     public class StatisticsMonitor : ICSSoft.STORMNET.DataObject, IDataObjectWithAuditFields
     {
 
