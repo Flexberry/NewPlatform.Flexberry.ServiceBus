@@ -1,9 +1,10 @@
 FROM mono:latest as mono
 
+ARG TAG
 RUN mono --version && \
     apt update && \
 	apt install -y git && \
-	git clone --depth=50 --branch=develop https://github.com/Flexberry/NewPlatform.Flexberry.ServiceBus.git /Flexberry/NewPlatform.Flexberry.ServiceBus && \
+	git clone --depth=50 --branch=$TAG https://github.com/Flexberry/NewPlatform.Flexberry.ServiceBus.git /Flexberry/NewPlatform.Flexberry.ServiceBus && \
 	msbuild /version && \
 	cd /Flexberry/NewPlatform.Flexberry.ServiceBus && \
 	nuget restore NewPlatform.Flexberry.ServiceBus.sln && \
