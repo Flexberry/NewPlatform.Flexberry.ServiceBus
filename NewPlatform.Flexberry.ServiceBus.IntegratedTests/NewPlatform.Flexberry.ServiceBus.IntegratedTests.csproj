@@ -206,6 +206,7 @@
     <Compile Include="Components\StatisticsService\DefaultStatisticsCompressorServiceTest.cs" />
     <Compile Include="Components\SubscriptionsManager\CachedSubscriptionsManagerTest.cs" />
     <Compile Include="Components\SubscriptionsManager\DefaultSubscriptionsManagerTest.cs" />
+    <Compile Include="Performance\ServiceBusPerformanceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
