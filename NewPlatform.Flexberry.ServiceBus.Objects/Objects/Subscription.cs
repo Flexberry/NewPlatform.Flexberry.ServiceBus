@@ -100,6 +100,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Client.Name",
             "Client.Address",
             "Client.DnsIdentity",
+            "Client.ConnectionsLimit",
             "MessageType",
             "MessageType.ID"})]
     [View("SubscriptionsManagerView", new string[] {

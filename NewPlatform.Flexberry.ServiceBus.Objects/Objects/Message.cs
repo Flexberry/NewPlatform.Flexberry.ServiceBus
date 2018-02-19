@@ -115,6 +115,20 @@ namespace NewPlatform.Flexberry.ServiceBus
             "MessageType.Name as \'Message type\'"}, Hidden=new string[] {
             "Recipient",
             "MessageType"})]
+    [View("SendingByCallbackView", new string[] {
+            "SendingTime",
+            "ReceivingTime",
+            "IsSending",
+            "ErrorCount",
+            "Sender",
+            "Body",
+            "Attachment",
+            "Priority",
+            "MessageType",
+            "MessageType.ID",
+            "Recipient",
+            "Recipient.ID",
+            "Recipient.SequentialSent"})]
     public class Message : ICSSoft.STORMNET.DataObject
     {
         
@@ -678,6 +692,17 @@ namespace NewPlatform.Flexberry.ServiceBus
                 get
                 {
                     return ICSSoft.STORMNET.Information.GetView("MessageListView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
+                }
+            }
+            
+            /// <summary>
+            /// "SendingByCallbackView" view.
+            /// </summary>
+            public static ICSSoft.STORMNET.View SendingByCallbackView
+            {
+                get
+                {
+                    return ICSSoft.STORMNET.Information.GetView("SendingByCallbackView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
                 }
             }
         }
