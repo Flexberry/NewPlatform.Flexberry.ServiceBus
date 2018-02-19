@@ -1,5 +1,5 @@
 set -x
-export confFile=/opt/flexberry-hwsb/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
+export confFile=/opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
 export newConfFile=/tmp/conf.$$
 export tmpFile=/tmp/tmp_$$
 cp $confFile $newConfFile 
@@ -13,7 +13,7 @@ function replaceConf() {
   mv $tmpFile $newConfFile
 } 
 
-replaceConf 'http://HighwaySB:' "http://$DOCKER_HOSTNAME:"
+replaceConf 'http://flexberry-service-bus:' "http://$DOCKER_HOSTNAME:"
 
 if xmllint $newConfFile >/dev/null 2>/tmp/xmlerror
 then
