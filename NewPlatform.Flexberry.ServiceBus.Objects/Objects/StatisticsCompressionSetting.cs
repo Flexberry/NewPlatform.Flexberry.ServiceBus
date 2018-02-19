@@ -15,8 +15,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business.Audit;
     using ICSSoft.STORMNET.Business.Audit.Objects;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -119,36 +119,36 @@ namespace NewPlatform.Flexberry.ServiceBus
             "CompressFrequencyUnits"})]
     public class StatisticsCompressionSetting : ICSSoft.STORMNET.DataObject, IDataObjectWithAuditFields
     {
-
+        
         private NewPlatform.Flexberry.ServiceBus.StatisticsInterval fCompressTo;
-
+        
         private int fStatisticsAgeCount;
-
+        
         private NewPlatform.Flexberry.ServiceBus.TimeUnit fStatisticsAgeUnits;
-
+        
         private int fCompressFrequencyCount;
-
+        
         private NewPlatform.Flexberry.ServiceBus.TimeUnit fCompressFrequencyUnits;
-
+        
         private System.DateTime fNextCompressTime = System.DateTime.Now;
-
+        
         private DateTime? fLastCompressTime;
-
+        
         private System.Nullable<System.DateTime> fCreateTime;
-
+        
         private string fCreator;
-
+        
         private System.Nullable<System.DateTime> fEditTime;
-
+        
         private string fEditor;
-
+        
         private NewPlatform.Flexberry.ServiceBus.StatisticsSetting fStatisticsSetting;
-
+        
         // *** Start programmer edit section *** (StatisticsCompressionSetting CustomMembers)
 
         // *** End programmer edit section *** (StatisticsCompressionSetting CustomMembers)
 
-
+        
         /// <summary>
         /// CompressTo.
         /// </summary>
@@ -181,7 +181,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.CompressTo Set end)
             }
         }
-
+        
         /// <summary>
         /// StatisticsAgeCount.
         /// </summary>
@@ -214,7 +214,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.StatisticsAgeCount Set end)
             }
         }
-
+        
         /// <summary>
         /// StatisticsAgeUnits.
         /// </summary>
@@ -247,7 +247,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.StatisticsAgeUnits Set end)
             }
         }
-
+        
         /// <summary>
         /// StatisticsAge.
         /// </summary>
@@ -273,7 +273,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.StatisticsAge Set)
             }
         }
-
+        
         /// <summary>
         /// CompressFrequencyCount.
         /// </summary>
@@ -306,7 +306,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.CompressFrequencyCount Set end)
             }
         }
-
+        
         /// <summary>
         /// CompressFrequencyUnits.
         /// </summary>
@@ -339,7 +339,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.CompressFrequencyUnits Set end)
             }
         }
-
+        
         /// <summary>
         /// CompressFrequency.
         /// </summary>
@@ -366,7 +366,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.CompressFrequency Set)
             }
         }
-
+        
         /// <summary>
         /// NextCompressTime.
         /// </summary>
@@ -399,7 +399,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.NextCompressTime Set end)
             }
         }
-
+        
         /// <summary>
         /// LastCompressTime.
         /// </summary>
@@ -431,7 +431,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.LastCompressTime Set end)
             }
         }
-
+        
         /// <summary>
         /// Время создания объекта.
         /// </summary>
@@ -462,7 +462,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.CreateTime Set end)
             }
         }
-
+        
         /// <summary>
         /// Создатель объекта.
         /// </summary>
@@ -494,7 +494,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.Creator Set end)
             }
         }
-
+        
         /// <summary>
         /// Время последнего редактирования объекта.
         /// </summary>
@@ -525,7 +525,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.EditTime Set end)
             }
         }
-
+        
         /// <summary>
         /// Последний редактор объекта.
         /// </summary>
@@ -557,7 +557,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.Editor Set end)
             }
         }
-
+        
         /// <summary>
         /// мастеровая ссылка на шапку NewPlatform.Flexberry.ServiceBus.StatisticsSetting.
         /// </summary>
@@ -592,13 +592,13 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsCompressionSetting.StatisticsSetting Set end)
             }
         }
-
+        
         /// <summary>
         /// Class views container.
         /// </summary>
         public class Views
         {
-
+            
             /// <summary>
             /// "AuditView" view.
             /// </summary>
@@ -609,7 +609,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("AuditView", typeof(NewPlatform.Flexberry.ServiceBus.StatisticsCompressionSetting));
                 }
             }
-
+            
             /// <summary>
             /// "CompressView" view.
             /// </summary>
@@ -620,7 +620,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("CompressView", typeof(NewPlatform.Flexberry.ServiceBus.StatisticsCompressionSetting));
                 }
             }
-
+            
             /// <summary>
             /// "DetailView" view.
             /// </summary>
@@ -631,7 +631,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("DetailView", typeof(NewPlatform.Flexberry.ServiceBus.StatisticsCompressionSetting));
                 }
             }
-
+            
             /// <summary>
             /// "EditView" view.
             /// </summary>
@@ -642,7 +642,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("EditView", typeof(NewPlatform.Flexberry.ServiceBus.StatisticsCompressionSetting));
                 }
             }
-
+            
             /// <summary>
             /// "ListView" view.
             /// </summary>
@@ -654,100 +654,100 @@ namespace NewPlatform.Flexberry.ServiceBus
                 }
             }
         }
-
+        
         /// <summary>
         /// Audit class settings.
         /// </summary>
         public class AuditSettings
         {
-
+            
             /// <summary>
             /// Включён ли аудит для класса.
             /// </summary>
             public static bool AuditEnabled = true;
-
+            
             /// <summary>
             /// Использовать имя представления для аудита по умолчанию.
             /// </summary>
             public static bool UseDefaultView = false;
-
+            
             /// <summary>
             /// Включён ли аудит операции чтения.
             /// </summary>
             public static bool SelectAudit = false;
-
+            
             /// <summary>
             /// Имя представления для аудирования операции чтения.
             /// </summary>
             public static string SelectAuditViewName = "AuditView";
-
+            
             /// <summary>
             /// Включён ли аудит операции создания.
             /// </summary>
             public static bool InsertAudit = true;
-
+            
             /// <summary>
             /// Имя представления для аудирования операции создания.
             /// </summary>
             public static string InsertAuditViewName = "AuditView";
-
+            
             /// <summary>
             /// Включён ли аудит операции изменения.
             /// </summary>
             public static bool UpdateAudit = true;
-
+            
             /// <summary>
             /// Имя представления для аудирования операции изменения.
             /// </summary>
             public static string UpdateAuditViewName = "AuditView";
-
+            
             /// <summary>
             /// Включён ли аудит операции удаления.
             /// </summary>
             public static bool DeleteAudit = true;
-
+            
             /// <summary>
             /// Имя представления для аудирования операции удаления.
             /// </summary>
             public static string DeleteAuditViewName = "AuditView";
-
+            
             /// <summary>
             /// Путь к форме просмотра результатов аудита.
             /// </summary>
             public static string FormUrl = "";
-
+            
             /// <summary>
             /// Режим записи данных аудита (синхронный или асинхронный).
             /// </summary>
             public static ICSSoft.STORMNET.Business.Audit.Objects.tWriteMode WriteMode = ICSSoft.STORMNET.Business.Audit.Objects.tWriteMode.Synchronous;
-
+            
             /// <summary>
             /// Максимальная длина сохраняемого значения поля (если 0, то строка обрезаться не будет).
             /// </summary>
             public static int PrunningLength = 0;
-
+            
             /// <summary>
             /// Показывать ли пользователям в изменениях первичные ключи.
             /// </summary>
             public static bool ShowPrimaryKey = false;
-
+            
             /// <summary>
             /// Сохранять ли старое значение.
             /// </summary>
             public static bool KeepOldValue = true;
-
+            
             /// <summary>
             /// Сжимать ли сохраняемые значения.
             /// </summary>
             public static bool Compress = false;
-
+            
             /// <summary>
             /// Сохранять ли все значения атрибутов, а не только изменяемые.
             /// </summary>
             public static bool KeepAllValues = false;
         }
     }
-
+    
     /// <summary>
     /// Detail array of StatisticsCompressionSetting.
     /// </summary>
@@ -756,12 +756,12 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (DetailArrayDetailArrayOfStatisticsCompressionSetting CustomAttributes)
     public class DetailArrayOfStatisticsCompressionSetting : ICSSoft.STORMNET.DetailArray
     {
-
+        
         // *** Start programmer edit section *** (NewPlatform.Flexberry.ServiceBus.DetailArrayOfStatisticsCompressionSetting members)
 
         // *** End programmer edit section *** (NewPlatform.Flexberry.ServiceBus.DetailArrayOfStatisticsCompressionSetting members)
 
-
+        
         /// <summary>
         /// Construct detail array.
         /// </summary>
@@ -771,11 +771,11 @@ namespace NewPlatform.Flexberry.ServiceBus
         /// <summary>
         /// Adds object with type StatisticsCompressionSetting.
         /// </summary>
-        public DetailArrayOfStatisticsCompressionSetting(NewPlatform.Flexberry.ServiceBus.StatisticsSetting fStatisticsSetting) :
+        public DetailArrayOfStatisticsCompressionSetting(NewPlatform.Flexberry.ServiceBus.StatisticsSetting fStatisticsSetting) : 
                 base(typeof(StatisticsCompressionSetting), ((ICSSoft.STORMNET.DataObject)(fStatisticsSetting)))
         {
         }
-
+        
         public NewPlatform.Flexberry.ServiceBus.StatisticsCompressionSetting this[int index]
         {
             get
@@ -783,7 +783,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 return ((NewPlatform.Flexberry.ServiceBus.StatisticsCompressionSetting)(this.ItemByIndex(index)));
             }
         }
-
+        
         public virtual void Add(NewPlatform.Flexberry.ServiceBus.StatisticsCompressionSetting dataobject)
         {
             this.AddObject(((ICSSoft.STORMNET.DataObject)(dataobject)));

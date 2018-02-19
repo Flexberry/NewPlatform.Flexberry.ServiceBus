@@ -13,8 +13,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     using System;
     using System.Xml;
     using ICSSoft.STORMNET;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -117,38 +117,38 @@ namespace NewPlatform.Flexberry.ServiceBus
             "MessageType"})]
     public class Message : ICSSoft.STORMNET.DataObject
     {
-
+        
         private System.DateTime fSendingTime = System.DateTime.Now;
-
+        
         private System.DateTime fReceivingTime = System.DateTime.Now;
-
+        
         private bool fIsSending;
-
+        
         private int fErrorCount;
-
+        
         private string fSender;
-
+        
         private string fBody;
-
+        
         private string fAttachment;
-
+        
         private int fPriority;
-
+        
         private string fGroup;
-
+        
         private string fTags;
-
+        
         private string fLogs;
-
+        
         private NewPlatform.Flexberry.ServiceBus.MessageType fMessageType;
-
+        
         private NewPlatform.Flexberry.ServiceBus.Client fRecipient;
-
+        
         // *** Start programmer edit section *** (Message CustomMembers)
         private byte[] binaryAttachment = null;
         // *** End programmer edit section *** (Message CustomMembers)
 
-
+        
         /// <summary>
         /// SendingTime.
         /// </summary>
@@ -181,7 +181,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.SendingTime Set end)
             }
         }
-
+        
         /// <summary>
         /// ReceivingTime.
         /// </summary>
@@ -214,7 +214,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.ReceivingTime Set end)
             }
         }
-
+        
         /// <summary>
         /// IsSending.
         /// </summary>
@@ -246,7 +246,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.IsSending Set end)
             }
         }
-
+        
         /// <summary>
         /// ErrorCount.
         /// </summary>
@@ -278,7 +278,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.ErrorCount Set end)
             }
         }
-
+        
         /// <summary>
         /// Sender.
         /// </summary>
@@ -311,7 +311,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.Sender Set end)
             }
         }
-
+        
         /// <summary>
         /// Body.
         /// </summary>
@@ -343,7 +343,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.Body Set end)
             }
         }
-
+        
         /// <summary>
         /// Attachment.
         /// </summary>
@@ -375,7 +375,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.Attachment Set end)
             }
         }
-
+        
         /// <summary>
         /// BinaryAttachment.
         /// </summary>
@@ -409,7 +409,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.BinaryAttachment Set)
             }
         }
-
+        
         /// <summary>
         /// Priority.
         /// </summary>
@@ -441,7 +441,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.Priority Set end)
             }
         }
-
+        
         /// <summary>
         /// Group.
         /// </summary>
@@ -474,7 +474,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.Group Set end)
             }
         }
-
+        
         /// <summary>
         /// Tags.
         /// </summary>
@@ -506,7 +506,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.Tags Set end)
             }
         }
-
+        
         /// <summary>
         /// Logs.
         /// </summary>
@@ -538,7 +538,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.Logs Set end)
             }
         }
-
+        
         /// <summary>
         /// Message.
         /// </summary>
@@ -572,7 +572,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.MessageType Set end)
             }
         }
-
+        
         /// <summary>
         /// Message.
         /// </summary>
@@ -608,13 +608,13 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Message.Recipient Set end)
             }
         }
-
+        
         /// <summary>
         /// Class views container.
         /// </summary>
         public class Views
         {
-
+            
             /// <summary>
             /// "EditView" view.
             /// </summary>
@@ -625,7 +625,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("EditView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
                 }
             }
-
+            
             /// <summary>
             /// "ListView" view.
             /// </summary>
@@ -636,7 +636,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("ListView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
                 }
             }
-
+            
             /// <summary>
             /// "LookupView" view.
             /// </summary>
@@ -647,7 +647,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("LookupView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
                 }
             }
-
+            
             /// <summary>
             /// "MessageEditView" view.
             /// </summary>
@@ -658,7 +658,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("MessageEditView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
                 }
             }
-
+            
             /// <summary>
             /// "MessageLightView" view.
             /// </summary>
@@ -669,7 +669,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("MessageLightView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
                 }
             }
-
+            
             /// <summary>
             /// "MessageListView" view.
             /// </summary>
