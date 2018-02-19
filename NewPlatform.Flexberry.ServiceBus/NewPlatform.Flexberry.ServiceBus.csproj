@@ -382,6 +382,7 @@
     <Compile Include="Components\RerouterService\MessageInfo.cs" />
     <Compile Include="Components\RerouterService\RerouterService.cs" />
     <Compile Include="Components\RerouterService\SerializationUtils.cs" />
+    <Compile Include="Components\SendingManager\PrioritySendingManager.cs" />
     <Compile Include="Components\StatisticsService\DefaultStatisticsCompressorService.cs" />
     <Compile Include="Components\StatisticsService\DefaultStatisticsSettings.cs" />
     <Compile Include="Controllers\RestDependencyResolver.cs" />
