@@ -36,7 +36,9 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Name as \'Name\'",
             "Description as \'Description\'",
             "Address as \'Address\'",
-            "DnsIdentity as \'Dns identity\'"})]
+            "DnsIdentity as \'Dns identity\'",
+            "ConnectionsLimit as \'Connections limit\'",
+            "SequentialSent as \'Sequential sent\'"})]
     [AssociatedDetailViewAttribute("AuditView", "SendingPermissions", "AuditView", true, "", "Sending permissions", true, new string[] {
             ""})]
     [AssociatedDetailViewAttribute("AuditView", "Subscriptions", "AuditView", true, "", "Subscriptions", true, new string[] {
@@ -46,7 +48,9 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Name as \'Name\'",
             "Description as \'Description\'",
             "Address as \'Address\'",
-            "DnsIdentity as \'DNS Identity\'"})]
+            "DnsIdentity as \'DNS Identity\'",
+            "ConnectionsLimit as \'Connections limit\'",
+            "SequentialSent as \'Sequential sent\'"})]
     [AssociatedDetailViewAttribute("EditView", "Subscriptions", "DetailView", true, "", "Subscriptions", true, new string[] {
             ""})]
     [AssociatedDetailViewAttribute("EditView", "SendingPermissions", "DetailView", true, "", "Sending permissions", true, new string[] {
@@ -70,6 +74,10 @@ namespace NewPlatform.Flexberry.ServiceBus
         private string fAddress;
         
         private string fDnsIdentity;
+        
+        private int? fConnectionsLimit;
+        
+        private bool fSequentialSent = false;
         
         private System.Nullable<System.DateTime> fCreateTime;
         
@@ -250,7 +258,70 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Client.DnsIdentity Set end)
             }
         }
+        
+        /// <summary>
+        /// ConnectionsLimit.
+        /// </summary>
+        // *** Start programmer edit section *** (Client.ConnectionsLimit CustomAttributes)
 
+        // *** End programmer edit section *** (Client.ConnectionsLimit CustomAttributes)
+        public virtual int? ConnectionsLimit
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Client.ConnectionsLimit Get start)
+
+                // *** End programmer edit section *** (Client.ConnectionsLimit Get start)
+                int? result = this.fConnectionsLimit;
+                // *** Start programmer edit section *** (Client.ConnectionsLimit Get end)
+
+                // *** End programmer edit section *** (Client.ConnectionsLimit Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Client.ConnectionsLimit Set start)
+
+                // *** End programmer edit section *** (Client.ConnectionsLimit Set start)
+                this.fConnectionsLimit = value;
+                // *** Start programmer edit section *** (Client.ConnectionsLimit Set end)
+
+                // *** End programmer edit section *** (Client.ConnectionsLimit Set end)
+            }
+        }
+        
+        /// <summary>
+        /// SequentialSent.
+        /// </summary>
+        // *** Start programmer edit section *** (Client.SequentialSent CustomAttributes)
+
+        // *** End programmer edit section *** (Client.SequentialSent CustomAttributes)
+        [NotNull()]
+        public virtual bool SequentialSent
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Client.SequentialSent Get start)
+
+                // *** End programmer edit section *** (Client.SequentialSent Get start)
+                bool result = this.fSequentialSent;
+                // *** Start programmer edit section *** (Client.SequentialSent Get end)
+
+                // *** End programmer edit section *** (Client.SequentialSent Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Client.SequentialSent Set start)
+
+                // *** End programmer edit section *** (Client.SequentialSent Set start)
+                this.fSequentialSent = value;
+                // *** Start programmer edit section *** (Client.SequentialSent Set end)
+
+                // *** End programmer edit section *** (Client.SequentialSent Set end)
+            }
+        }
+        
         /// <summary>
         /// Время создания объекта.
         /// </summary>
