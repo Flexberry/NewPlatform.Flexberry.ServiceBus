@@ -12,8 +12,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Xml;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
     using System.Collections.Generic;
     // *** End programmer edit section *** (Using statements)
@@ -58,18 +58,29 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** End programmer edit section *** (IStatisticsService.NotifyAvgTimeSql NewPlatform.Flexberry.ServiceBus.Subscription System.Int32 System.String CustomAttributes)
         void NotifyAvgTimeSql(NewPlatform.Flexberry.ServiceBus.Subscription subscription, int time, string sql);
         
+        // *** Start programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription NewPlatform.Flexberry.ServiceBus.Message CustomAttributes)
+
+        // *** End programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription NewPlatform.Flexberry.ServiceBus.Message CustomAttributes)
+        void NotifyIncConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, NewPlatform.Flexberry.ServiceBus.Message message);
+        
         // *** Start programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsService.NotifyIncConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
-        void NotifyIncConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, Message message);
         void NotifyIncConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
+        
+        // *** Start programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription NewPlatform.Flexberry.ServiceBus.Message CustomAttributes)
 
+        // *** End programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription NewPlatform.Flexberry.ServiceBus.Message CustomAttributes)
+        void NotifyDecConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, NewPlatform.Flexberry.ServiceBus.Message message);
+        
         // *** Start programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
 
         // *** End programmer edit section *** (IStatisticsService.NotifyDecConnectionCount NewPlatform.Flexberry.ServiceBus.Subscription CustomAttributes)
-        void NotifyDecConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription, Message message);
         void NotifyDecConnectionCount(NewPlatform.Flexberry.ServiceBus.Subscription subscription);
+        
+        // *** Start programmer edit section *** (IStatisticsService.GetCurrentState CustomAttributes)
 
-        Dictionary<object, Dictionary<string, string>> GetStats();
+        // *** End programmer edit section *** (IStatisticsService.GetCurrentState CustomAttributes)
+        MessageInfo[] GetCurrentState();
     }
 }

@@ -12,8 +12,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Xml;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
     using System.Collections.Generic;
     // *** End programmer edit section *** (Using statements)
@@ -57,12 +57,12 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         // *** End programmer edit section *** (ISubscriptionsManager.GetSubscriptions System.Boolean CustomAttributes)
         System.Collections.Generic.IEnumerable<Subscription> GetSubscriptions(bool onlyActive = true);
-
+        
         // *** Start programmer edit section *** (ISubscriptionsManager.GetSubscriptions System.String System.Boolean CustomAttributes)
 
         // *** End programmer edit section *** (ISubscriptionsManager.GetSubscriptions System.String System.Boolean CustomAttributes)
         System.Collections.Generic.IEnumerable<Subscription> GetSubscriptions(string clientId, bool onlyActive = true);
-
+        
         // *** Start programmer edit section *** (ISubscriptionsManager.GetCallbackSubscriptions System.Boolean CustomAttributes)
 
         // *** End programmer edit section *** (ISubscriptionsManager.GetCallbackSubscriptions System.Boolean CustomAttributes)
