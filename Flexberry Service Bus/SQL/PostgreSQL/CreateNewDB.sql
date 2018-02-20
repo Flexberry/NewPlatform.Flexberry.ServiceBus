@@ -49,11 +49,15 @@ CREATE TABLE Шина (
 
  Наименование VARCHAR(255) NULL,
 
+ Description TEXT NULL,
+
  Адрес VARCHAR(255) NULL,
 
  DnsIdentity VARCHAR(255) NULL,
 
- Description TEXT NULL,
+ ConnectionsLimit INT NULL,
+
+ SequentialSent BOOLEAN NOT NULL,
 
  PRIMARY KEY (primaryKey));
 
@@ -114,11 +118,15 @@ CREATE TABLE Клиент (
 
  Наименование VARCHAR(255) NULL,
 
+ Description TEXT NULL,
+
  Адрес VARCHAR(255) NULL,
 
  DnsIdentity VARCHAR(255) NULL,
 
- Description TEXT NULL,
+ ConnectionsLimit INT NULL,
+
+ SequentialSent BOOLEAN NOT NULL,
 
  CreateTime TIMESTAMP(3) NULL,
 
