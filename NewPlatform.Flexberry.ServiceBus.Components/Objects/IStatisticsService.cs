@@ -15,7 +15,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     
     
     // *** Start programmer edit section *** (Using statements)
-    using System.Collections.Generic;
+
     // *** End programmer edit section *** (Using statements)
 
 

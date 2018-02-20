@@ -16,8 +16,6 @@ namespace NewPlatform.Flexberry.ServiceBus
     
     // *** Start programmer edit section *** (Using statements)
     using System.ServiceModel;
-    using System.Collections.Generic;
-
     // *** End programmer edit section *** (Using statements)
 
 
