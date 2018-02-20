@@ -13,7 +13,9 @@
 
         private readonly IReceivingManager _receivingManager;
 
-        public SBService(ISubscriptionsManager subscriptionsManager, ISendingManager sendingManager, IReceivingManager receivingManager)
+        private readonly IStatisticsService _statisticsService;
+
+        public SBService(ISubscriptionsManager subscriptionsManager, ISendingManager sendingManager, IReceivingManager receivingManager, IStatisticsService statisticsService)
         {
             if (subscriptionsManager == null)
                 throw new ArgumentNullException(nameof(subscriptionsManager));
@@ -24,9 +26,13 @@
             if (receivingManager == null)
                 throw new ArgumentNullException(nameof(receivingManager));
 
+            if (statisticsService == null)
+                throw new ArgumentNullException(nameof(statisticsService));
+
             _subscriptionsManager = subscriptionsManager;
             _sendingManager = sendingManager;
             _receivingManager = receivingManager;
+            _statisticsService = statisticsService;
         }
     }
 }

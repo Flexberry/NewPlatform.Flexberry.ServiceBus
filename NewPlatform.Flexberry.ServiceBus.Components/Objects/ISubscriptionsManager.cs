@@ -57,12 +57,12 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         // *** End programmer edit section *** (ISubscriptionsManager.GetSubscriptions System.Boolean CustomAttributes)
         System.Collections.Generic.IEnumerable<Subscription> GetSubscriptions(bool onlyActive = true);
-
+        
         // *** Start programmer edit section *** (ISubscriptionsManager.GetSubscriptions System.String System.Boolean CustomAttributes)
 
         // *** End programmer edit section *** (ISubscriptionsManager.GetSubscriptions System.String System.Boolean CustomAttributes)
         System.Collections.Generic.IEnumerable<Subscription> GetSubscriptions(string clientId, bool onlyActive = true);
-
+        
         // *** Start programmer edit section *** (ISubscriptionsManager.GetCallbackSubscriptions System.Boolean CustomAttributes)
 
         // *** End programmer edit section *** (ISubscriptionsManager.GetCallbackSubscriptions System.Boolean CustomAttributes)

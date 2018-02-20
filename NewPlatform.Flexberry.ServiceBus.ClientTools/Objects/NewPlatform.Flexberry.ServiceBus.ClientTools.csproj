@@ -87,6 +87,9 @@
     <Compile Include="IServiceBusService.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MessageInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="NewPlatform.Flexberry.ServiceBus.ClientTools.snk" />

@@ -20,7 +20,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
 
     /// <summary>
-    /// Основная информация о сообщении для отправки из шины.
+    /// MessageInfoFromESB.
     /// </summary>
     // *** Start programmer edit section *** (MessageInfoFromESB CustomAttributes)
     [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects")]
@@ -42,7 +42,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         
         /// <summary>
-        /// Уникальный идентификатор сообщения.
+        /// Id.
         /// </summary>
         // *** Start programmer edit section *** (MessageInfoFromESB.Id CustomAttributes)
         [DataMember]
@@ -73,7 +73,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Идентификатор типа сообщения.
+        /// MessageTypeID.
         /// </summary>
         // *** Start programmer edit section *** (MessageInfoFromESB.MessageTypeID CustomAttributes)
         [DataMember]
@@ -104,7 +104,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Приоритет сообщения.
+        /// Priority.
         /// </summary>
         // *** Start programmer edit section *** (MessageInfoFromESB.Priority CustomAttributes)
         [DataMember]
@@ -135,7 +135,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Время формирования сообщения.
+        /// MessageFormingTime.
         /// </summary>
         // *** Start programmer edit section *** (MessageInfoFromESB.MessageFormingTime CustomAttributes)
         [DataMember]

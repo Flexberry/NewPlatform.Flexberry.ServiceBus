@@ -24,7 +24,7 @@
             SubManager = new Mock<ISubscriptionsManager>();
             SendManager = new Mock<ISendingManager>();
             RecManager = new Mock<IReceivingManager>();
-            service = new WcfService(SubManager.Object, SendManager.Object, RecManager.Object, GetMockLogger())
+            service = new WcfService(SubManager.Object, SendManager.Object, RecManager.Object, GetMockLogger(), GetMockStatisticsService())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),

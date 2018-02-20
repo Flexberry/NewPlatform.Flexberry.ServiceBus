@@ -19,7 +19,7 @@
         [Fact]
         public void TestStartStop()
         {
-            var service = new WcfService(GetMockSubscriptionManager(), GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger())
+            var service = new WcfService(GetMockSubscriptionManager(), GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),
@@ -43,7 +43,8 @@
             var sendingManager = GetMockSendingManager();
             var receivingManager = GetMockReceivingManager();
             var logger = GetMockLogger();
-            var service = new WcfService(subscriptionManager, sendingManager, receivingManager, logger)
+            var statisticsService = GetMockStatisticsService();
+            var service = new WcfService(subscriptionManager, sendingManager, receivingManager, logger, statisticsService)
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = binding,

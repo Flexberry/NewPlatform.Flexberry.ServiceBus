@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
+    using ICSSoft.STORMNET.KeyGen;
     using MultiTasking;
 
     /// <summary>
@@ -63,6 +65,11 @@
         /// Timer for periodical update of data.
         /// </summary>
         private readonly PeriodicalTimer _periodicalTimer;
+
+        /// <summary>
+        /// Contains current state of SB.
+        /// </summary>
+        private Dictionary<Guid, MessageInfo> _currentState = new Dictionary<Guid, MessageInfo>();
 
         /// <summary>
         /// Constructor for <see cref="DefaultStatisticsService"/>.
@@ -187,6 +194,39 @@
         }
 
         /// <summary>
+        /// Notify statistics component of opening connection and save message info.
+        /// </summary>
+        /// <param name="subscription">Subscription for message.</param>
+        /// <param name="message">A sent message.</param>
+        public void NotifyIncConnectionCount(Subscription subscription, Message message)
+        {
+            if (CollectAdvancedStatistics)
+            {
+                lock (_lock)
+                {
+                    GetCurrentStatRecord(subscription).ConnectionCount++;
+                    if (CollectBusStatistics)
+                        GetCurrentStatRecord(null).ConnectionCount++;
+
+                    int size = message.Body == null ? 0 : Encoding.Unicode.GetByteCount(message.Body);
+                    size += message.Attachment == null ? 0 : Encoding.Unicode.GetByteCount(message.Attachment);
+                    var messageInfo = new MessageInfo()
+                    {
+                        StartSendingTime = DateTime.Now,
+                        RecipientName = message.Recipient.Name,
+                        RecipientAddress = message.Recipient.Address,
+                        Size = size,
+                    };
+
+                    lock (_currentState)
+                    {
+                        _currentState.Add((KeyGuid)message.__PrimaryKey, messageInfo);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Notify statistics component that open connection.
         /// </summary>
         /// <param name="subscription">Subscription for message.</param>
@@ -199,6 +239,29 @@
                     GetCurrentStatRecord(subscription).ConnectionCount++;
                     if (CollectBusStatistics)
                         GetCurrentStatRecord(null).ConnectionCount++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Notify statistics component of closing connection and delete message info.
+        /// </summary>
+        /// <param name="subscription">Subscription for message.</param>
+        /// <param name="message">A sent message.</param>
+        public void NotifyDecConnectionCount(Subscription subscription, Message message)
+        {
+            if (CollectAdvancedStatistics)
+            {
+                lock (_lock)
+                {
+                    GetCurrentStatRecord(subscription).ConnectionCount--;
+                    if (CollectBusStatistics)
+                        GetCurrentStatRecord(null).ConnectionCount--;
+
+                    lock (_currentState)
+                    {
+                        _currentState.Remove((KeyGuid)message.__PrimaryKey);
+                    }
                 }
             }
         }
@@ -218,6 +281,22 @@
                         GetCurrentStatRecord(null).ConnectionCount--;
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns current state.
+        /// </summary>
+        /// <returns>Information about messages in the process of sending.</returns>
+        public MessageInfo[] GetCurrentState()
+        {
+            MessageInfo[] messageInfos;
+            lock (_currentState)
+            {
+                messageInfos = new MessageInfo[_currentState.Count];
+                _currentState.Values.CopyTo(messageInfos, 0);
+            }
+
+            return messageInfos;
         }
 
         /// <summary>

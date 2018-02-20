@@ -20,7 +20,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
 
     /// <summary>
-    /// Структура для отправки сообщения в шину.
+    /// MessageForESB.
     /// </summary>
     // *** Start programmer edit section *** (MessageForESB CustomAttributes)
     [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects")]
@@ -46,7 +46,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         
         /// <summary>
-        /// Тело сообщения.
+        /// Body.
         /// </summary>
         // *** Start programmer edit section *** (MessageForESB.Body CustomAttributes)
         [DataMember]
@@ -77,7 +77,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Идентификатор типа сообщения.
+        /// MessageTypeID.
         /// </summary>
         // *** Start programmer edit section *** (MessageForESB.MessageTypeID CustomAttributes)
         [DataMember]
@@ -108,7 +108,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Идентификатор клиента,  от имени которого отправляется сообщение.
+        /// ClientID.
         /// </summary>
         // *** Start programmer edit section *** (MessageForESB.ClientID CustomAttributes)
         [DataMember]
@@ -139,7 +139,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Тэги отправляемого сообщения. Ключ - имя тега.
+        /// Tags.
         /// </summary>
         // *** Start programmer edit section *** (MessageForESB.Tags CustomAttributes)
         [DataMember]
@@ -170,7 +170,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Вложение сообщения.
+        /// Attachment.
         /// </summary>
         // *** Start programmer edit section *** (MessageForESB.Attachment CustomAttributes)
         [DataMember]
@@ -201,7 +201,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Приоритет сообщения (чем больше число, тем выше приоритет).
+        /// Priority.
         /// </summary>
         // *** Start programmer edit section *** (MessageForESB.Priority CustomAttributes)
         [DataMember]

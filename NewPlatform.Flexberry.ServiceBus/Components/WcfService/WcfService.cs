@@ -26,6 +26,11 @@
         /// </summary>
         private readonly IReceivingManager _receivingManager;
 
+        /// <summary>
+        /// Statistics service.
+        /// </summary>
+        private readonly IStatisticsService _statisticsService;
+
         private readonly ILogger _logger;
 
         /// <summary>
@@ -70,13 +75,16 @@
         /// <param name="sendingManager">The sending manager.</param>
         /// <param name="receivingManager">The receiving manager.</param>
         /// <param name="logger">The logger.</param>
-        public WcfService(ISubscriptionsManager subscriptionsManager, ISendingManager sendingManager, IReceivingManager receivingManager, ILogger logger)
+        public WcfService(ISubscriptionsManager subscriptionsManager, ISendingManager sendingManager, IReceivingManager receivingManager, ILogger logger, IStatisticsService statisticsService)
         {
             if (subscriptionsManager == null)
                 throw new ArgumentNullException(nameof(subscriptionsManager));
 
             if (sendingManager == null)
                 throw new ArgumentNullException(nameof(sendingManager));
+
+            if (statisticsService == null)
+                throw new ArgumentNullException(nameof(statisticsService));
 
             if (receivingManager == null)
                 throw new ArgumentNullException(nameof(receivingManager));
@@ -88,6 +96,7 @@
             _sendingManager = sendingManager;
             _receivingManager = receivingManager;
             _logger = logger;
+            _statisticsService = statisticsService;
         }
 
         /// <summary>
@@ -96,7 +105,7 @@
         /// </summary>
         public override void Start()
         {
-            var service = new SBService(_subscriptionsManager, _sendingManager, _receivingManager);
+            var service = new SBService(_subscriptionsManager, _sendingManager, _receivingManager, _statisticsService);
 
             if (UseWcfSettingsFromConfig)
             {

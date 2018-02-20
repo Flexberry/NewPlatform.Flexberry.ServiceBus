@@ -1,5 +1,6 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -71,6 +72,15 @@
         public void UpdateClientSubscribesForMsgs(string clientId)
         {
             _subscriptionsManager.UpdateAllSubscriptions(clientId);
+        }
+
+        /// <summary>
+        /// Returns current state.
+        /// </summary>
+        /// <returns>Information about messages in the process of sending.</returns>
+        public MessageInfo[] GetCurrentState()
+        {
+            return _statisticsService.GetCurrentState();
         }
     }
 }

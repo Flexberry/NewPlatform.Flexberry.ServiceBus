@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus
     public interface IServiceBusInterop
     {
         
+        // *** Start programmer edit section *** (IServiceBusInterop CustomMembers)
+
+        // *** End programmer edit section *** (IServiceBusInterop CustomMembers)
+
+        
         // *** Start programmer edit section *** (IServiceBusInterop.AddNewEvntType NewPlatform.Flexberry.ServiceBus.NameCommentStruct CustomAttributes)
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusInterop.AddNewEvntType NewPlatform.Flexberry.ServiceBus.NameCommentStruct CustomAttributes)
@@ -57,5 +62,10 @@ namespace NewPlatform.Flexberry.ServiceBus
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusInterop.UpdateClientSubscribesForMsgs System.String CustomAttributes)
         void UpdateClientSubscribesForMsgs([MessageParameter(Name = "ClientID")] string clientId);
+
+        // *** Start programmer edit section *** (IServiceBusInterop.GetCurrentState CustomAttributes)
+        [OperationContract]
+        // *** End programmer edit section *** (IServiceBusInterop.GetCurrentState CustomAttributes)
+        MessageInfo[] GetCurrentState();
     }
 }

@@ -246,7 +246,7 @@
         /// <returns>Settings WcfService <see cref="WcfService"/>.</returns>
         private WcfService GetWcfService()
         {
-            return new WcfService(GetMockSubscriptionManager(), GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger())
+            return new WcfService(GetMockSubscriptionManager(), GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),

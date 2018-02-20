@@ -20,7 +20,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
 
     /// <summary>
-    /// Структура, использующая для передачи трех строк - идентификатора, имени и комментария - типичного набора для некоторых методов шины.
+    /// NameCommentStruct.
     /// </summary>
     // *** Start programmer edit section *** (NameCommentStruct CustomAttributes)
     [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects")]
@@ -40,7 +40,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         
         /// <summary>
-        /// Идентификатор объекта.
+        /// Id.
         /// </summary>
         // *** Start programmer edit section *** (NameCommentStruct.Id CustomAttributes)
         [DataMember(Name = "id")]
@@ -71,7 +71,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Имя объекта.
+        /// Name.
         /// </summary>
         // *** Start programmer edit section *** (NameCommentStruct.Name CustomAttributes)
         [DataMember(Name = "name")]
@@ -102,7 +102,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Комментарий к объекту.
+        /// Comment.
         /// </summary>
         // *** Start programmer edit section *** (NameCommentStruct.Comment CustomAttributes)
         [DataMember(Name = "comment")]
