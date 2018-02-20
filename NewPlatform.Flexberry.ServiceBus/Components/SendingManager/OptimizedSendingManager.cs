@@ -284,13 +284,11 @@
         {
             Interlocked.Decrement(ref _sendingTasksCount);
 
-            var сообщ = (Message)messageObject;
-            Subscription subscription = _subscriptionsManager
-                .GetSubscriptions(сообщ.Recipient.ID)
-                .FirstOrDefault(x => x.MessageType.ID == сообщ.MessageType.ID);
-            _statisticsService.NotifyDecConnectionCount(subscription);
-
             var message = (Message)messageObject;
+            Subscription subscription = _subscriptionsManager
+                .GetSubscriptions(message.Recipient.ID)
+                .FirstOrDefault(x => x.MessageType.ID == message.MessageType.ID);
+            _statisticsService.NotifyDecConnectionCount(subscription, message);
 
             if (task.Status == TaskStatus.RanToCompletion && task.Result)
             {
