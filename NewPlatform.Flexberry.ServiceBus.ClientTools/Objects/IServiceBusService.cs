@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus
     public interface IServiceBusService
     {
         
+        // *** Start programmer edit section *** (IServiceBusService CustomMembers)
+
+        // *** End programmer edit section *** (IServiceBusService CustomMembers)
+
+        
         // *** Start programmer edit section *** (IServiceBusService.CreateClient System.String System.String System.String CustomAttributes)
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusService.CreateClient System.String System.String System.String CustomAttributes)
@@ -77,12 +82,12 @@ namespace NewPlatform.Flexberry.ServiceBus
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusService.GetMessageWithTagsFromESB System.String System.String string[] CustomAttributes)
         NewPlatform.Flexberry.ServiceBus.MessageFromESB GetMessageWithTagsFromESB([MessageParameter(Name = "clientId")] string clientId, [MessageParameter(Name = "messageTypeId")] string messageTypeId, [MessageParameter(Name = "tags")] string[] tags);
-
+        
         // *** Start programmer edit section *** (IServiceBusService.GetMessageInfoWithTags System.String System.String string[] CustomAttributes)
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusService.GetMessageInfoWithTags System.String System.String string[] CustomAttributes)
         NewPlatform.Flexberry.ServiceBus.MessageOrderingInformation GetMessageInfoWithTags([MessageParameter(Name = "clientId")] string clientId, [MessageParameter(Name = "messageTypeId")] string messageTypeId, [MessageParameter(Name = "tags")] string[] tags);
-
+        
         // *** Start programmer edit section *** (IServiceBusService.RiseEventOnESB System.String System.String CustomAttributes)
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusService.RiseEventOnESB System.String System.String CustomAttributes)

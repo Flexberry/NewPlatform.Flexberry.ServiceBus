@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.ClientTools
     public interface ICallbackSubscriber
     {
         
+        // *** Start programmer edit section *** (ICallbackSubscriber CustomMembers)
+
+        // *** End programmer edit section *** (ICallbackSubscriber CustomMembers)
+
+        
         // *** Start programmer edit section *** (ICallbackSubscriber.AcceptMessage NewPlatform.Flexberry.ServiceBus.MessageFromESB CustomAttributes)
         [OperationContract]
         // *** End programmer edit section *** (ICallbackSubscriber.AcceptMessage NewPlatform.Flexberry.ServiceBus.MessageFromESB CustomAttributes)

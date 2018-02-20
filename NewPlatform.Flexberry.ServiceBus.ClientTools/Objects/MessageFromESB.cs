@@ -20,7 +20,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
 
     /// <summary>
-    /// Структура, описывающая сообщение, которая отправляется из шины к клиенту.
+    /// MessageFromESB.
     /// </summary>
     // *** Start programmer edit section *** (MessageFromESB CustomAttributes)
     [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects")]
@@ -48,7 +48,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         
         /// <summary>
-        /// Тело сообщения.
+        /// Body.
         /// </summary>
         // *** Start programmer edit section *** (MessageFromESB.Body CustomAttributes)
         [DataMember]
@@ -79,7 +79,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Время формирования сообщения.
+        /// MessageFormingTime.
         /// </summary>
         // *** Start programmer edit section *** (MessageFromESB.MessageFormingTime CustomAttributes)
         [DataMember]
@@ -110,7 +110,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Идентификатор типа сообщения.
+        /// MessageTypeID.
         /// </summary>
         // *** Start programmer edit section *** (MessageFromESB.MessageTypeID CustomAttributes)
         [DataMember]
@@ -141,7 +141,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Имя отправителя сообщения.
+        /// SenderName.
         /// </summary>
         // *** Start programmer edit section *** (MessageFromESB.SenderName CustomAttributes)
         [DataMember]
@@ -172,7 +172,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Идентификатор группы сообщения.
+        /// GroupID.
         /// </summary>
         // *** Start programmer edit section *** (MessageFromESB.GroupID CustomAttributes)
         [DataMember]
@@ -203,7 +203,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Теги сообщения. Ключ - имя тега.
+        /// Tags.
         /// </summary>
         // *** Start programmer edit section *** (MessageFromESB.Tags CustomAttributes)
         [DataMember]
@@ -234,7 +234,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Вложение сообщения.
+        /// Attachment.
         /// </summary>
         // *** Start programmer edit section *** (MessageFromESB.Attachment CustomAttributes)
         [DataMember]

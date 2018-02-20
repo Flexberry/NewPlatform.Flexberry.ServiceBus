@@ -28,6 +28,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     public interface IServiceBusComponent
     {
         
+        // *** Start programmer edit section *** (IServiceBusComponent CustomMembers)
+
+        // *** End programmer edit section *** (IServiceBusComponent CustomMembers)
+
+        
         // *** Start programmer edit section *** (IServiceBusComponent.Prepare CustomAttributes)
 
         // *** End programmer edit section *** (IServiceBusComponent.Prepare CustomAttributes)

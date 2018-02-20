@@ -30,6 +30,11 @@ namespace NewPlatform.Flexberry.ServiceBus
     public interface IServiceBusInterop
     {
         
+        // *** Start programmer edit section *** (IServiceBusInterop CustomMembers)
+
+        // *** End programmer edit section *** (IServiceBusInterop CustomMembers)
+
+        
         // *** Start programmer edit section *** (IServiceBusInterop.AddNewEvntType NewPlatform.Flexberry.ServiceBus.NameCommentStruct CustomAttributes)
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusInterop.AddNewEvntType NewPlatform.Flexberry.ServiceBus.NameCommentStruct CustomAttributes)

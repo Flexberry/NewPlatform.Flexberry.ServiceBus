@@ -20,7 +20,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
 
     /// <summary>
-    /// Стуктура, хранящая информацию, необходимую для упорядочивания сообщений при отправке клиенту - приоритет и время формирования.
+    /// MessageOrderingInformation.
     /// </summary>
     // *** Start programmer edit section *** (MessageOrderingInformation CustomAttributes)
     [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects")]
@@ -38,7 +38,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         
         /// <summary>
-        /// Приоритет сообщения (чем больше число, тем выше приоритет).
+        /// Priority.
         /// </summary>
         // *** Start programmer edit section *** (MessageOrderingInformation.Priority CustomAttributes)
         [DataMember]
@@ -69,7 +69,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         
         /// <summary>
-        /// Время формирования сообщения.
+        /// FormingTime.
         /// </summary>
         // *** Start programmer edit section *** (MessageOrderingInformation.FormingTime CustomAttributes)
         [DataMember]
