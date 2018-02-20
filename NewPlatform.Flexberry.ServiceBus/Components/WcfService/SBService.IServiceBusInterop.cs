@@ -74,9 +74,13 @@
             _subscriptionsManager.UpdateAllSubscriptions(clientId);
         }
 
-        public Dictionary<object, Dictionary<string, string>> GetStats()
+        /// <summary>
+        /// Returns current state.
+        /// </summary>
+        /// <returns>Information about messages in the process of sending.</returns>
+        public MessageInfo[] GetCurrentState()
         {
-            return _statisticsService.GetStats();
+            return _statisticsService.GetCurrentState();
         }
     }
 }
