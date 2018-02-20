@@ -10,8 +10,8 @@
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
     using ICSSoft.STORMNET.KeyGen;
-    using ICSSoft.STORMNET.Windows.Forms;
 
     using NewPlatform.Flexberry.ServiceBus.MessageSenders;
 
@@ -180,7 +180,7 @@
                         continue;
                     }
 
-                    var langDef = ExternalLangDef.LanguageDef;
+                    SQLWhereLanguageDef langDef = SQLWhereLanguageDef.LanguageDef;
                     LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.SendingByCallbackView);
 
                     // All messages for this client by all its active subscriptions
