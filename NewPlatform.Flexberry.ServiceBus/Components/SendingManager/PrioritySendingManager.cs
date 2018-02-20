@@ -10,6 +10,7 @@
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
 
     using NewPlatform.Flexberry.ServiceBus.MessageSenders;
@@ -38,7 +39,7 @@
         /// <summary>
         /// Current sending tasks for each client.
         /// </summary>
-        private Dictionary<string, int> _clientConnections = new Dictionary<string, int>();
+        private Dictionary<Guid, int> _clientConnections = new Dictionary<Guid, int>();
 
         /// <summary>
         /// Current sending tasks count.
@@ -70,11 +71,6 @@
             /// </summary>
             public Message Message;
         }
-
-        /// <summary>
-        /// Limitation language.
-        /// </summary>
-        private static readonly ExternalLangDef _langDef = ExternalLangDef.LanguageDef;
 
         /// <summary>
         /// ISubscriptionsManager component.
@@ -159,36 +155,46 @@
             try
             {
                 if (_sendingTasksCount >= MaxTasks)
+                {
                     return;
+                }
 
                 IEnumerable<Subscription> subscriptions = _subscriptionsManager.GetCallbackSubscriptions();
                 if (!subscriptions.Any())
+                {
                     return;
+                }
 
                 foreach (var clientSubscriptions in subscriptions.GroupBy(s => s.Client))
                 {
                     int currentConnections = 0;
                     int connectionsLimit = clientSubscriptions.Key.ConnectionsLimit ?? DefaultConnectionsLimit;
-                    if (!_clientConnections.TryGetValue(clientSubscriptions.Key.__PrimaryKey.ToString(), out currentConnections))
-                        _clientConnections.Add(clientSubscriptions.Key.__PrimaryKey.ToString(), 0);
+                    Guid clientId = (KeyGuid)clientSubscriptions.Key.__PrimaryKey;
+                    if (!_clientConnections.TryGetValue(clientId, out currentConnections))
+                    {
+                        _clientConnections.Add(clientId, 0);
+                    }
 
                     if (currentConnections >= connectionsLimit)
+                    {
                         continue;
+                    }
 
+                    var langDef = ExternalLangDef.LanguageDef;
                     LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.SendingByCallbackView);
 
                     // All messages for this client by all its active subscriptions
-                    Function clientLimitFunction = _langDef.GetFunction(_langDef.funcOR, clientSubscriptions.Select(s => _langDef.GetFunction(
-                        _langDef.funcAND,
-                        _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.GuidType, Information.ExtractPropertyPath<Message>(m => m.Recipient)), s.Client.__PrimaryKey),
-                        _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.GuidType, Information.ExtractPropertyPath<Message>(m => m.MessageType)), s.MessageType.__PrimaryKey))).ToArray());
+                    Function clientLimitFunction = langDef.GetFunction(langDef.funcOR, clientSubscriptions.Select(s => langDef.GetFunction(
+                        langDef.funcAND,
+                        langDef.GetFunction(langDef.funcEQ, new VariableDef(langDef.GuidType, Information.ExtractPropertyPath<Message>(m => m.Recipient)), s.Client.__PrimaryKey),
+                        langDef.GetFunction(langDef.funcEQ, new VariableDef(langDef.GuidType, Information.ExtractPropertyPath<Message>(m => m.MessageType)), s.MessageType.__PrimaryKey))).ToArray());
 
                     // Only unsent messages whose sending time has already arrived
-                    lcs.LimitFunction = _langDef.GetFunction(
-                        _langDef.funcAND,
+                    lcs.LimitFunction = langDef.GetFunction(
+                        langDef.funcAND,
                         clientLimitFunction,
-                        _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.BoolType, Information.ExtractPropertyPath<Message>(m => m.IsSending)), false),
-                        _langDef.GetFunction(_langDef.funcLEQ, new VariableDef(_langDef.DateTimeType, Information.ExtractPropertyPath<Message>(m => m.SendingTime)), DateTime.Now));
+                        langDef.GetFunction(langDef.funcEQ, new VariableDef(langDef.BoolType, Information.ExtractPropertyPath<Message>(m => m.IsSending)), false),
+                        langDef.GetFunction(langDef.funcLEQ, new VariableDef(langDef.DateTimeType, Information.ExtractPropertyPath<Message>(m => m.SendingTime)), DateTime.Now));
 
                     // Get no more than we can send
                     lcs.ReturnTop = connectionsLimit - currentConnections;
@@ -222,14 +228,14 @@
         private bool TryEnqueue(Message message)
         {
             Subscription subscription = _subscriptionsManager.GetSubscriptions(message.Recipient.ID).First(x => x.MessageType.ID == message.MessageType.ID);
-            string client = subscription.Client.__PrimaryKey.ToString();
+            Guid clientId = (KeyGuid)subscription.Client.__PrimaryKey;
             int connectionsLimit = subscription.Client.ConnectionsLimit ?? DefaultConnectionsLimit;
             bool canSend = false;
             lock (_lock)
             {
-                if (_clientConnections[client] < connectionsLimit && _sendingTasksCount < MaxTasks)
+                if (_clientConnections[clientId] < connectionsLimit && _sendingTasksCount < MaxTasks)
                 {
-                    _clientConnections[client]++;
+                    _clientConnections[clientId]++;
                     _sendingTasksCount++;
                     canSend = true;
                 }
@@ -301,7 +307,7 @@
             lock (_lock)
             {
                 _sendingTasksCount--;
-                _clientConnections[message.Recipient.__PrimaryKey.ToString()]--;
+                _clientConnections[(KeyGuid)message.Recipient.__PrimaryKey]--;
             }
 
             _statisticsService.NotifyDecConnectionCount(subscription);
