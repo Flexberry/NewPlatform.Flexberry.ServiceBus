@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
+    using ICSSoft.STORMNET.KeyGen;
     using MultiTasking;
 
     /// <summary>
@@ -67,7 +69,7 @@
         /// <summary>
         /// Contains current state of SB.
         /// </summary>
-        private Dictionary<object, Dictionary<string, string>> _currentState;
+        private Dictionary<Guid, MessageInfo> _currentState = new Dictionary<Guid, MessageInfo>();
 
         /// <summary>
         /// Constructor for <see cref="DefaultStatisticsService"/>.
@@ -192,10 +194,10 @@
         }
 
         /// <summary>
-        /// Notify statistics component that open connection.
+        /// Notify statistics component of opening connection and save message info.
         /// </summary>
         /// <param name="subscription">Subscription for message.</param>
-        /// <param name="message">Message itself.</param>
+        /// <param name="message">A sent message.</param>
         public void NotifyIncConnectionCount(Subscription subscription, Message message)
         {
             if (CollectAdvancedStatistics)
@@ -206,14 +208,20 @@
                     if (CollectBusStatistics)
                         GetCurrentStatRecord(null).ConnectionCount++;
 
-                    if (_currentState[message.__PrimaryKey] == null)
+                    int size = message.Body == null ? 0 : Encoding.Unicode.GetByteCount(message.Body);
+                    size += message.Attachment == null ? 0 : Encoding.Unicode.GetByteCount(message.Attachment);
+                    var messageInfo = new MessageInfo()
                     {
-                        _currentState.Add(message.__PrimaryKey, new Dictionary<string, string>());
-                    }
+                        StartSendingTime = DateTime.Now,
+                        RecipientName = message.Recipient.Name,
+                        RecipientAddress = message.Recipient.Address,
+                        Size = size,
+                    };
 
-                    _currentState[message.__PrimaryKey].Add("clientAddress", message.Recipient.Address);
-                    _currentState[message.__PrimaryKey].Add("clientName", message.Recipient.Name);
-                    _currentState[message.__PrimaryKey].Add("timeStart", message.SendingTime.ToString());
+                    lock (_currentState)
+                    {
+                        _currentState.Add((KeyGuid)message.__PrimaryKey, messageInfo);
+                    }
                 }
             }
         }
@@ -236,10 +244,10 @@
         }
 
         /// <summary>
-        /// Notify statistics component that close connection.
+        /// Notify statistics component of closing connection and delete message info.
         /// </summary>
         /// <param name="subscription">Subscription for message.</param>
-        /// <param name="message">Message itself.</param>
+        /// <param name="message">A sent message.</param>
         public void NotifyDecConnectionCount(Subscription subscription, Message message)
         {
             if (CollectAdvancedStatistics)
@@ -250,9 +258,9 @@
                     if (CollectBusStatistics)
                         GetCurrentStatRecord(null).ConnectionCount--;
 
-                    if (_currentState[message.__PrimaryKey] != null)
+                    lock (_currentState)
                     {
-                        _currentState[message.__PrimaryKey] = null;
+                        _currentState.Remove((KeyGuid)message.__PrimaryKey);
                     }
                 }
             }
@@ -274,6 +282,23 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Returns current state.
+        /// </summary>
+        /// <returns>Information about messages in the process of sending.</returns>
+        public MessageInfo[] GetCurrentState()
+        {
+            MessageInfo[] messageInfos;
+            lock (_currentState)
+            {
+                messageInfos = new MessageInfo[_currentState.Count];
+                _currentState.Values.CopyTo(messageInfos, 0);
+            }
+
+            return messageInfos;
+        }
+
         /// <summary>
         /// Start work.
         /// </summary>
@@ -392,14 +417,6 @@
             }
 
             return statRecord;
-        }
-        /// <summary>
-        /// Returns current stats.
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<object, Dictionary<string, string>> GetStats()
-        {
-            return this._currentState;
         }
     }
 }
