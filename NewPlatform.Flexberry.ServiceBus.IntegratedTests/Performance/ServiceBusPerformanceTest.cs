@@ -95,7 +95,7 @@
             private IReceivingManager RecievingManager { get; }
         }
 
-        [Fact]
+        [Fact(Skip = "Only manual start.")]
         public void TestReciveSendMessageBlockWcf()
         {
             const string BaseAddress = "http://localhost:2525/Message";
