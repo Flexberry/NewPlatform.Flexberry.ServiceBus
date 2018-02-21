@@ -41,6 +41,11 @@
         private int _sendingTasksCount;
 
         /// <summary>
+        /// Gets or sets a value indicating whether enable online state.
+        /// </summary>
+        public bool EnableOnlineState { get; set; } = false;
+
+        /// <summary>
         /// The maximum number of tasks for sending messages.
         /// </summary>
         public int MaxTasks { get; set; } = 1000;
@@ -146,7 +151,15 @@
                 _statisticsService.NotifyAvgTimeSql(subscription, (int)time, "OptimizedSendingManager.TryEnqueue() update message.");
 
                 Interlocked.Increment(ref _sendingTasksCount);
-                _statisticsService.NotifyIncConnectionCount(subscription, message);
+                if (EnableOnlineState)
+                {
+                    _statisticsService.NotifyIncConnectionCount(subscription, message);
+                }
+                else
+                {
+                    _statisticsService.NotifyIncConnectionCount(subscription);
+                }
+
                 Task<bool>.Factory.StartNew(SendMessage, new SendingTaskParam { Message = message, Subscription = subscription }, TaskCreationOptions.PreferFairness)
                     .ContinueWith(SendingTaskContinuation, message);
 
@@ -288,7 +301,14 @@
             Subscription subscription = _subscriptionsManager
                 .GetSubscriptions(message.Recipient.ID)
                 .FirstOrDefault(x => x.MessageType.ID == message.MessageType.ID);
-            _statisticsService.NotifyDecConnectionCount(subscription, message);
+            if (EnableOnlineState)
+            {
+                _statisticsService.NotifyDecConnectionCount(subscription, message);
+            }
+            else
+            {
+                _statisticsService.NotifyDecConnectionCount(subscription);
+            }
 
             if (task.Status == TaskStatus.RanToCompletion && task.Result)
             {

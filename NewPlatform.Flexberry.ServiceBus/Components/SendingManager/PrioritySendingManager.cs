@@ -21,6 +21,11 @@
     internal class PrioritySendingManager : BaseSendingManager
     {
         /// <summary>
+        /// Gets or sets a value indicating whether enable online state.
+        /// </summary>
+        public bool EnableOnlineState { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets DefaultConnectionsLimit.
         /// Used if the client does not have a connection limit.
         /// </summary>
@@ -248,7 +253,15 @@
                 _dataService.UpdateObject(message);
                 stopwatch.Stop();
                 _statisticsService.NotifyAvgTimeSql(subscription, (int)stopwatch.ElapsedMilliseconds, "PrioritySendingManager.TryEnqueue(): Update message sending status.");
-                _statisticsService.NotifyIncConnectionCount(subscription);
+                if (EnableOnlineState)
+                {
+                    _statisticsService.NotifyIncConnectionCount(subscription, message);
+                }
+                else
+                {
+                    _statisticsService.NotifyIncConnectionCount(subscription);
+                }
+
                 Task<bool>.Factory.StartNew(
                     SendMessage,
                     new SendingTaskParam() { Message = message, Subscription = subscription },
@@ -310,7 +323,15 @@
                 _clientConnections[(KeyGuid)message.Recipient.__PrimaryKey]--;
             }
 
-            _statisticsService.NotifyDecConnectionCount(subscription);
+            if (EnableOnlineState)
+            {
+                _statisticsService.NotifyDecConnectionCount(subscription, message);
+            }
+            else
+            {
+                _statisticsService.NotifyDecConnectionCount(subscription);
+            }
+
             if (task.Status == TaskStatus.RanToCompletion && task.Result)
             {
                 message.SetStatus(ObjectStatus.Deleted);
