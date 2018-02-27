@@ -53,6 +53,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     [View("EditView", new string[] {
             "Client as \'Client\'",
             "Client.Name",
+            "Client.Address as \'Client address\'",
             "MessageType as \'Message type\'",
             "MessageType.Name",
             "ExpiryDate as \'Expiry date\'",

@@ -41,7 +41,8 @@ namespace NewPlatform.Flexberry.ServiceBus
             "QueueLength",
             "SentAvgTime",
             "QueryAvgTime",
-            "StatisticsSetting"})]
+            "StatisticsSetting",
+            "StatisticsSetting.Subscription"})]
     [View("DetailView", new string[] {
             "Since as \'Start interval\'",
             "To as \'End interval\'",
