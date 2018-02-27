@@ -213,8 +213,8 @@
                     var messageInfo = new MessageInfo()
                     {
                         StartSendingTime = DateTime.Now,
-                        RecipientName = message.Recipient.Name,
-                        RecipientAddress = message.Recipient.Address,
+                        RecipientName = subscription.Client.Name,
+                        RecipientAddress = subscription.Client.Address,
                         Size = size,
                     };
 
