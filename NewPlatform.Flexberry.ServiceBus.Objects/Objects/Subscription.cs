@@ -156,7 +156,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.Description Get start)
                 string result = this.fDescription;
                 // *** Start programmer edit section *** (Subscription.Description Get end)
-                if (string.IsNullOrWhiteSpace(result))
+                if (string.IsNullOrWhiteSpace(result) && Client != null && MessageType != null)
                 {
                     var client = string.IsNullOrWhiteSpace(Client.Name) ? Client.ID : Client.Name;
                     var messageType = string.IsNullOrWhiteSpace(MessageType.Name) ? MessageType.ID : MessageType.Name;
