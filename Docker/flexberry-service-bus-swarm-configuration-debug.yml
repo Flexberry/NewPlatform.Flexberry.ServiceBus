@@ -1,0 +1,24 @@
+version: '3'
+services:
+  FlexberryServiceBusPostgres:
+    image: "flexberry/flexberry-service-bus-postgres-db:latest"
+    volumes:
+      - FlexberryServiceBusDB:/var/lib/pgsql/data/
+    ports:
+     - "5432:5432"
+  FlexberryServiceBus:
+    environment:
+     - DOCKER_HOSTNAME=${COMPUTERNAME}.${USERDNSDOMAIN}
+    image: "flexberry/flexberry-service-bus:latest"
+    command: /bin/sleep 11d
+    ports:
+     - "7075:7075"
+     - "7085:7085"
+  FlexberryServiceBusEditor:
+    image: "flexberry/flexberry-service-bus-editor:latest"
+    command: /bin/sleep 11d
+    ports:
+     - "1818:80"
+
+volumes:
+  FlexberryServiceBusDB: 
