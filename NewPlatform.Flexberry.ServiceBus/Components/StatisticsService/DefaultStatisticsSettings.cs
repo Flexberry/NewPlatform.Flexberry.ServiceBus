@@ -17,7 +17,7 @@
         /// <summary>
         /// View to load statistics settings.
         /// </summary>
-        private static readonly View _view = StatisticsSetting.Views.EditView;
+        private static readonly View _view = StatisticsSetting.Views.CompressView;
 
         /// <summary>
         /// Cached copy of statistics settings.
