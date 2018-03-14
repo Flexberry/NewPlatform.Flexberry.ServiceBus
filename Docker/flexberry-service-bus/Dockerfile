@@ -10,14 +10,15 @@ RUN mono --version && \
 	nuget restore NewPlatform.Flexberry.ServiceBus.sln && \
 	msbuild /p:Configuration=Release NewPlatform.Flexberry.ServiceBus.sln
 
-FROM flexberry/flexberry-service-bus-base:latest
+FROM flexberry/alt.p8-apache2-mono:latest
 
 COPY --from=mono /Flexberry/NewPlatform.Flexberry.ServiceBus/NewPlatform.Flexberry.ServiceBus.WinServiceHost/bin/Release /opt/flexberry-service-bus
 COPY host/prepareConf.sh /opt/
 COPY host/start-flexberry-service-bus.sh /opt/
 
-RUN rm /opt/flexberry-service-bus/Mono.Security.dll && \
-	rm /opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config && \
+RUN 	mkdir /opt/flexberry-service-bus ; adduser flexberry ; \
+	rm /opt/flexberry-service-bus/Mono.Security.dll ; \
+	rm /opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config ; \
 	cp /opt/flexberry-service-bus/App.Docker.config /opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
 
 MAINTAINER mail@flexberry.net
