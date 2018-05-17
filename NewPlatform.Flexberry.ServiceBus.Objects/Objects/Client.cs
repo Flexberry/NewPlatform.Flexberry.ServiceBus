@@ -33,35 +33,35 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "Description as \'Description\'",
-            "Address as \'Address\'",
-            "DnsIdentity as \'Dns identity\'",
-            "ConnectionsLimit as \'Connections limit\'",
-            "SequentialSent as \'Sequential sent\'"})]
+            "Name as \'Наименование\'",
+            "Description as \'Описание\'",
+            "Address as \'Адрес\'",
+            "DnsIdentity as \'DnsIdentity\'",
+            "ConnectionsLimit as \'Лимит подключений\'",
+            "SequentialSent as \'Последовательная отправка\'"})]
     [AssociatedDetailViewAttribute("AuditView", "SendingPermissions", "AuditView", true, "", "Sending permissions", true, new string[] {
             ""})]
     [AssociatedDetailViewAttribute("AuditView", "Subscriptions", "AuditView", true, "", "Subscriptions", true, new string[] {
             ""})]
     [View("EditView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "Description as \'Description\'",
-            "Address as \'Address\'",
-            "DnsIdentity as \'DNS Identity\'",
-            "ConnectionsLimit as \'Connections limit\'",
-            "SequentialSent as \'Sequential sent\'"})]
+            "Name as \'Наименование\'",
+            "Description as \'Описание\'",
+            "Address as \'Адрес\'",
+            "DnsIdentity as \'DnsIdentity\'",
+            "ConnectionsLimit as \'Лимит подключений\'",
+            "SequentialSent as \'Последовательная отправка\'"})]
     [AssociatedDetailViewAttribute("EditView", "Subscriptions", "DetailView", true, "", "Subscriptions", true, new string[] {
             ""})]
     [AssociatedDetailViewAttribute("EditView", "SendingPermissions", "DetailView", true, "", "Sending permissions", true, new string[] {
             ""})]
     [View("ListView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "Address as \'Address\'"})]
+            "Name as \'Наименование\'",
+            "Address as \'Адрес\'"})]
     [View("LookupView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'"})]
+            "Name as \'Наименование\'"})]
     public class Client : ICSSoft.STORMNET.DataObject, IDataObjectWithAuditFields
     {
         
@@ -113,8 +113,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Client.ID Get start)
                 string result = this.fID;
                 // *** Start programmer edit section *** (Client.ID Get end)
-                if (string.IsNullOrEmpty(result))
-                    result = __PrimaryKey.ToString();
+
                 // *** End programmer edit section *** (Client.ID Get end)
                 return result;
             }

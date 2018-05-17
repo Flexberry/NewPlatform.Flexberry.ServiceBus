@@ -32,15 +32,19 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
-            "CompressTo as \'Compress to\'",
-            "StatisticsAgeCount as \'Statistics age count\'",
-            "StatisticsAgeUnits as \'Statistics age units\'",
-            "StatisticsAge as \'Statistics age\'",
-            "CompressFrequencyCount as \'Compress frequency count\'",
-            "CompressFrequencyUnits as \'Compress frequency units\'",
-            "CompressFrequency as \'Compress frequency\'",
-            "NextCompressTime as \'Next compress time\'",
-            "LastCompressTime as \'Last compress time\'"})]
+            "CompressTo as \'Сжимать до интервала\'",
+            "StatisticsAgeCount",
+            "StatisticsAgeUnits",
+            "StatisticsAge as \'Сжимать старше, чем\'",
+            "CompressFrequencyCount",
+            "CompressFrequencyUnits",
+            "CompressFrequency as \'Периодичность сжатия\'",
+            "NextCompressTime as \'Время следующего сжатия\'",
+            "LastCompressTime as \'Время последнего сжатия\'"}, Hidden=new string[] {
+            "StatisticsAgeCount",
+            "StatisticsAgeUnits",
+            "CompressFrequencyCount",
+            "CompressFrequencyUnits"})]
     [View("CompressView", new string[] {
             "CompressTo",
             "StatisticsAgeCount",
@@ -51,17 +55,23 @@ namespace NewPlatform.Flexberry.ServiceBus
             "LastCompressTime",
             "StatisticsSetting"})]
     [View("DetailView", new string[] {
-            "CompressTo as \'Compress to interval\'",
-            "StatisticsAgeCount as \'Compress older than\'",
+            "CompressTo as \'Сжимать до интервала\'",
+            "StatisticsAge as \'Сжимать старше, чем\'",
+            "StatisticsAgeCount",
             "StatisticsAgeUnits",
-            "CompressFrequencyCount as \'Compress frequency\'",
+            "CompressFrequency as \'Периодичность сжатия\'",
+            "CompressFrequencyCount",
             "CompressFrequencyUnits",
-            "NextCompressTime as \'Time of next compression\'",
-            "LastCompressTime as \'Time of last compression\'",
+            "NextCompressTime as \'Время следующего сжатия\'",
+            "LastCompressTime as \'Время последнего сжатия\'",
             "StatisticsSetting"}, Hidden=new string[] {
+            "StatisticsAgeCount",
+            "StatisticsAgeUnits",
+            "CompressFrequencyCount",
+            "CompressFrequencyUnits",
             "StatisticsSetting"})]
     [View("EditView", new string[] {
-            "StatisticsSetting as \'Statistics setting\'",
+            "StatisticsSetting as \'Настройка регистрации статистики\'",
             "StatisticsSetting.Subscription",
             "StatisticsSetting.Subscription.Description",
             "StatisticsSetting.Subscription.Client",
@@ -70,13 +80,13 @@ namespace NewPlatform.Flexberry.ServiceBus
             "StatisticsSetting.Subscription.MessageType",
             "StatisticsSetting.Subscription.MessageType.ID",
             "StatisticsSetting.Subscription.MessageType.Name",
-            "CompressTo as \'Compress to interval\'",
-            "StatisticsAgeCount as \'Compress older than\'",
-            "StatisticsAgeUnits",
-            "CompressFrequencyCount as \'Compress frequency\'",
-            "CompressFrequencyUnits",
-            "NextCompressTime as \'Time of next compression\'",
-            "LastCompressTime as \'Time of last compression\'"}, Hidden=new string[] {
+            "CompressTo as \'Сжимать до интервала\'",
+            "StatisticsAgeCount as \'Сжимать старше, чем\'",
+            "StatisticsAgeUnits as \'Единица времени возраста сжатия статистики\'",
+            "CompressFrequencyCount as \'Периодичность сжатия\'",
+            "CompressFrequencyUnits as \'Единица времени периодичности сжатия\'",
+            "NextCompressTime as \'Время следующего сжатия\'",
+            "LastCompressTime as \'Время последнего сжатия\'"}, Hidden=new string[] {
             "StatisticsSetting.Subscription",
             "StatisticsSetting.Subscription.Description",
             "StatisticsSetting.Subscription.Client",
@@ -89,22 +99,22 @@ namespace NewPlatform.Flexberry.ServiceBus
     [View("ListView", new string[] {
             "StatisticsSetting",
             "StatisticsSetting.Subscription",
-            "StatisticsSetting.Subscription.Description as \'Statistics setting\'",
+            "StatisticsSetting.Subscription.Description as \'Подписка\'",
             "StatisticsSetting.Subscription.Client",
             "StatisticsSetting.Subscription.Client.ID",
             "StatisticsSetting.Subscription.Client.Name",
             "StatisticsSetting.Subscription.MessageType",
             "StatisticsSetting.Subscription.MessageType.ID",
             "StatisticsSetting.Subscription.MessageType.Name",
-            "CompressTo as \'Compress to interval\'",
+            "CompressTo as \'Сжимать до интервала\'",
             "StatisticsAgeCount",
             "StatisticsAgeUnits",
-            "StatisticsAge as \'Compress older than\'",
+            "StatisticsAge as \'Сжимать старше, чем\'",
             "CompressFrequencyCount",
             "CompressFrequencyUnits",
-            "CompressFrequency as \'Compress frequency\'",
-            "NextCompressTime as \'Time of next compression\'",
-            "LastCompressTime as \'Time of last compression\'"}, Hidden=new string[] {
+            "CompressFrequency as \'Периодичность сжатия\'",
+            "NextCompressTime as \'Время следующего сжатия\'",
+            "LastCompressTime as \'Время последнего сжатия\'"}, Hidden=new string[] {
             "StatisticsSetting",
             "StatisticsSetting.Subscription",
             "StatisticsSetting.Subscription.Client",
@@ -263,7 +273,8 @@ namespace NewPlatform.Flexberry.ServiceBus
             get
             {
                 // *** Start programmer edit section *** (StatisticsCompressionSetting.StatisticsAge Get)
-                return $"{StatisticsAgeCount} ({EnumCaption.GetCaptionFor(StatisticsAgeUnits)})";
+
+                return null;
                 // *** End programmer edit section *** (StatisticsCompressionSetting.StatisticsAge Get)
             }
             set
@@ -356,7 +367,8 @@ namespace NewPlatform.Flexberry.ServiceBus
             get
             {
                 // *** Start programmer edit section *** (StatisticsCompressionSetting.CompressFrequency Get)
-                return $"{CompressFrequencyCount} ({EnumCaption.GetCaptionFor(CompressFrequencyUnits)})";
+
+                return null;
                 // *** End programmer edit section *** (StatisticsCompressionSetting.CompressFrequency Get)
             }
             set

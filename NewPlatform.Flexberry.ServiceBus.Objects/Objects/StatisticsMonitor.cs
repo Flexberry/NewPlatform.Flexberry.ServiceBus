@@ -31,22 +31,22 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
-            "Owner as \'Owner\'",
-            "Name as \'Name\'",
-            "Public as \'Public\'"})]
+            "Owner as \'Владелец\'",
+            "Name as \'Наименование\'",
+            "Public as \'Доступен всем\'"})]
     [AssociatedDetailViewAttribute("AuditView", "SubscriptionStatisticsMonitor", "AuditView", true, "", "Subscription statistics monitor", true, new string[] {
             ""})]
     [View("EditView", new string[] {
-            "Owner",
-            "Name as \'Name\'",
-            "Public as \'Public\'"}, Hidden=new string[] {
+            "Owner as \'Владелец\'",
+            "Name as \'Наименование\'",
+            "Public as \'Доступен всем\'"}, Hidden=new string[] {
             "Owner"})]
     [AssociatedDetailViewAttribute("EditView", "SubscriptionStatisticsMonitor", "DetailView", true, "", "Subscriptions statistics monitor", true, new string[] {
             ""})]
     [View("ListView", new string[] {
-            "Owner as \'Owner\'",
-            "Name as \'Name\'",
-            "Public as \'Public\'"}, Hidden=new string[] {
+            "Owner as \'Владелец\'",
+            "Name as \'Наименование\'",
+            "Public as \'Доступен всем\'"}, Hidden=new string[] {
             "Owner"})]
     public class StatisticsMonitor : ICSSoft.STORMNET.DataObject, IDataObjectWithAuditFields
     {

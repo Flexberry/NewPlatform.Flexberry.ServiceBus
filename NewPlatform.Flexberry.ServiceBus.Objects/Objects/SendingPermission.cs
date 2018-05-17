@@ -32,13 +32,13 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
-            "MessageType as \'Message type\'",
+            "MessageType as \'Тип сообщения\'",
             "MessageType.ID as \'ID\'"}, Hidden=new string[] {
             "MessageType.ID"})]
     [MasterViewDefineAttribute("AuditView", "MessageType", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "ID")]
     [View("DetailView", new string[] {
             "Client",
-            "MessageType as \'Message type\'",
+            "MessageType as \'Тип сообщения\'",
             "MessageType.Name"}, Hidden=new string[] {
             "Client",
             "MessageType.Name"})]

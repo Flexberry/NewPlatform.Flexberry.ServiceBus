@@ -30,65 +30,65 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("EditView", new string[] {
-            "Sender as \'Sender\'",
-            "Recipient as \'Recipient\'",
+            "Sender as \'Отправитель\'",
+            "Recipient as \'Получатель\'",
             "Recipient.Name",
-            "MessageType as \'Message type\'",
+            "MessageType as \'Тип сообщения\'",
             "MessageType.Name",
-            "SendingTime as \'Sending time\'",
-            "ReceivingTime as \'Receiving time\'",
-            "IsSending as \'Is sending\'",
-            "Group as \'Group\'",
-            "Priority as \'Priority\'",
-            "ErrorCount as \'Error count\'",
-            "Body as \'Body\'",
-            "Attachment as \'Attachment\'",
-            "Tags as \'Tags\'"}, Hidden=new string[] {
+            "SendingTime as \'Время следующей отправки\'",
+            "ReceivingTime as \'Время формирования\'",
+            "IsSending as \'Отправляется\'",
+            "Group as \'Имя группы\'",
+            "Priority as \'Приоритет\'",
+            "ErrorCount as \'Количество неудачных попыток отправки\'",
+            "Body as \'Тело сообщения\'",
+            "Attachment as \'Вложение\'",
+            "Tags as \'Теги\'"}, Hidden=new string[] {
             "Recipient.Name",
             "MessageType.Name"})]
     [MasterViewDefineAttribute("EditView", "Recipient", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Name")]
     [MasterViewDefineAttribute("EditView", "MessageType", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Name")]
     [View("ListView", new string[] {
-            "Sender as \'Sender\'",
+            "Sender as \'Отправитель\'",
             "Recipient",
-            "Recipient.Name as \'Recipient\'",
+            "Recipient.Name as \'Получатель\'",
             "MessageType",
-            "MessageType.Name as \'Message type\'",
-            "SendingTime as \'Sending time\'",
-            "ReceivingTime as \'Receiving time\'",
-            "IsSending as \'Is sending\'",
-            "Priority as \'Priority\'",
-            "ErrorCount as \'Error count\'"}, Hidden=new string[] {
+            "MessageType.Name as \'Тип сообщения\'",
+            "SendingTime as \'Время следующей отправки\'",
+            "ReceivingTime as \'Время формирования\'",
+            "IsSending as \'Отправляется\'",
+            "Priority as \'Приоритет\'",
+            "ErrorCount as \'Количество неудачных попыток отправки\'"}, Hidden=new string[] {
             "Recipient",
             "MessageType"})]
     [View("LookupView", new string[] {
-            "Sender as \'Sender\'",
+            "Sender as \'Отправитель\'",
             "Recipient",
-            "Recipient.Name as \'Recipient\'",
+            "Recipient.Name as \'Получатель\'",
             "MessageType",
-            "MessageType.Name as \'Message type\'",
-            "SendingTime as \'Sending time\'",
-            "ReceivingTime as \'Receiving time\'",
-            "ErrorCount as \'Error count\'"}, Hidden=new string[] {
+            "MessageType.Name as \'Тип сообщения\'",
+            "SendingTime as \'Время следующей отправки\'",
+            "ReceivingTime as \'Время формирования\'",
+            "ErrorCount as \'Количество неудачных попыток отправки\'"}, Hidden=new string[] {
             "Recipient",
             "MessageType"})]
     [View("MessageEditView", new string[] {
-            "SendingTime as \'Sending time\'",
-            "ReceivingTime as \'Receiving time\'",
-            "Body as \'Body\'",
-            "Sender as \'Sender\'",
-            "Attachment as \'Attachment\'",
-            "Priority as \'Priority\'",
-            "IsSending as \'Is sending\'",
-            "ErrorCount as \'Error count\'",
-            "Group as \'Group\'",
-            "Tags as \'Tags\'",
+            "SendingTime as \'Время следующей отправки\'",
+            "ReceivingTime as \'Время формирования\'",
+            "Body as \'Тело сообщения\'",
+            "Sender as \'Отправитель\'",
+            "Attachment as \'Вложение\'",
+            "Priority as \'Приоритет\'",
+            "IsSending as \'Отправляется\'",
+            "ErrorCount as \'Количество неудачных попыток отправки\'",
+            "Group as \'Имя группы\'",
+            "Tags as \'Теги\'",
             "MessageType",
             "MessageType.ID",
-            "MessageType.Name as \'Message type\'",
+            "MessageType.Name as \'Тип сообщения\'",
             "Recipient",
             "Recipient.ID",
-            "Recipient.Name as \'Recipient\'"}, Hidden=new string[] {
+            "Recipient.Name as \'Получатель\'"}, Hidden=new string[] {
             "MessageType",
             "MessageType.ID",
             "Recipient",
@@ -104,15 +104,15 @@ namespace NewPlatform.Flexberry.ServiceBus
             "MessageType",
             "Recipient"})]
     [View("MessageListView", new string[] {
-            "SendingTime as \'Sending time\'",
-            "ReceivingTime as \'Receiving time\'",
-            "Sender as \'Sender\'",
-            "Priority as \'Priority\'",
-            "ErrorCount as \'Error count\'",
+            "SendingTime as \'Время следующей отправки\'",
+            "ReceivingTime as \'Время формирования\'",
+            "Sender as \'Отправитель\'",
+            "Priority as \'Приоритет\'",
+            "ErrorCount as \'Количество неудачных попыток отправки\'",
             "Recipient",
-            "Recipient.Name as \'Recipient\'",
+            "Recipient.Name as \'Получатель\'",
             "MessageType",
-            "MessageType.Name as \'Message type\'"}, Hidden=new string[] {
+            "MessageType.Name as \'Тип сообщения\'"}, Hidden=new string[] {
             "Recipient",
             "MessageType"})]
     [View("SendingByCallbackView", new string[] {
@@ -159,7 +159,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         private NewPlatform.Flexberry.ServiceBus.Client fRecipient;
         
         // *** Start programmer edit section *** (Message CustomMembers)
-        private byte[] binaryAttachment = null;
+
         // *** End programmer edit section *** (Message CustomMembers)
 
         
@@ -402,24 +402,14 @@ namespace NewPlatform.Flexberry.ServiceBus
             get
             {
                 // *** Start programmer edit section *** (Message.BinaryAttachment Get)
-                if (binaryAttachment == null && fAttachment != null)
-                    binaryAttachment = Convert.FromBase64String(fAttachment);
-                return binaryAttachment;
+
+                return 0;
                 // *** End programmer edit section *** (Message.BinaryAttachment Get)
             }
             set
             {
                 // *** Start programmer edit section *** (Message.BinaryAttachment Set)
-                if (value == null)
-                {
-                    fAttachment = null;
-                    binaryAttachment = null;
-                }
-                else
-                {
-                    binaryAttachment = value;
-                    fAttachment = Convert.ToBase64String(value);
-                }
+
                 // *** End programmer edit section *** (Message.BinaryAttachment Set)
             }
         }

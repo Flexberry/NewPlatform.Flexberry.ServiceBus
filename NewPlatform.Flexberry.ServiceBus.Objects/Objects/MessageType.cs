@@ -33,15 +33,15 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "Description as \'Description\'"})]
+            "Name as \'Наименование\'",
+            "Description as \'Комментарий\'"})]
     [View("EditView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "Description as \'Description\'"})]
+            "Name as \'Наименование\'",
+            "Description as \'Комментарий\'"})]
     [View("ListView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'"})]
+            "Name as \'Наименование\'"})]
     public class MessageType : ICSSoft.STORMNET.DataObject, IDataObjectWithAuditFields
     {
         
@@ -81,8 +81,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (MessageType.ID Get start)
                 string result = this.fID;
                 // *** Start programmer edit section *** (MessageType.ID Get end)
-                if (string.IsNullOrEmpty(result))
-                    result = __PrimaryKey.ToString();
+
                 // *** End programmer edit section *** (MessageType.ID Get end)
                 return result;
             }
