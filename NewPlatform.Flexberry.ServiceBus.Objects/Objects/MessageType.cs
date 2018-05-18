@@ -81,7 +81,8 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (MessageType.ID Get start)
                 string result = this.fID;
                 // *** Start programmer edit section *** (MessageType.ID Get end)
-
+                if (string.IsNullOrEmpty(result))
+                    result = __PrimaryKey.ToString();
                 // *** End programmer edit section *** (MessageType.ID Get end)
                 return result;
             }

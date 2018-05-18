@@ -159,7 +159,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         private NewPlatform.Flexberry.ServiceBus.Client fRecipient;
         
         // *** Start programmer edit section *** (Message CustomMembers)
-
+        private byte[] binaryAttachment = null;
         // *** End programmer edit section *** (Message CustomMembers)
 
         
@@ -402,14 +402,24 @@ namespace NewPlatform.Flexberry.ServiceBus
             get
             {
                 // *** Start programmer edit section *** (Message.BinaryAttachment Get)
-
-                return 0;
+                if (binaryAttachment == null && fAttachment != null)
+                    binaryAttachment = Convert.FromBase64String(fAttachment);
+                return binaryAttachment;
                 // *** End programmer edit section *** (Message.BinaryAttachment Get)
             }
             set
             {
                 // *** Start programmer edit section *** (Message.BinaryAttachment Set)
-
+                if (value == null)
+                {
+                    fAttachment = null;
+                    binaryAttachment = null;
+                }
+                else
+                {
+                    binaryAttachment = value;
+                    fAttachment = Convert.ToBase64String(value);
+                }
                 // *** End programmer edit section *** (Message.BinaryAttachment Set)
             }
         }

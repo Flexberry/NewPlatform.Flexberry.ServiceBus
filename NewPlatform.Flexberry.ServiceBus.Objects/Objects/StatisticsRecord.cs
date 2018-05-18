@@ -136,7 +136,10 @@ namespace NewPlatform.Flexberry.ServiceBus
         private NewPlatform.Flexberry.ServiceBus.StatisticsSetting fStatisticsSetting;
         
         // *** Start programmer edit section *** (StatisticsRecord CustomMembers)
-
+        private int sentCount = 0;
+        private int sentSumTime = 0;
+        private int queryCount = 0;
+        private int querySumTime = 0;
         // *** End programmer edit section *** (StatisticsRecord CustomMembers)
 
         
@@ -439,14 +442,16 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.SentAvgTime Get start)
                 int result = this.fSentAvgTime;
                 // *** Start programmer edit section *** (StatisticsRecord.SentAvgTime Get end)
-
+                if (sentSumTime > 0 && sentCount > 0)
+                    result = sentSumTime / sentCount;
                 // *** End programmer edit section *** (StatisticsRecord.SentAvgTime Get end)
                 return result;
             }
             set
             {
                 // *** Start programmer edit section *** (StatisticsRecord.SentAvgTime Set start)
-
+                sentCount++;
+                sentSumTime += value;
                 // *** End programmer edit section *** (StatisticsRecord.SentAvgTime Set start)
                 this.fSentAvgTime = value;
                 // *** Start programmer edit section *** (StatisticsRecord.SentAvgTime Set end)
@@ -471,14 +476,16 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (StatisticsRecord.QueryAvgTime Get start)
                 int result = this.fQueryAvgTime;
                 // *** Start programmer edit section *** (StatisticsRecord.QueryAvgTime Get end)
-
+                if (querySumTime > 0 && queryCount > 0)
+                    result = querySumTime / queryCount;
                 // *** End programmer edit section *** (StatisticsRecord.QueryAvgTime Get end)
                 return result;
             }
             set
             {
                 // *** Start programmer edit section *** (StatisticsRecord.QueryAvgTime Set start)
-
+                queryCount++;
+                querySumTime += value;
                 // *** End programmer edit section *** (StatisticsRecord.QueryAvgTime Set start)
                 this.fQueryAvgTime = value;
                 // *** Start programmer edit section *** (StatisticsRecord.QueryAvgTime Set end)

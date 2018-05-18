@@ -273,8 +273,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             get
             {
                 // *** Start programmer edit section *** (StatisticsCompressionSetting.StatisticsAge Get)
-
-                return null;
+                return $"{StatisticsAgeCount} ({EnumCaption.GetCaptionFor(StatisticsAgeUnits)})";
                 // *** End programmer edit section *** (StatisticsCompressionSetting.StatisticsAge Get)
             }
             set
@@ -367,8 +366,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             get
             {
                 // *** Start programmer edit section *** (StatisticsCompressionSetting.CompressFrequency Get)
-
-                return null;
+                return $"{CompressFrequencyCount} ({EnumCaption.GetCaptionFor(CompressFrequencyUnits)})";
                 // *** End programmer edit section *** (StatisticsCompressionSetting.CompressFrequency Get)
             }
             set
