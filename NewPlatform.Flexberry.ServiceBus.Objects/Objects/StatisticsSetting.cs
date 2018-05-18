@@ -32,18 +32,18 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
-            "Subscription as \'Subscription\'",
-            "Subscription.Description as \'Description\'"})]
+            "Subscription as \'Подписка\'",
+            "Subscription.Description as \'Описание\'"})]
     [AssociatedDetailViewAttribute("AuditView", "StatisticsCompressionSetting", "AuditView", true, "", "Statistics compression setting", true, new string[] {
             ""})]
     [View("CompressView", new string[] {
-            "Subscription",
-            "Subscription.Client",
-            "Subscription.MessageType"})]
+            "Subscription as \'Подписка\'",
+            "Subscription.Client as \'Клиент\'",
+            "Subscription.MessageType as \'Тип сообщения\'"})]
     [AssociatedDetailViewAttribute("CompressView", "StatisticsCompressionSetting", "CompressView", true, "", "", true, new string[] {
             ""})]
     [View("EditView", new string[] {
-            "Subscription as \'Subscription\'",
+            "Subscription as \'Подписка\'",
             "Subscription.Description",
             "Subscription.Client",
             "Subscription.Client.ID",
@@ -65,7 +65,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     [MasterViewDefineAttribute("EditView", "Subscription", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Description")]
     [View("ListView", new string[] {
             "Subscription",
-            "Subscription.Description as \'Subscription\'",
+            "Subscription.Description as \'Подписка\'",
             "Subscription.Client",
             "Subscription.Client.ID",
             "Subscription.Client.Name",

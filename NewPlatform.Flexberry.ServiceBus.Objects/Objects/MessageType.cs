@@ -33,15 +33,15 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "Description as \'Description\'"})]
+            "Name as \'Наименование\'",
+            "Description as \'Комментарий\'"})]
     [View("EditView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "Description as \'Description\'"})]
+            "Name as \'Наименование\'",
+            "Description as \'Комментарий\'"})]
     [View("ListView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'"})]
+            "Name as \'Наименование\'"})]
     public class MessageType : ICSSoft.STORMNET.DataObject, IDataObjectWithAuditFields
     {
         

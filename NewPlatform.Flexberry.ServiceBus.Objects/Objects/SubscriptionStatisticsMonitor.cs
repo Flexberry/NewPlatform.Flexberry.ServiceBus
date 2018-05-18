@@ -32,18 +32,18 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
-            "Number as \'Number\'",
-            "Category as \'Category\'",
-            "Name as \'Name\'",
-            "Subscription as \'Subscription\'",
+            "Number as \'Номер п/п\'",
+            "Category as \'Категория\'",
+            "Name as \'Наименование\'",
+            "Subscription as \'Подписка\'",
             "Subscription.Description as \'Description\'"}, Hidden=new string[] {
             "Subscription.Description"})]
     [MasterViewDefineAttribute("AuditView", "Subscription", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Description")]
     [View("DetailView", new string[] {
-            "Number as \'Number\'",
-            "Name as \'Name\'",
-            "Category as \'Category\'",
-            "Subscription as \'Subscription\'",
+            "Number as \'Номер п/п\'",
+            "Name as \'Наименование\'",
+            "Category as \'Категория\'",
+            "Subscription as \'Подписка\'",
             "Subscription.Description",
             "Subscription.Client",
             "Subscription.Client.ID",

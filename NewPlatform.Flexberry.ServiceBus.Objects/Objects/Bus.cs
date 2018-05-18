@@ -32,27 +32,27 @@ namespace NewPlatform.Flexberry.ServiceBus
     [AutoAltered()]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
-            "ManagerAddress as \'Manager address\'",
+            "ManagerAddress as \'Адрес интерфейса управления шиной\'",
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "Address as \'Address\'",
-            "DnsIdentity as \'Dns identity\'",
-            "Description as \'Description\'"})]
+            "Name as \'Наименование\'",
+            "Address as \'Адрес\'",
+            "DnsIdentity as \'DnsIdentity\'",
+            "Description as \'Описание\'"})]
     [AssociatedDetailViewAttribute("AuditView", "Subscriptions", "AuditView", true, "", "Subscriptions", true, new string[] {
             ""})]
     [View("EditView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "ManagerAddress as \'Manager address\'",
-            "Address as \'Address\'",
-            "DnsIdentity as \'DNS Identity\'",
-            "Description as \'Description\'"})]
+            "Name as \'Наименование\'",
+            "ManagerAddress as \'Адрес интерфейса управления шиной\'",
+            "Address as \'Адрес\'",
+            "DnsIdentity as \'DnsIdentity\'",
+            "Description as \'Описание\'"})]
     [AssociatedDetailViewAttribute("EditView", "Subscriptions", "DetailView", true, "", "Subscriptions", true, new string[] {
             ""})]
     [View("ListView", new string[] {
             "ID as \'ID\'",
-            "Name as \'Name\'",
-            "ManagerAddress as \'Manager address\'"})]
+            "Name as \'Наименование\'",
+            "ManagerAddress as \'Адрес интерфейса управления шиной\'"})]
     public class Bus : NewPlatform.Flexberry.ServiceBus.Client, IDataObjectWithAuditFields
     {
         
