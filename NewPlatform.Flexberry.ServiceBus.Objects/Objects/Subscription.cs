@@ -147,6 +147,8 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (Subscription.Description CustomAttributes)
         [PropertyStorage("Описание")]
+        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.SQLDataService), "COALESCE(CAST(@Description@ AS VARCHAR), CONCAT(COALESCE(@Client.Name@, @Client.I" +
+            "D@), \' - \', COALESCE(@MessageType.Name@, @MessageType.ID@)))")]
         public virtual string Description
         {
             get
