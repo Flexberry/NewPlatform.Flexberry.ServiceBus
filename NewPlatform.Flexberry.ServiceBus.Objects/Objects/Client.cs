@@ -51,8 +51,6 @@ namespace NewPlatform.Flexberry.ServiceBus
             "DnsIdentity as \'DnsIdentity\'",
             "ConnectionsLimit as \'Лимит подключений\'",
             "SequentialSent as \'Последовательная отправка\'"})]
-    [AssociatedDetailViewAttribute("EditView", "Subscriptions", "DetailView", true, "", "Subscriptions", true, new string[] {
-            ""})]
     [AssociatedDetailViewAttribute("EditView", "SendingPermissions", "DetailView", true, "", "Sending permissions", true, new string[] {
             ""})]
     [View("ListView", new string[] {
