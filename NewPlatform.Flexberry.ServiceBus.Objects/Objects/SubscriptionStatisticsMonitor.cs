@@ -30,6 +30,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (SubscriptionStatisticsMonitor CustomAttributes)
     [ClassStorage("SubStatisticsMonitor")]
     [AutoAltered()]
+    [Caption("Подписка монитора статистики")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "Number as \'Номер п/п\'",

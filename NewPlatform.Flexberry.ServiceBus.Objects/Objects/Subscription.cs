@@ -30,6 +30,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (Subscription CustomAttributes)
     [ClassStorage("Подписка")]
     [AutoAltered()]
+    [Caption("Подписка")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "Description as \'Описание\'",

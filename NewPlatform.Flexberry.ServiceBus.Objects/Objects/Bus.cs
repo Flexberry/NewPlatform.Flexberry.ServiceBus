@@ -30,6 +30,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (Bus CustomAttributes)
     [ClassStorage("Шина")]
     [AutoAltered()]
+    [Caption("Шина")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "ManagerAddress as \'Адрес интерфейса управления шиной\'",

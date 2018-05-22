@@ -30,6 +30,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (Client CustomAttributes)
     [ClassStorage("Клиент")]
     [AutoAltered()]
+    [Caption("Клиент")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "ID as \'ID\'",

@@ -30,6 +30,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (StatisticsCompressionSetting CustomAttributes)
     [ClassStorage("CompressionSetting")]
     [AutoAltered()]
+    [Caption("Настройка сжатия статистики")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "CompressTo as \'Сжимать до интервала\'",
