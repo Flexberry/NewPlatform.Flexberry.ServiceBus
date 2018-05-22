@@ -49,7 +49,7 @@ CREATE TABLE [Шина] (
 
 	 [Наименование] VARCHAR(255)  NULL,
 
-	 [Description] TEXT  NULL,
+	 [Description] VARCHAR(MAX)  NULL,
 
 	 [Адрес] VARCHAR(255)  NULL,
 
@@ -118,7 +118,7 @@ CREATE TABLE [Клиент] (
 
 	 [Наименование] VARCHAR(255)  NULL,
 
-	 [Description] TEXT  NULL,
+	 [Description] VARCHAR(MAX)  NULL,
 
 	 [Адрес] VARCHAR(255)  NULL,
 
@@ -226,7 +226,7 @@ CREATE TABLE [Подписка] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [Описание] TEXT  NULL,
+	 [Описание] VARCHAR(MAX)  NULL,
 
 	 [ExpiryDate] DATETIME  NOT NULL,
 
@@ -278,7 +278,7 @@ CREATE TABLE [ТипСообщения] (
 
 	 [Наименование] VARCHAR(255)  NULL,
 
-	 [Комментарий] TEXT  NULL,
+	 [Комментарий] VARCHAR(MAX)  NULL,
 
 	 [CreateTime] DATETIME  NULL,
 

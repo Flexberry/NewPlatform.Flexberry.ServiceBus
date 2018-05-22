@@ -37,7 +37,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Category as \'Категория\'",
             "Name as \'Наименование\'",
             "Subscription as \'Подписка\'",
-            "Subscription.Description as \'Description\'"}, Hidden=new string[] {
+            "Subscription.Description"}, Hidden=new string[] {
             "Subscription.Description"})]
     [MasterViewDefineAttribute("AuditView", "Subscription", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Description")]
     [View("DetailView", new string[] {
@@ -45,6 +45,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Name as \'Наименование\'",
             "Category as \'Категория\'",
             "Subscription as \'Подписка\'",
+            "Subscription.DefaultDescription",
             "Subscription.Description",
             "Subscription.Client",
             "Subscription.Client.ID",
@@ -53,6 +54,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Subscription.MessageType.ID",
             "Subscription.MessageType.Name",
             "StatisticsMonitor"}, Hidden=new string[] {
+            "Subscription.DefaultDescription",
             "Subscription.Description",
             "Subscription.Client",
             "Subscription.Client.ID",
@@ -61,7 +63,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Subscription.MessageType.ID",
             "Subscription.MessageType.Name",
             "StatisticsMonitor"})]
-    [MasterViewDefineAttribute("DetailView", "Subscription", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Description")]
+    [MasterViewDefineAttribute("DetailView", "Subscription", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "DefaultDescription")]
     public class SubscriptionStatisticsMonitor : ICSSoft.STORMNET.DataObject, IDataObjectWithAuditFields
     {
         
