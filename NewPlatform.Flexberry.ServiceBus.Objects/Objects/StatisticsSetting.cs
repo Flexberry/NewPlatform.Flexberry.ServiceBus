@@ -30,6 +30,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (StatisticsSetting CustomAttributes)
     [ClassStorage("StatSetting")]
     [AutoAltered()]
+    [Caption("Настройка регистрации статистики")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "Subscription as \'Подписка\'",

@@ -29,6 +29,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
     // *** End programmer edit section *** (StatisticsMonitor CustomAttributes)
     [AutoAltered()]
+    [Caption("Монитор статистики")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "Owner as \'Владелец\'",

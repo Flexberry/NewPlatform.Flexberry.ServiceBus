@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (StatisticsRecord CustomAttributes)
     [ClassStorage("StatRecord")]
     [AutoAltered()]
+    [Caption("Запись статистики")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("CompressView", new string[] {
             "Since",

@@ -28,6 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (Message CustomAttributes)
     [ClassStorage("Сообщение")]
     [AutoAltered()]
+    [Caption("Сообщение")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("EditView", new string[] {
             "Sender as \'Отправитель\'",

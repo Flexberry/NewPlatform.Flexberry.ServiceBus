@@ -30,6 +30,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (SendingPermission CustomAttributes)
     [ClassStorage("OutboundMessageTypeRestriction")]
     [AutoAltered()]
+    [Caption("Разрешение на отправку")]
     [AccessType(ICSSoft.STORMNET.AccessType.@this)]
     [View("AuditView", new string[] {
             "MessageType as \'Тип сообщения\'",
