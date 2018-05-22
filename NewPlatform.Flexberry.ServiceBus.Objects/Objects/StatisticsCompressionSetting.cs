@@ -73,6 +73,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     [View("EditView", new string[] {
             "StatisticsSetting as \'Настройка регистрации статистики\'",
             "StatisticsSetting.Subscription",
+            "StatisticsSetting.Subscription.DefaultDescription",
             "StatisticsSetting.Subscription.Description",
             "StatisticsSetting.Subscription.Client",
             "StatisticsSetting.Subscription.Client.ID",
@@ -88,6 +89,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "NextCompressTime as \'Время следующего сжатия\'",
             "LastCompressTime as \'Время последнего сжатия\'"}, Hidden=new string[] {
             "StatisticsSetting.Subscription",
+            "StatisticsSetting.Subscription.DefaultDescription",
             "StatisticsSetting.Subscription.Description",
             "StatisticsSetting.Subscription.Client",
             "StatisticsSetting.Subscription.Client.ID",
@@ -95,11 +97,12 @@ namespace NewPlatform.Flexberry.ServiceBus
             "StatisticsSetting.Subscription.MessageType",
             "StatisticsSetting.Subscription.MessageType.ID",
             "StatisticsSetting.Subscription.MessageType.Name"})]
-    [MasterViewDefineAttribute("EditView", "StatisticsSetting", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Subscription.Description")]
+    [MasterViewDefineAttribute("EditView", "StatisticsSetting", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Subscription.DefaultDescription")]
     [View("ListView", new string[] {
             "StatisticsSetting",
             "StatisticsSetting.Subscription",
-            "StatisticsSetting.Subscription.Description as \'Подписка\'",
+            "StatisticsSetting.Subscription.DefaultDescription as \'Подписка\'",
+            "StatisticsSetting.Subscription.Description",
             "StatisticsSetting.Subscription.Client",
             "StatisticsSetting.Subscription.Client.ID",
             "StatisticsSetting.Subscription.Client.Name",
@@ -117,6 +120,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "LastCompressTime as \'Время последнего сжатия\'"}, Hidden=new string[] {
             "StatisticsSetting",
             "StatisticsSetting.Subscription",
+            "StatisticsSetting.Subscription.Description",
             "StatisticsSetting.Subscription.Client",
             "StatisticsSetting.Subscription.Client.ID",
             "StatisticsSetting.Subscription.Client.Name",

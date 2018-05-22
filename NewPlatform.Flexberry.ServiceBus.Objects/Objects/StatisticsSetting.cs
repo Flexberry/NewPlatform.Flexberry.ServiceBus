@@ -44,6 +44,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             ""})]
     [View("EditView", new string[] {
             "Subscription as \'Подписка\'",
+            "Subscription.DefaultDescription",
             "Subscription.Description",
             "Subscription.Client",
             "Subscription.Client.ID",
@@ -51,6 +52,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Subscription.MessageType",
             "Subscription.MessageType.ID",
             "Subscription.MessageType.Name"}, Hidden=new string[] {
+            "Subscription.DefaultDescription",
             "Subscription.Description",
             "Subscription.Client",
             "Subscription.Client.ID",
@@ -62,10 +64,11 @@ namespace NewPlatform.Flexberry.ServiceBus
             ""})]
     [AssociatedDetailViewAttribute("EditView", "StatisticsRecord", "DetailView", true, "", "Statistics records", true, new string[] {
             ""})]
-    [MasterViewDefineAttribute("EditView", "Subscription", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Description")]
+    [MasterViewDefineAttribute("EditView", "Subscription", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "DefaultDescription")]
     [View("ListView", new string[] {
             "Subscription",
-            "Subscription.Description as \'Подписка\'",
+            "Subscription.DefaultDescription as \'Подписка\'",
+            "Subscription.Description",
             "Subscription.Client",
             "Subscription.Client.ID",
             "Subscription.Client.Name",
@@ -73,6 +76,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Subscription.MessageType.ID",
             "Subscription.MessageType.Name"}, Hidden=new string[] {
             "Subscription",
+            "Subscription.Description",
             "Subscription.Client",
             "Subscription.Client.ID",
             "Subscription.Client.Name",
