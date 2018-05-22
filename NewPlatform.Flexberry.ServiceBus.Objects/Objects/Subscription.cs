@@ -37,7 +37,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "IsCallback as \'Callback\'",
             "TransportType as \'Передавать через\'",
             "MessageType as \'Тип сообщения\'",
-            "MessageType.ID as \'ID\'"}, Hidden=new string[] {
+            "MessageType.ID"}, Hidden=new string[] {
             "MessageType.ID"})]
     [MasterViewDefineAttribute("AuditView", "MessageType", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "ID")]
     [View("DetailView", new string[] {
@@ -76,15 +76,17 @@ namespace NewPlatform.Flexberry.ServiceBus
             "MessageType"})]
     [View("LookupView", new string[] {
             "IsCallback as \'Callback\'",
-            "Description as \'Описание\'",
+            "DefaultDescription as \'Описание\'",
             "ExpiryDate as \'Дата прекращения\'",
             "TransportType as \'Передавать через\'",
+            "Description",
             "Client",
             "Client.ID",
             "Client.Name",
             "MessageType",
             "MessageType.ID",
             "MessageType.Name"}, Hidden=new string[] {
+            "Description",
             "Client",
             "Client.ID",
             "Client.Name",
@@ -92,7 +94,6 @@ namespace NewPlatform.Flexberry.ServiceBus
             "MessageType.ID",
             "MessageType.Name"})]
     [View("SendingByCallbackView", new string[] {
-            "Description",
             "ExpiryDate",
             "IsCallback",
             "TransportType",
