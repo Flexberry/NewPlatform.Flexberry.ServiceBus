@@ -147,8 +147,6 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (Subscription.Description CustomAttributes)
         [PropertyStorage("Описание")]
-        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.SQLDataService), "COALESCE(CAST(@Description@ AS VARCHAR), CONCAT(COALESCE(@Client.Name@, @Client.I" +
-            "D@), \' - \', COALESCE(@MessageType.Name@, @MessageType.ID@)))")]
         public virtual string Description
         {
             get
@@ -158,12 +156,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.Description Get start)
                 string result = this.fDescription;
                 // *** Start programmer edit section *** (Subscription.Description Get end)
-                if (string.IsNullOrWhiteSpace(result) && Client != null && MessageType != null)
-                {
-                    var client = string.IsNullOrWhiteSpace(Client.Name) ? Client.ID : Client.Name;
-                    var messageType = string.IsNullOrWhiteSpace(MessageType.Name) ? MessageType.ID : MessageType.Name;
-                    result = $"{client} - {messageType}";
-                }
+
                 // *** End programmer edit section *** (Subscription.Description Get end)
                 return result;
             }
@@ -176,6 +169,39 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** Start programmer edit section *** (Subscription.Description Set end)
 
                 // *** End programmer edit section *** (Subscription.Description Set end)
+            }
+        }
+        
+        /// <summary>
+        /// DefaultDescription.
+        /// </summary>
+        // *** Start programmer edit section *** (Subscription.DefaultDescription CustomAttributes)
+
+        // *** End programmer edit section *** (Subscription.DefaultDescription CustomAttributes)
+        [ICSSoft.STORMNET.NotStored()]
+        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.SQLDataService), "COALESCE(CAST(@Description@ AS VARCHAR), CONCAT(COALESCE(@Client.Name@, @Client.I" +
+            "D@), \' - \', COALESCE(@MessageType.Name@, @MessageType.ID@)))")]
+        public virtual string DefaultDescription
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Subscription.DefaultDescription Get)
+                string description = this.Description;
+                if (string.IsNullOrWhiteSpace(description) && Client != null && MessageType != null)
+                {
+                    var client = string.IsNullOrWhiteSpace(Client.Name) ? Client.ID : Client.Name;
+                    var messageType = string.IsNullOrWhiteSpace(MessageType.Name) ? MessageType.ID : MessageType.Name;
+                    description = $"{client} - {messageType}";
+                }
+
+                return description;
+                // *** End programmer edit section *** (Subscription.DefaultDescription Get)
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Subscription.DefaultDescription Set)
+
+                // *** End programmer edit section *** (Subscription.DefaultDescription Set)
             }
         }
         
