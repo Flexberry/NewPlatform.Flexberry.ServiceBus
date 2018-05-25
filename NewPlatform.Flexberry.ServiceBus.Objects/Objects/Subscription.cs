@@ -181,8 +181,10 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (Subscription.DefaultDescription CustomAttributes)
         [ICSSoft.STORMNET.NotStored()]
-        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.SQLDataService), "COALESCE(CAST(@Description@ AS VARCHAR), CONCAT(COALESCE(@Client.Name@, @Client.I" +
-            "D@), \' - \', COALESCE(@MessageType.Name@, @MessageType.ID@)))")]
+        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.MSSQLDataService), "COALESCE(NULLIF(@Description@, \'\'), COALESCE(@Client.Name@, @Client.ID@) + \' - \' " +
+            "+ COALESCE(@MessageType.Name@, @MessageType.ID@))")]
+        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.PostgresDataService), "COALESCE(NULLIF(@Description@, \'\'), CONCAT(COALESCE(@Client.Name@, @Client.ID@), " +
+            "\' - \', COALESCE(@MessageType.Name@, @MessageType.ID@)))")]
         public virtual string DefaultDescription
         {
             get
