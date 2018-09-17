@@ -1,4 +1,6 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿using NewPlatform.Flexberry.ServiceBus.Components.SendingManager;
+
+namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Collections.Generic;
@@ -27,6 +29,9 @@
         private readonly IDataService _dataService;
 
         private readonly ILogger _logger;
+
+        protected readonly MessageSenderCreator MessageSenderCreator;
+
 
         /// <summary>
         /// Язык для создания ограничений.
@@ -61,6 +66,7 @@
             _statistics = statistics;
             _dataService = dataService;
             _logger = logger;
+            MessageSenderCreator = new MessageSenderCreator(_logger);
         }
 
         public abstract void QueueForSending(Message msg);

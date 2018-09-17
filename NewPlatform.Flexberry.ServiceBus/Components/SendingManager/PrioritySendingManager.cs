@@ -281,7 +281,7 @@
         {
             var send = false;
             var param = (SendingTaskParam)state;
-            IMessageSender messageSender = GetMessageSender(param.Subscription);
+            IMessageSender messageSender = MessageSenderCreator.GetMessageSender(param.Subscription);
             try
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -349,28 +349,6 @@
             }
 
             ServiceHelper.UpdateObject(_dataService, message, _logger, _statisticsService);
-        }
-
-        /// <summary>
-        /// Get message sender for subscription.
-        /// </summary>
-        /// <param name="subscription">Subscription for which messages will be sent.</param>
-        /// <returns>Message sender.</returns>
-        private IMessageSender GetMessageSender(Subscription subscription)
-        {
-            switch (subscription.TransportType)
-            {
-                case TransportType.HTTP:
-                    return new HttpMessageSender(subscription.Client, _logger);
-                case TransportType.MAIL:
-                    return new MailMessageSender(subscription.Client, _logger);
-                case TransportType.WCF:
-                    return new WcfMessageSender(subscription.Client, _logger);
-                case TransportType.WEB:
-                    return new WebMessageSender(subscription.Client, _logger);
-                default:
-                    throw new ArgumentException("An unknown way to send a message.");
-            }
         }
     }
 }

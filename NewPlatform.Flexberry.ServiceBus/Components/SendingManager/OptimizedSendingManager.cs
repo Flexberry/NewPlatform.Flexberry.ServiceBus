@@ -178,7 +178,7 @@
         {
             var param = (SendingTaskParam)paramObject;
 
-            IMessageSender messageSender = GetMessageSender(param.Subscription);
+            IMessageSender messageSender = MessageSenderCreator.GetMessageSender(param.Subscription);
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -199,34 +199,6 @@
             return true;
         }
 
-        /// <summary>
-        /// Получить объект для отправки сообщений, тип которого зависит от метода отправки.
-        /// </summary>
-        /// <param name="subscription">Подписка, для которой нужно получить объект для отправки.</param>
-        /// <returns>Объект для отправки сообщений.</returns>
-        private IMessageSender GetMessageSender(Subscription subscription)
-        {
-            IMessageSender result;
-            switch (subscription.TransportType)
-            {
-                case TransportType.HTTP:
-                    result = new HttpMessageSender(subscription.Client, _logger);
-                    break;
-                case TransportType.MAIL:
-                    result = new MailMessageSender(subscription.Client, _logger);
-                    break;
-                case TransportType.WCF:
-                    result = new WcfMessageSender(subscription.Client, _logger);
-                    break;
-                case TransportType.WEB:
-                    result = new WebMessageSender(subscription.Client, _logger);
-                    break;
-                default:
-                    throw new ArgumentException("Неизвестный способ отправки сообщения.");
-            }
-
-            return result;
-        }
 
         /// <summary>
         /// Метод отправки сообщений из БД, выполняющийся по таймеру.
