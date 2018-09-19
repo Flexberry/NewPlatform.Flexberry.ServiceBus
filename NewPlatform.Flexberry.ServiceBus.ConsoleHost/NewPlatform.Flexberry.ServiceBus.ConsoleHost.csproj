@@ -107,7 +107,8 @@
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
     </Reference>
     <Reference Include="EasyNetQ.Management.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EasyNetQ.Management.Client.1.0.0\lib\net452\EasyNetQ.Management.Client.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\dllsignining\signed\EasyNetQ.Management.Client.dll</HintPath>
     </Reference>
     <Reference Include="ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ExternalLangDef.dll</HintPath>
