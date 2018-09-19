@@ -1,6 +1,4 @@
-﻿using NewPlatform.Flexberry.ServiceBus.Components.SendingManager;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Collections.Generic;

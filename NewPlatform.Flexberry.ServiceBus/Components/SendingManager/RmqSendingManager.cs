@@ -7,7 +7,6 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     using System.Collections.Generic;
     using System.Linq;
     using EasyNetQ.Management.Client;
-    using NewPlatform.Flexberry.ServiceBus.Components.SendingManager;
     using NewPlatform.Flexberry.ServiceBus.MessageSenders;
     using RabbitMQ.Client;
 
@@ -42,7 +41,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 Subscription = subscription;
                 _converter = converter;
                 _connectionFactory = connectionFactory;
-                _sender = new SendingManager.MessageSenderCreator(logger).GetMessageSender(subscription);
+                _sender = new MessageSenderCreator(logger).GetMessageSender(subscription);
             }
 
             /// <summary>
@@ -53,7 +52,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             {
                 if (subscription.TransportType != this.Subscription.TransportType || subscription.Client.Address != this.Subscription.Client.Address)
                 {
-                    this._sender = new SendingManager.MessageSenderCreator(this._logger).GetMessageSender(subscription);
+                    this._sender = new MessageSenderCreator(this._logger).GetMessageSender(subscription);
                     this.Subscription = subscription;
                 }
             }
