@@ -12,6 +12,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 {
     using System;
     using System.Xml;
+    using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business.Audit;
     using ICSSoft.STORMNET.Business.Audit.Objects;
@@ -28,6 +29,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (Client CustomAttributes)
 
     // *** End programmer edit section *** (Client CustomAttributes)
+    [BusinessServer("NewPlatform.Flexberry.ServiceBus.ClientBS, NewPlatform.Flexberry.ServiceBus.Busin" +
+        "essServers", ICSSoft.STORMNET.Business.DataServiceObjectEvents.OnAllEvents)]
     [ClassStorage("Клиент")]
     [AutoAltered()]
     [Caption("Клиент")]

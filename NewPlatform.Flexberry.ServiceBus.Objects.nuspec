@@ -21,5 +21,7 @@
   <files>
     <file src="NewPlatform.Flexberry.ServiceBus.Objects.dll" target="lib\net45\NewPlatform.Flexberry.ServiceBus.Objects.dll" />
     <file src="NewPlatform.Flexberry.ServiceBus.Objects.xml" target="lib\net45\NewPlatform.Flexberry.ServiceBus.Objects.xml" />
+    <file src="NewPlatform.Flexberry.ServiceBus.BusinessServers.dll" target="lib\net45\NewPlatform.Flexberry.ServiceBus.BusinessServers.dll" />
+    <file src="NewPlatform.Flexberry.ServiceBus.BusinessServers.xml" target="lib\net45\NewPlatform.Flexberry.ServiceBus.BusinessServers.xml" />
   </files>
 </package>

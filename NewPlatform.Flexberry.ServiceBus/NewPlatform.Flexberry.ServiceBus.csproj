@@ -432,6 +432,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus.BusinessServers\BusinessServers\NewPlatform.Flexberry.ServiceBus.BusinessServers.csproj">
+      <Project>{97408753-48e8-48f4-ae20-bdd44ab3f628}</Project>
+      <Name>NewPlatform.Flexberry.ServiceBus.BusinessServers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus.ClientTools\Objects\NewPlatform.Flexberry.ServiceBus.ClientTools.csproj">
       <Project>{5de41952-fd87-47da-b6d1-f805c670cb09}</Project>
       <Name>NewPlatform.Flexberry.ServiceBus.ClientTools</Name>

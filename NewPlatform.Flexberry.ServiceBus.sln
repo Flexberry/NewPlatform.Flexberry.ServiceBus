@@ -62,6 +62,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Open Source", "Open Source"
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.BusinessServers", "NewPlatform.Flexberry.ServiceBus.BusinessServers\BusinessServers\NewPlatform.Flexberry.ServiceBus.BusinessServers.csproj", "{97408753-48E8-48F4-AE20-BDD44AB3F628}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,6 +136,14 @@ Global
 		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Release|x86.ActiveCfg = Release|x86
 		{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}.Release|x86.Build.0 = Release|x86
+		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Debug|x86.Build.0 = Debug|Any CPU
+		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Release|x86.ActiveCfg = Release|Any CPU
+		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
