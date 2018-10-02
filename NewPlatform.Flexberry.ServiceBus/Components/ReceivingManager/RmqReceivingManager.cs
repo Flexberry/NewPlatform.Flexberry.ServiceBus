@@ -22,6 +22,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         {
             _connectionFactory = connectionFactory;
             _messageConverter = converter;
+            _namingManager = new AmqpNamingManager();
         }
 
         /// <summary>

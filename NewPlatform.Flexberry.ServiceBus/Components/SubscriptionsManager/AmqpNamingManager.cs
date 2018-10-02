@@ -11,6 +11,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         public string ClientQueuePrefix => "ics-consumer_";
 
+        private string _queueClientTypeDelimiter = "@";
+
         /// <summary>
         /// Получить имя точки обмена по типу сообщения в шине.
         /// </summary>
@@ -29,7 +31,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Имя очереди.</returns>
         public string GetClientQueueName(string clientId, string messageTypeId)
         {
-            return $"{this.GetClientQueuePrefix(clientId)}_{messageTypeId}";
+            return $"{this.GetClientQueuePrefix(clientId)}{this._queueClientTypeDelimiter}{messageTypeId}";
         }
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Начало наименования очереди клиента.</returns>
         public string GetClientQueuePrefix(string clienId)
         {
-            return $"{this.ClientQueuePrefix}{clienId}_";
+            return $"{this.ClientQueuePrefix}{clienId}";
         }
 
         /// <summary>
@@ -69,9 +71,10 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <param name="queueName">Название очереди.</param>
         /// <param name="routingKey">Ключ маршрутизации.</param>
         /// <returns>Объект подписки с заполенным MessageType.ID и Client.ID.</returns>
+        /// TODO: возможно следует выкинуть метод и пользоваться атрибутами очереди (проверить есть ли атрибуты очереди в AMQP/JMS или это специфика RMQ)
         public Subscription GetSubscriptionByAmqpModel(string queueName, string routingKey)
         {
-            if (!queueName.StartsWith(this.ClientQueuePrefix))
+            if (!queueName.StartsWith(this.ClientQueuePrefix) && queueName.Contains(this._queueClientTypeDelimiter.ToString()))
             {
                 throw new Exception($"Не совместимая очередь {queueName}");
             }
@@ -81,6 +84,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 Client = new Client()
                 {
                     ID = queueName.Replace(this.ClientQueuePrefix, string.Empty)
+                                     .Replace(routingKey, string.Empty)
+                                     .Replace(this._queueClientTypeDelimiter, string.Empty)
                 },
                 MessageType = new MessageType()
                 {

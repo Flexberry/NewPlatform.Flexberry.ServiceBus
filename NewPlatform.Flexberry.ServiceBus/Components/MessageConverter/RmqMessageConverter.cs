@@ -7,7 +7,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System.Collections.Generic;
 
-    internal class MessageConverter
+    internal class MessageConverter : IMessageConverter
     {
         private string _attachmentPropertyName => "attachment";
 
@@ -22,11 +22,19 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Словарь "имя свойства - значения"</returns>
         public IDictionary<string, object> GetBodyProperties(MessageForESB msg)
         {
-            return new Dictionary<string, object>()
+            var result = new Dictionary<string, object>();
+
+            if (msg.Attachment != null && msg.Attachment.Any())
             {
-                {this._attachmentPropertyName, msg.Attachment },
-                {this._bodyPropertyName, msg.Body }
-            };
+                result[this._attachmentPropertyName] = msg.Attachment;
+            }
+
+            if (msg.Body != null)
+            {
+                result[this._bodyPropertyName] = msg.Body;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -38,9 +46,12 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         public IDictionary<string, object> GetProperties(MessageForESB msg)
         {
             var properties = new Dictionary<string, object>();
-            foreach (var tag in msg.Tags)
+            if (msg.Tags != null)
             {
-                properties.Add(_tagPropertiesPrefix + tag.Key, tag.Value);
+                foreach (var tag in msg.Tags)
+                {
+                    properties.Add(_tagPropertiesPrefix + tag.Key, tag.Value);
+                }
             }
 
             return properties;
@@ -60,21 +71,31 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             rmqProperties.Headers = properties;
             var mapMessageReader = new MapMessageReader(rmqProperties, messagePayload);
 
-            var attachment = (byte[])mapMessageReader.Body[this._attachmentPropertyName];
-            var body = (string)mapMessageReader.Body[this._bodyPropertyName];
+            var bodyProperties = mapMessageReader.Body;
 
-            var messageTags = new Dictionary<string, string>();
-            foreach (var property in mapMessageReader.Properties.Headers)
+            if (bodyProperties.ContainsKey(this._bodyPropertyName))
             {
-                if (property.Key.StartsWith(this._tagPropertiesPrefix))
-                {
-                    messageTags.Add(property.Key.Substring(this._tagPropertiesPrefix.Length), property.Value.ToString());
-                }
+                result.Body = (string) mapMessageReader.Body[this._bodyPropertyName];
             }
 
-            result.BinaryAttachment = attachment;
-            result.Body = body;
-            result.Tags = messageTags.Select(x => $"{x.Key}:{x.Value}").Aggregate((x, y) => $"{x}, {y}");
+            if (bodyProperties.ContainsKey(this._attachmentPropertyName))
+            {
+                result.BinaryAttachment = (byte[])mapMessageReader.Body[this._attachmentPropertyName];
+            }
+
+            if (mapMessageReader.Properties.Headers != null)
+            {
+                var messageTags = new Dictionary<string, string>();
+                foreach (var property in mapMessageReader.Properties.Headers)
+                {
+                    if (property.Key.StartsWith(this._tagPropertiesPrefix))
+                    {
+                        messageTags.Add(property.Key.Substring(this._tagPropertiesPrefix.Length), property.Value.ToString());
+                    }
+                }
+
+                result.Tags = messageTags.Select(x => $"{x.Key}:{x.Value}").Aggregate((x, y) => $"{x}, {y}");
+            }
 
             return result;
         }
