@@ -16,15 +16,19 @@
         private readonly IManagementClient _managementClient;
         private readonly AmqpNamingManager _namingManager;
 
+        private readonly Vhost _vhost;
+
         /// <summary>
         /// Создаёт новый экземпляр класса <see cref="RmqSubscriptionManager"/> class.
         /// </summary>
         /// <param name="logger">Используемый компонент логирования.</param>
-        /// <param name="connectionFactory">Фабрика соединений RabbitMQ.</param>
-        public RmqSubscriptionsManager(ILogger logger, IManagementClient managementClient)
+        /// <param name="managementClient">Фабрика соединений RabbitMQ.</param>
+        /// <param name="vhost">Virtual host RabbitMQ</param>
+        public RmqSubscriptionsManager(ILogger logger, IManagementClient managementClient, string vhost = "/")
         {
             this._logger = logger;
             this._managementClient = managementClient;
+            this._vhost = this._managementClient.CreateVirtualHostAsync(vhost).Result;
 
             // TODO: следует ли выносить это в зависимости?
             this._namingManager = new AmqpNamingManager();
@@ -68,7 +72,7 @@
             var exchangeName = this._namingManager.GetExchangeName(msgTypeInfo.Id);
             var exchangeInfo = new ExchangeInfo(exchangeName, ExchangeType.Topic, autoDelete: false, durable: true, @internal: false, arguments: null);
 
-            this._managementClient.CreateExchangeAsync(exchangeInfo, null).Wait();
+            this._managementClient.CreateExchangeAsync(exchangeInfo, _vhost).Wait();
         }
 
         /// <summary>
@@ -130,7 +134,7 @@
             var result = new List<Subscription>();
 
             var exchangeName = this._namingManager.GetExchangeName(messageTypeId);
-            var exchange = this._managementClient.GetExchangeAsync(exchangeName, null).Result;
+            var exchange = this._managementClient.GetExchangeAsync(exchangeName, _vhost).Result;
             var bindings = this._managementClient.GetBindingsWithSourceAsync(exchange).Result;
 
             foreach (var binding in bindings)
@@ -162,8 +166,8 @@
             var exchangeName = this._namingManager.GetExchangeName(messageTypeId);
             var routingKey = this._namingManager.GetRoutingKey(messageTypeId);
 
-            var queue = this._managementClient.CreateQueueAsync(new QueueInfo(queueName, false, true, null), null).Result;
-            var exchange = this._managementClient.CreateExchangeAsync(new ExchangeInfo(exchangeName, ExchangeType.Topic, false, true, false, null), null).Result;
+            var queue = this._managementClient.CreateQueueAsync(new QueueInfo(queueName, false, true, new InputArguments()), this._vhost).Result;
+            var exchange = this._managementClient.CreateExchangeAsync(new ExchangeInfo(exchangeName, ExchangeType.Topic, false, true, false, new Arguments()), _vhost).Result;
             this._managementClient.CreateBinding(exchange, queue, new BindingInfo(routingKey)).Wait();
         }
 
@@ -187,7 +191,8 @@
             var queues = this._managementClient.GetQueuesAsync().Result.Where(x => x.Name.StartsWith(prefix));
             foreach (var queue in queues)
             {
-                var bindings = this._managementClient.GetBindingsForQueueAsync(queue).Result;
+                var bindings = this._managementClient.GetBindingsForQueueAsync(queue).Result
+                                    .Where(x => !string.IsNullOrEmpty(x.Source)); // откидываем стандартный binding, берем только те, что связывают с exchange
                 foreach (var binding in bindings)
                 {
                     result.Add(this._namingManager.GetSubscriptionByAmqpModel(queue.Name, binding.RoutingKey));

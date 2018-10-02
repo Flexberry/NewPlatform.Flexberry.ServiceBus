@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NewPlatform.Flexberry.ServiceBus
+namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     public interface ISubscriptionSynchronizer : NewPlatform.Flexberry.ServiceBus.Components.IServiceBusComponent
     {

@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using EasyNetQ.Management.Client.Model;
 
 namespace NewPlatform.Flexberry.ServiceBus.Components
 {
@@ -128,11 +129,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         private readonly IManagementClient _managementClient;
         private readonly IMessageConverter _converter;
         private readonly AmqpNamingManager _namingManager;
+        private readonly Vhost _vhost;
 
         private List<RmqConsumer> _consumers;
         private Timer _actualizationTimer;
+        
 
-        public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, ISubscriptionsManager rmqSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager)
+        public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/")
         {
             this._logger = logger;
             this._esbSubscriptionsManager = esbSubscriptionsManager;
@@ -141,6 +144,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             this._converter = converter;
             this._namingManager = namingManager;
             this.MessageSenderCreator = new MessageSenderCreator(_logger);
+            this._vhost = this._managementClient.CreateVirtualHostAsync(vhost).Result;
 
             this._consumers = new List<RmqConsumer>();
         }
@@ -260,7 +264,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             }
 
             var queueName = this._namingManager.GetClientQueueName(clientId, messageTypeId);
-            return this._managementClient.GetQueueAsync(queueName, null).Result.Messages;
+            return this._managementClient.GetQueueAsync(queueName, this._vhost).Result.Messages;
         }
 
         public MessageInfoFromESB[] GetMessagesInfo(string clientId, int maxCount = 0)
@@ -315,6 +319,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 if (message != null)
                 {
                     result = _converter.ConvertFromMqFormat(message.Body, message.BasicProperties.Headers);
+                    result.MessageType = new MessageType()
+                    {
+                        ID = messageTypeId
+                    };
+                    result.__PrimaryKey = message.DeliveryTag;
                 }
             }
 

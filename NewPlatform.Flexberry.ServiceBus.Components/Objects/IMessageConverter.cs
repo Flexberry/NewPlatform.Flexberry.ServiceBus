@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NewPlatform.Flexberry.ServiceBus
+namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     /// <summary>
     /// Компонент преобразования сообщения шины в формат JMS (заголовок и тело)

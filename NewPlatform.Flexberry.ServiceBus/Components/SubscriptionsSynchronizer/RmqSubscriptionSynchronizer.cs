@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace NewPlatform.Flexberry.ServiceBus.Components.SubscriptionsSynchronizer
+namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     /// <summary>
     /// Класс для синхронизации подписок в MQ и шине.
@@ -36,7 +36,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components.SubscriptionsSynchronizer
 
         public void Start()
         {
-            this._syncTimer = new Timer(x => this.Sync(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);
+            this._syncTimer = new Timer(x => this.Sync(), null, 0, this.UpdatePeriodMilliseconds);
         }
 
         public void Stop()
@@ -54,7 +54,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components.SubscriptionsSynchronizer
                 var mqSubscriptions = this._mqSubscriptionsManager.GetSubscriptions().ToList();
                 var esbSubscriptions = this._esbSubscriptionsManager.GetSubscriptions().ToList();
 
-                // Сначала актуализируем подписки в брокере, считаем его ведущим по данным
+                // Сначала актуализируем подписки в брокере, считаем его ведомым по данным
                 this.UpdateMqSubscriptions(mqSubscriptions, esbSubscriptions);
                 this.UpdateEsbSubscriptions(mqSubscriptions, esbSubscriptions);
             }
