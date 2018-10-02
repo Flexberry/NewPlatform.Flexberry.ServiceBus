@@ -183,9 +183,8 @@
     <Reference Include="ChangesToSqlBTMonitor, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e5ad39f116a43e0b, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
     </Reference>
-    <Reference Include="EasyNetQ.Management.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\dllsignining\signed\EasyNetQ.Management.Client.dll</HintPath>
+    <Reference Include="EasyNetQ.Management.Client, Version=0.0.0.0, Culture=neutral, PublicKeyToken=399630078ce52ba3, processorArchitecture=MSIL">
+      <HintPath>..\packages\NewPlatform.Flexberry.EasyNetQ.Management.Client.1.0.0\lib\net452\EasyNetQ.Management.Client.dll</HintPath>
     </Reference>
     <Reference Include="ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ExternalLangDef.dll</HintPath>
@@ -319,7 +318,7 @@
       <HintPath>..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=3.0.8.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\packages\Npgsql.3.0.8\lib\net45\Npgsql.dll</HintPath>

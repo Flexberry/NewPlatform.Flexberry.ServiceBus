@@ -173,7 +173,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="app.config" />
     <None Include="NewPlatform.Flexberry.ServiceBus.Objects.snk" />
     <None Include="packages.config" />
   </ItemGroup>
