@@ -45,7 +45,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
             if (existingMessageType != null)
             {
-                throw new Exception($"Тип сообщения с ID=\"{UpdatedObject.ID}\" уже существует.");
+                throw new Exception($"Message type with ID=\"{UpdatedObject.ID}\" already exists.");
             }
 
             return new ICSSoft.STORMNET.DataObject[0];

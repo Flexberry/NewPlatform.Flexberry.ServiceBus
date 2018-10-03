@@ -45,7 +45,7 @@ namespace NewPlatform.Flexberry.ServiceBus
 
             if (existingClient != null)
             {
-                throw new Exception($"Клиент с ID=\"{UpdatedObject.ID}\" уже существует.");
+                throw new Exception($"Client with ID=\"{UpdatedObject.ID}\" already exists.");
             }
 
             return new ICSSoft.STORMNET.DataObject[0];
