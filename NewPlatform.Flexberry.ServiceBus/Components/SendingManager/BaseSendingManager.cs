@@ -28,6 +28,9 @@
 
         private readonly ILogger _logger;
 
+        protected readonly MessageSenderCreator MessageSenderCreator;
+
+
         /// <summary>
         /// Язык для создания ограничений.
         /// </summary>
@@ -61,6 +64,7 @@
             _statistics = statistics;
             _dataService = dataService;
             _logger = logger;
+            MessageSenderCreator = new MessageSenderCreator(_logger);
         }
 
         public abstract void QueueForSending(Message msg);

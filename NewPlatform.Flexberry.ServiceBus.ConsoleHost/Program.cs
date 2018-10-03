@@ -20,7 +20,7 @@
         {
             var unityContainer = new UnityContainer();
             unityContainer.LoadConfiguration();
-            
+
             var components = 
                 from registration in unityContainer.Registrations
                 where typeof(IServiceBusComponent).IsAssignableFrom(registration.MappedToType)

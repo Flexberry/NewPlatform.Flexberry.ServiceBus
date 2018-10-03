@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet Package Properties", 
 		NewPlatform.Flexberry.ServiceBus.Components.nuspec = NewPlatform.Flexberry.ServiceBus.Components.nuspec
 		NewPlatform.Flexberry.ServiceBus.nuspec = NewPlatform.Flexberry.ServiceBus.nuspec
 		NewPlatform.Flexberry.ServiceBus.Objects.nuspec = NewPlatform.Flexberry.ServiceBus.Objects.nuspec
+		NewPlatform.Flexberry.ServiceBus.RabbitMQ.nuspec = NewPlatform.Flexberry.ServiceBus.RabbitMQ.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.IntegratedTests", "NewPlatform.Flexberry.ServiceBus.IntegratedTests\NewPlatform.Flexberry.ServiceBus.IntegratedTests.csproj", "{7C16F6BC-8BC6-42AD-8FFB-88A040D04CB8}"
@@ -66,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.Servi
 	ProjectSection(ProjectDependencies) = postProject
 		{CCF11380-4C57-48A2-B832-BC8F477C0B2A} = {CCF11380-4C57-48A2-B832-BC8F477C0B2A}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.RabbitMQ", "NewPlatform.Flexberry.ServiceBus.RabbitMQ\NewPlatform.Flexberry.ServiceBus.RabbitMQ.csproj", "{4AE4E878-F8A8-45EF-AC27-877210F684C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +150,14 @@ Global
 		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Release|x86.ActiveCfg = Release|Any CPU
 		{97408753-48E8-48F4-AE20-BDD44AB3F628}.Release|x86.Build.0 = Release|Any CPU
+		{4AE4E878-F8A8-45EF-AC27-877210F684C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AE4E878-F8A8-45EF-AC27-877210F684C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AE4E878-F8A8-45EF-AC27-877210F684C7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4AE4E878-F8A8-45EF-AC27-877210F684C7}.Debug|x86.Build.0 = Debug|Any CPU
+		{4AE4E878-F8A8-45EF-AC27-877210F684C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AE4E878-F8A8-45EF-AC27-877210F684C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AE4E878-F8A8-45EF-AC27-877210F684C7}.Release|x86.ActiveCfg = Release|Any CPU
+		{4AE4E878-F8A8-45EF-AC27-877210F684C7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
