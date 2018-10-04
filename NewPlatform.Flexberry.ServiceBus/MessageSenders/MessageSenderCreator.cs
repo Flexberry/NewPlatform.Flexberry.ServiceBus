@@ -1,9 +1,10 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.MessageSenders
 {
     using System;
-    using NewPlatform.Flexberry.ServiceBus.MessageSenders;
 
-    internal class MessageSenderCreator
+    using NewPlatform.Flexberry.ServiceBus.Components;
+
+    public class MessageSenderCreator
     {
         private readonly ILogger _logger;
 

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 using RabbitMQ.Client.Content;
 using RabbitMQ.Client.Impl;
 

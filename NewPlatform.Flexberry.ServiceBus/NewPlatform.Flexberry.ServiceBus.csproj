@@ -183,9 +183,6 @@
     <Reference Include="ChangesToSqlBTMonitor, Version=1.0.0.1, Culture=neutral, PublicKeyToken=e5ad39f116a43e0b, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ChangesToSqlBTMonitor.dll</HintPath>
     </Reference>
-    <Reference Include="EasyNetQ.Management.Client, Version=0.0.0.0, Culture=neutral, PublicKeyToken=399630078ce52ba3, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.EasyNetQ.Management.Client.1.0.0\lib\net452\EasyNetQ.Management.Client.dll</HintPath>
-    </Reference>
     <Reference Include="ExternalLangDef, Version=1.0.0.0, Culture=neutral, PublicKeyToken=50dc27591ed591e6, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.4.1.0\lib\net45\ExternalLangDef.dll</HintPath>
     </Reference>
@@ -250,9 +247,6 @@
       <HintPath>..\packages\NewPlatform.Flexberry.LogService.Objects.1.0.1\lib\net35\IIS.Caseberry.Logging.MsEntLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -262,9 +256,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=1.1.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.1.28\lib\net40\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
@@ -334,9 +325,6 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RabbitMQ.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <HintPath>..\packages\RabbitMQ.Client.5.1.0\lib\net451\RabbitMQ.Client.dll</HintPath>
-    </Reference>
     <Reference Include="Remotion.Linq, Version=1.13.183.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.1.13.183.0\lib\net35\Remotion.Linq.dll</HintPath>
       <Private>True</Private>
@@ -380,10 +368,8 @@
   <ItemGroup>
     <Compile Include="Components\Logger\Log4NetLogger.cs" />
     <Compile Include="Components\Logger\LoggerHelper.cs" />
-    <Compile Include="Components\MessageConverter\RmqMessageConverter.cs" />
     <Compile Include="Components\ObjectRepository\CachedDataServiceObjectRepository.cs" />
     <Compile Include="Components\ObjectRepository\DataServiceObjectRepository.cs" />
-    <Compile Include="Components\ReceivingManager\RmqReceivingManager.cs" />
     <Compile Include="Components\RerouterService\Configuration\MessageRerouterConfiguration.cs" />
     <Compile Include="Components\RerouterService\Configuration\RecieverElement.cs" />
     <Compile Include="Components\RerouterService\Configuration\RecieverElementCollection.cs" />
@@ -391,13 +377,10 @@
     <Compile Include="Components\RerouterService\MessageInfo.cs" />
     <Compile Include="Components\RerouterService\RerouterService.cs" />
     <Compile Include="Components\RerouterService\SerializationUtils.cs" />
-    <Compile Include="Components\SendingManager\MessageSenderCreator.cs" />
+    <Compile Include="MessageSenders\MessageSenderCreator.cs" />
     <Compile Include="Components\SendingManager\PrioritySendingManager.cs" />
-    <Compile Include="Components\SendingManager\RmqSendingManager.cs" />
     <Compile Include="Components\StatisticsService\DefaultStatisticsCompressorService.cs" />
     <Compile Include="Components\StatisticsService\DefaultStatisticsSettings.cs" />
-    <Compile Include="Components\SubscriptionsManager\AmqpNamingManager.cs" />
-    <Compile Include="Components\SubscriptionsManager\RmqSubscriptionsManager.cs" />
     <Compile Include="Controllers\RestDependencyResolver.cs" />
     <Compile Include="Controllers\RestDependencyScope.cs" />
     <Compile Include="Mail\Attach.cs" />
@@ -429,7 +412,6 @@
     <Compile Include="MessageSenders\WebMessageSender.cs" />
     <Compile Include="MultiTasking\SendingTaskParams.cs" />
     <Compile Include="Components\SendingManager\OptimizedSendingManager.cs" />
-    <Compile Include="Components\SubscriptionsSynchronizer\RmqSubscriptionSynchronizer.cs" />
     <Compile Include="ServiceBus.cs" />
     <Compile Include="Components\WcfService\SBService.IServiceBusInterop.cs" />
     <Compile Include="ServiceBusSettings.cs" />
@@ -473,9 +455,7 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="RmqComponents\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

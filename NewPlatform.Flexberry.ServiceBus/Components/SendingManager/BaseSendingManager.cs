@@ -15,6 +15,8 @@
     using Npgsql;
     using SortOrder = ICSSoft.STORMNET.Business.SortOrder;
 
+    using NewPlatform.Flexberry.ServiceBus.MessageSenders;
+
     /// <summary>
     /// Base abstract implementation of <see cref="ISendingManager"/>.
     /// </summary>

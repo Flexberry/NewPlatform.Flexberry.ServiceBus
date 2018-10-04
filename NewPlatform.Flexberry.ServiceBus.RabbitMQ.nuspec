@@ -15,6 +15,10 @@
     <copyright>Copyright © New Platform Ltd. 2018</copyright>
     <tags>Flexberry Service Bus</tags>
     <dependencies>
+      <dependency id="NewPlatform.Flexberry.ServiceBus" version="1.1.0" />
+
+      <dependency id="RabbitMQ.Client" version="5.1.0" />
+      <dependency id="NewPlatform.Flexberry.EasyNetQ.Management.Client" version="1.0.0" />
     </dependencies>
   </metadata>
   <files>
