@@ -5,7 +5,7 @@
     /// <summary>
     /// Base abstract implementation of <see cref="IServiceBusComponent"/>.
     /// </summary>
-    internal abstract class BaseServiceBusComponent : IServiceBusComponent, IDisposable
+    public abstract class BaseServiceBusComponent : IServiceBusComponent, IDisposable
     {
         /// <summary>
         /// Prepare to start component.

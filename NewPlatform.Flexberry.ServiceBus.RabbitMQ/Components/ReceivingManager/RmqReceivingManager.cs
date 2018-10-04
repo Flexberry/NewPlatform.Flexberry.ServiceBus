@@ -10,7 +10,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     /// <summary>
     /// Модуль приёма сообщений в формате шины в брокер
     /// </summary>
-    internal class RmqReceivingManager : BaseReceivingManager
+    internal class RmqReceivingManager : BaseServiceBusComponent, IReceivingManager
     {
         private IConnectionFactory _connectionFactory;
 
@@ -54,7 +54,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// Приём сообщения в брокер.
         /// </summary>
         /// <param name="message">Входящее сообщение.</param>
-        public override void AcceptMessage(MessageForESB message)
+        public void AcceptMessage(MessageForESB message)
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
@@ -74,7 +74,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// </summary>
         /// <param name="message">Входящее сообщение.</param>
         /// <param name="groupName">Имя группы.</param>
-        public override void AcceptMessage(MessageForESB message, string groupName)
+        public void AcceptMessage(MessageForESB message, string groupName)
         {
             // TODO: реализовать
             throw new NotImplementedException();
@@ -85,7 +85,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// </summary>
         /// <param name="clientId">Идентификатор клиента.</param>
         /// <param name="eventTypeId">Идентификатор уведомления (события).</param>
-        public override void RaiseEvent(string clientId, string eventTypeId)
+        public void RaiseEvent(string clientId, string eventTypeId)
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
