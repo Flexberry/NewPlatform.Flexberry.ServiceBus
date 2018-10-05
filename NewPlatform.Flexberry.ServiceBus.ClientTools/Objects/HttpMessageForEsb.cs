@@ -12,8 +12,8 @@ namespace NewPlatform.Flexberry.ServiceBus
 {
     using System;
     using System.Xml;
-    
-    
+
+
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -23,7 +23,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     /// HttpMessageForEsb.
     /// </summary>
     // *** Start programmer edit section *** (HttpMessageForEsb CustomAttributes)
-
+    [Obsolete("This type is not used instead of it use ServiceBusMessage")]
     // *** End programmer edit section *** (HttpMessageForEsb CustomAttributes)
     public class HttpMessageForEsb
     {
