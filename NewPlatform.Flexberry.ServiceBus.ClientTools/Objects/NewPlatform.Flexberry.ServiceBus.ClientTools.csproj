@@ -51,9 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IServiceBusCallbackSubscriber.cs" />
+    <Compile Include="IServiceBusClient.cs" />
     <Compile Include="IServiceBusComponent.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="IServiceBusManager.cs" />
     <Compile Include="MessageFromESB.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -91,6 +94,11 @@
     <Compile Include="MessageInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ServiceBusClient.cs" />
+    <Compile Include="ServiceBusMessage.cs" />
+    <Compile Include="ServiceBusMessageInfo.cs" />
+    <Compile Include="ServiceBusMessageType.cs" />
+    <Compile Include="ServiceBusSubscription.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NewPlatform.Flexberry.ServiceBus.ClientTools.snk" />

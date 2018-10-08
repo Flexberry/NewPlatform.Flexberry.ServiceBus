@@ -24,6 +24,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     /// </summary>
     // *** Start programmer edit section *** (MessageOrderingInformation CustomAttributes)
     [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects")]
+    [Obsolete("This type is not used instead of it use ServiceBusMessageInfo")]
     // *** End programmer edit section *** (MessageOrderingInformation CustomAttributes)
     public class MessageOrderingInformation
     {
