@@ -12,10 +12,10 @@ namespace NewPlatform.Flexberry.ServiceBus
 {
     using System;
     using System.Xml;
-    
-    
-    // *** Start programmer edit section *** (Using statements)
 
+
+    // *** Start programmer edit section *** (Using statements)
+    using System.Runtime.Serialization;
     // *** End programmer edit section *** (Using statements)
 
 
@@ -23,7 +23,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     /// ServiceBusSubscription.
     /// </summary>
     // *** Start programmer edit section *** (ServiceBusSubscription CustomAttributes)
-
+    [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects")]
     // *** End programmer edit section *** (ServiceBusSubscription CustomAttributes)
     public class ServiceBusSubscription
     {
@@ -39,17 +39,17 @@ namespace NewPlatform.Flexberry.ServiceBus
         private string fSendBy;
         
         private string fDescription;
-        
+
         // *** Start programmer edit section *** (ServiceBusSubscription CustomMembers)
 
         // *** End programmer edit section *** (ServiceBusSubscription CustomMembers)
 
-        
+
         /// <summary>
         /// ClientId.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusSubscription.ClientId CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusSubscription.ClientId CustomAttributes)
         public virtual string ClientId
         {
@@ -75,12 +75,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.ClientId Set end)
             }
         }
-        
+
         /// <summary>
         /// MessageTypeId.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeId CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeId CustomAttributes)
         public virtual string MessageTypeId
         {
@@ -106,12 +106,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeId Set end)
             }
         }
-        
+
         /// <summary>
         /// ExpiryDate.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusSubscription.ExpiryDate CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusSubscription.ExpiryDate CustomAttributes)
         public virtual DateTime? ExpiryDate
         {
@@ -137,12 +137,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.ExpiryDate Set end)
             }
         }
-        
+
         /// <summary>
         /// Callback.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusSubscription.Callback CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusSubscription.Callback CustomAttributes)
         public virtual bool Callback
         {
@@ -168,12 +168,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.Callback Set end)
             }
         }
-        
+
         /// <summary>
         /// SendBy.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusSubscription.SendBy CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusSubscription.SendBy CustomAttributes)
         public virtual string SendBy
         {
@@ -199,12 +199,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.SendBy Set end)
             }
         }
-        
+
         /// <summary>
         /// Description.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusSubscription.Description CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusSubscription.Description CustomAttributes)
         public virtual string Description
         {

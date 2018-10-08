@@ -12,10 +12,10 @@ namespace NewPlatform.Flexberry.ServiceBus
 {
     using System;
     using System.Xml;
-    
-    
-    // *** Start programmer edit section *** (Using statements)
 
+
+    // *** Start programmer edit section *** (Using statements)
+    using System.Runtime.Serialization;
     // *** End programmer edit section *** (Using statements)
 
 
@@ -23,7 +23,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     /// ServiceBusClient.
     /// </summary>
     // *** Start programmer edit section *** (ServiceBusClient CustomAttributes)
-
+    [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects")]
     // *** End programmer edit section *** (ServiceBusClient CustomAttributes)
     public class ServiceBusClient
     {
@@ -41,17 +41,17 @@ namespace NewPlatform.Flexberry.ServiceBus
         private int? fConnectionsLimit;
         
         private bool fSequentialSent = false;
-        
+
         // *** Start programmer edit section *** (ServiceBusClient CustomMembers)
 
         // *** End programmer edit section *** (ServiceBusClient CustomMembers)
 
-        
+
         /// <summary>
         /// Id.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusClient.Id CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusClient.Id CustomAttributes)
         public virtual string Id
         {
@@ -77,12 +77,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusClient.Id Set end)
             }
         }
-        
+
         /// <summary>
         /// Name.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusClient.Name CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusClient.Name CustomAttributes)
         public virtual string Name
         {
@@ -108,12 +108,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusClient.Name Set end)
             }
         }
-        
+
         /// <summary>
         /// Address.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusClient.Address CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusClient.Address CustomAttributes)
         public virtual string Address
         {
@@ -139,12 +139,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusClient.Address Set end)
             }
         }
-        
+
         /// <summary>
         /// Description.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusClient.Description CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusClient.Description CustomAttributes)
         public virtual string Description
         {
@@ -170,12 +170,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusClient.Description Set end)
             }
         }
-        
+
         /// <summary>
         /// DnsIdentity.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusClient.DnsIdentity CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusClient.DnsIdentity CustomAttributes)
         public virtual string DnsIdentity
         {
@@ -201,12 +201,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusClient.DnsIdentity Set end)
             }
         }
-        
+
         /// <summary>
         /// ConnectionsLimit.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusClient.ConnectionsLimit CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusClient.ConnectionsLimit CustomAttributes)
         public virtual int? ConnectionsLimit
         {
@@ -232,12 +232,12 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusClient.ConnectionsLimit Set end)
             }
         }
-        
+
         /// <summary>
         /// SequentialSent.
         /// </summary>
         // *** Start programmer edit section *** (ServiceBusClient.SequentialSent CustomAttributes)
-
+        [DataMember]
         // *** End programmer edit section *** (ServiceBusClient.SequentialSent CustomAttributes)
         public virtual bool SequentialSent
         {
