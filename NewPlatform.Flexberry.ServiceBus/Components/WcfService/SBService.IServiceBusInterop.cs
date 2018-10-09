@@ -14,7 +14,13 @@
         /// <param name="evntType">Информация о создаваемом типе событий.</param>
         public void AddNewEvntType(NameCommentStruct evntType)
         {
-            _subscriptionsManager.CreateEventType(evntType);
+            ServiceBusMessageType serviceBusMessageType = new ServiceBusMessageType
+            {
+                Id = evntType.Id,
+                Name = evntType.Name,
+                Description = evntType.Comment
+            };
+            _subscriptionsManager.CreateMessageType(serviceBusMessageType);
         }
 
         /// <summary>
@@ -23,7 +29,13 @@
         /// <param name="msgType">Информация о создаваемом типе сообщений.</param>
         public void AddNewMsgType(NameCommentStruct msgType)
         {
-            _subscriptionsManager.CreateMessageType(msgType);
+            ServiceBusMessageType serviceBusMessageType = new ServiceBusMessageType
+            {
+                Id = msgType.Id,
+                Name = msgType.Name,
+                Description = msgType.Comment
+            };
+            _subscriptionsManager.CreateMessageType(serviceBusMessageType);
         }
 
         /// <summary>
@@ -33,7 +45,7 @@
         /// <returns>Информация о найденных типах событий.</returns>
         public NameCommentStruct[] GetEvntTypesFromBus(string clientId)
         {
-            return _subscriptionsManager.GetSubscriptions(clientId).Select(x => new NameCommentStruct
+            return _subscriptionsManager.GetSubscriptions(clientId, true).Select(x => new NameCommentStruct
             {
                 Id = x.MessageType.ID,
                 Name = x.MessageType.Name,
@@ -48,7 +60,7 @@
         /// <returns>Информация о найденных типах сообщений.</returns>
         public NameCommentStruct[] GetMsgTypesFromBus(string clientId)
         {
-            return _subscriptionsManager.GetSubscriptions(clientId).Select(x => new NameCommentStruct
+            return _subscriptionsManager.GetSubscriptions(clientId, true).Select(x => new NameCommentStruct
             {
                 Id = x.MessageType.ID,
                 Name = x.MessageType.Name,

@@ -52,13 +52,13 @@
                 return false;
             }
 
-            var channelFactory = new ChannelFactory<ICallbackSubscriber>(
+            var channelFactory = new ChannelFactory<IServiceBusCallbackSubscriber>(
                 "CallbackClient",
                 Client.DnsIdentity != null ? new EndpointAddress(new Uri(Client.Address), EndpointIdentity.CreateDnsIdentity(Client.DnsIdentity)) : new EndpointAddress(Client.Address));
-            ICallbackSubscriber channel = channelFactory.CreateChannel();
+            IServiceBusCallbackSubscriber channel = channelFactory.CreateChannel();
             ((IClientChannel)channel).Open();
 
-            MessageFromESB messageFromEsb = ServiceHelper.CreateWcfMessageFromEsb(
+            ServiceBusMessage messageFromEsb = ServiceHelper.CreateWcfMessageFromEsb(
                 message.ReceivingTime,
                 message.MessageType.ID,
                 message.Body,

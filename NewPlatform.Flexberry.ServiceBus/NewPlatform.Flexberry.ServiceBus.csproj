@@ -377,6 +377,9 @@
     <Compile Include="Components\RerouterService\MessageInfo.cs" />
     <Compile Include="Components\RerouterService\RerouterService.cs" />
     <Compile Include="Components\RerouterService\SerializationUtils.cs" />
+    <Compile Include="Components\WcfService\SBService.IServiceBusCallbackSubscriber.cs" />
+    <Compile Include="Components\WcfService\SBService.IServiceBusClient.cs" />
+    <Compile Include="Components\WcfService\SBService.IServiceBusManager.cs" />
     <Compile Include="MessageSenders\MessageSenderCreator.cs" />
     <Compile Include="Components\SendingManager\PrioritySendingManager.cs" />
     <Compile Include="Components\StatisticsService\DefaultStatisticsCompressorService.cs" />

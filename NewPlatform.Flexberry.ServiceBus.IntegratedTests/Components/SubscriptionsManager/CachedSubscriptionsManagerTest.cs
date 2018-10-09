@@ -33,23 +33,23 @@
                 var messageLcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.MessageLightView);
                 service.CreateClient(client1Id, "TestClient1");
                 service.CreateClient(client2Id, "TestClient2");
-                service.CreateMessageType(new NameCommentStruct
+                service.CreateMessageType(new ServiceBusMessageType
                 {
                     Id = messageType1Id,
                     Name = "TestMessageType1",
-                    Comment = "ForTest"
+                    Description = "ForTest"
                 });
-                service.CreateMessageType(new NameCommentStruct
+                service.CreateMessageType(new ServiceBusMessageType
                 {
                     Id = messageType2Id,
                     Name = "TestMessageType2",
-                    Comment = "ForTest"
+                    Description = "ForTest"
                 });
-                service.CreateMessageType(new NameCommentStruct
+                service.CreateMessageType(new ServiceBusMessageType
                 {
                     Id = messageType3Id,
                     Name = "TestMessageType3",
-                    Comment = "ForTest"
+                    Description = "ForTest"
                 });
                 service.Prepare();
                 service.SubscribeOrUpdate(client1Id, messageType1Id, true, TransportType.WCF);
@@ -108,23 +108,23 @@
                 const string messageType3Id = "BC3F54C6-4E2F-43DA-B124-A0771F8F200C";
                 var service = new CachedSubscriptionsManager(GetMockLogger(), dataService, GetMockStatisticsService());
                 service.CreateClient(clientId, "TestClient1");
-                service.CreateMessageType(new NameCommentStruct
+                service.CreateMessageType(new ServiceBusMessageType
                 {
                     Id = messageType1Id,
                     Name = "TestMessageType1",
-                    Comment = "ForTest"
+                    Description = "ForTest"
                 });
-                service.CreateMessageType(new NameCommentStruct
+                service.CreateMessageType(new ServiceBusMessageType
                 {
                     Id = messageType2Id,
                     Name = "TestMessageType2",
-                    Comment = "ForTest"
+                    Description = "ForTest"
                 });
-                service.CreateMessageType(new NameCommentStruct
+                service.CreateMessageType(new ServiceBusMessageType
                 {
                     Id = messageType3Id,
                     Name = "TestMessageType3",
-                    Comment = "ForTest"
+                    Description = "ForTest"
                 });
                 service.Prepare();
 

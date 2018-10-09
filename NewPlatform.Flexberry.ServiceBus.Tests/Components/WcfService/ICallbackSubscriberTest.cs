@@ -21,7 +21,7 @@
             // Arrange.
             var address = new Uri("http://localhost:12346/CallbackSubscriber");
             RecManager = new Mock<IReceivingManager>();
-            service = new WcfService(GetMockSubscriptionManager(), GetMockSendingManager(), RecManager.Object, GetMockLogger(), GetMockStatisticsService())
+            service = new WcfService(GetMockSubscriptionManager(), GetMockSendingManager(), RecManager.Object, GetMockLogger(), GetMockStatisticsService(), GetMockObjectRepository())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),
@@ -76,7 +76,7 @@
             fixture.RecManager.Verify(
                 rec =>
                     rec.AcceptMessage(
-                        It.Is<MessageForESB>(
+                        It.Is<ServiceBusMessage>(
                             msg =>
                                 msg.ClientID == clientId && msg.MessageTypeID == messageTypeId &&
                                 msg.Body == message.Body && msg.Tags["senderName"] == senderId), groupId),
@@ -87,7 +87,7 @@
             fixture.RecManager.Verify(
                 rec =>
                     rec.AcceptMessage(
-                        It.Is<MessageForESB>(
+                        It.Is<ServiceBusMessage>(
                             msg =>
                                 msg.ClientID == clientId && msg.MessageTypeID == messageTypeId &&
                                 msg.Body == message.Body && msg.Tags["senderName"] == senderId)),

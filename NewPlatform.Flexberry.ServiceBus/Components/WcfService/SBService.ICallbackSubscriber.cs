@@ -58,7 +58,13 @@
         {
             var uc = new UnityContainer();
             var cbcs = uc.Resolve<CrossBusCommunicationService>();
-            _receivingManager.RaiseEvent(cbcs.ServiceID4SB, ИдТипаСобытия);
+            var msg = new ServiceBusMessage
+            {
+                Id = cbcs.ServiceID4SB,
+                MessageTypeID = ИдТипаСобытия
+            };
+ 
+            _receivingManager.AcceptMessage(msg);
         }
 
         /// <summary>

@@ -55,7 +55,7 @@
         public void TestMessageTypeCreate()
         {
             // Arrange.
-            var messageTypeInfo = new NameCommentStruct { Id = "123", Name = "TestMessageType", Comment = "ForTest" };
+            var messageTypeInfo = new ServiceBusMessageType { Id = "123", Name = "TestMessageType", Description = "ForTest" };
             var dataServiceMock = new Mock<IDataService>();
             var service = new CachedSubscriptionsManager(GetMockLogger(), dataServiceMock.Object, GetMockStatisticsService());
 
@@ -63,25 +63,7 @@
             service.CreateMessageType(messageTypeInfo);
 
             // Assert.
-            dataServiceMock.Verify(f => f.UpdateObject(It.Is<MessageType>(t => t.ID == messageTypeInfo.Id && t.Name == messageTypeInfo.Name && t.Description == messageTypeInfo.Comment)), Times.Once);
-        }
-
-        /// <summary>
-        /// Testing event type creation.
-        /// </summary>
-        [Fact]
-        public void TestEventTypeCreate()
-        {
-            // Arrange.
-            var eventTypeInfo = new NameCommentStruct { Id = "123", Name = "TestEventType", Comment = "ForTest" };
-            var dataServiceMock = new Mock<IDataService>();
-            var service = new CachedSubscriptionsManager(GetMockLogger(), dataServiceMock.Object, GetMockStatisticsService());
-
-            // Act.
-            service.CreateEventType(eventTypeInfo);
-
-            // Assert.
-            dataServiceMock.Verify(f => f.UpdateObject(It.Is<MessageType>(t => t.ID == eventTypeInfo.Id && t.Name == eventTypeInfo.Name && t.Description == eventTypeInfo.Comment)), Times.Once);
+            dataServiceMock.Verify(f => f.UpdateObject(It.Is<MessageType>(t => t.ID == messageTypeInfo.Id && t.Name == messageTypeInfo.Name && t.Description == messageTypeInfo.Description)), Times.Once);
         }
 
         /// <summary>

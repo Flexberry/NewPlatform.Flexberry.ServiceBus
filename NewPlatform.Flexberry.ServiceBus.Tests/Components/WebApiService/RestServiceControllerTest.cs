@@ -68,8 +68,8 @@
             request.Method = "GET";
             fixture.SendManager.Setup(send => send.GetMessagesInfo(clientId, It.IsAny<int>())).Returns(new[]
             {
-                new MessageInfoFromESB { Id = message1Id, MessageFormingTime = messageTime, Priority = 1, MessageTypeID = messageType1Id },
-                new MessageInfoFromESB { Id = message2Id, MessageFormingTime = messageTime, Priority = 2, MessageTypeID = messageType2Id }
+                new ServiceBusMessageInfo { Id = message1Id, FormingTime = messageTime, Priority = 1, MessageTypeID = messageType1Id },
+                new ServiceBusMessageInfo { Id = message2Id, FormingTime = messageTime, Priority = 2, MessageTypeID = messageType2Id }
             });
 
             // Act.
@@ -205,7 +205,7 @@
             request.GetResponse();
 
             // Assert.
-            fixture.RecManager.Verify(rec => rec.AcceptMessage(It.Is<MessageForESB>(msg => msg.ClientID == clientId && msg.MessageTypeID == messageTypeId)), Times.Once);
+            fixture.RecManager.Verify(rec => rec.AcceptMessage(It.Is<ServiceBusMessage>(msg => msg.ClientID == clientId && msg.MessageTypeID == messageTypeId)), Times.Once);
         }
 
         /// <summary>

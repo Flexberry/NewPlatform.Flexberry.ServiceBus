@@ -70,7 +70,7 @@
         /// Принять сообщение.
         /// </summary>
         /// <param name="message">Принимаемое сообщение.</param>
-        public override void AcceptMessage(MessageForESB message)
+        public override void AcceptMessage(ServiceBusMessage message)
         {
             _logger.LogIncomingMessage(message);
             try
@@ -139,7 +139,7 @@
         /// </summary>
         /// <param name="message">Принимаемое сообщение.</param>
         /// <param name="groupName">Имя группы.</param>
-        public override void AcceptMessage(MessageForESB message, string groupName)
+        public override void AcceptMessage(ServiceBusMessage message, string groupName)
         {
             _logger.LogIncomingMessage(message);
             try
@@ -230,71 +230,6 @@
             {
                 _logger.LogUnhandledException(e);
                 throw;
-            }
-        }
-
-        /// <summary>
-        /// Уведомить о событии.
-        /// </summary>
-        /// <param name="clientId">Идентификатор клиента.</param>
-        /// <param name="eventTypeId">Идентификатор типа события.</param>
-        public override void RaiseEvent(string clientId, string eventTypeId)
-        {
-            if (!_objectRepository.GetRestrictionsForClient(clientId).Any(x => x.MessageType.ID == eventTypeId))
-            {
-                _logger.LogInformation("Отправка запрещена.", $"Клиент {clientId} не имеет прав на отправку сообщения типа {eventTypeId}.");
-                return;
-            }
-
-            IEnumerable<Subscription> subscriptions = _subscriptionsManager.GetSubscriptionsForMsgType(eventTypeId, clientId);
-
-            if (!subscriptions.Any())
-            {
-                _logger.LogInformation("Для сообщения нет ни одной подписки.", $"Было получено сообщение, для которого нет ни одной активной подписки (ID типа сообщения: {eventTypeId}).");
-                return;
-            }
-
-            foreach (var subscription in subscriptions)
-            {
-                // Получение существующих событий по загруженным подпискам.
-                LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.MessageLightView);
-
-                lcs.LimitFunction = _langDef.GetFunction(
-                    _langDef.funcAND,
-                    _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.GuidType, Information.ExtractPropertyPath<Message>(x => x.Recipient)), ((KeyGuid)subscription.Client.__PrimaryKey).Guid),
-                    _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.GuidType, Information.ExtractPropertyPath<Message>(x => x.MessageType)), ((KeyGuid)subscription.MessageType.__PrimaryKey).Guid));
-
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-
-                DataObject[] events = _dataService.LoadObjects(lcs);
-
-                stopwatch.Stop();
-                long time = stopwatch.ElapsedMilliseconds;
-                _statisticsService.NotifyAvgTimeSql(subscription, (int)time, "DefaultReceivingManager.RaiseEvent() load messages.");
-
-
-                if (events.Length != 0)
-                    continue;
-
-                // Создание нового уведомления о событии в случае, если оно еще не существует.
-                var newEvent = new Message()
-                {
-                    ReceivingTime = DateTime.Now,
-                    MessageType = subscription.MessageType,
-                    Recipient = subscription.Client
-                };
-
-                stopwatch = new Stopwatch();
-                stopwatch.Start();
-
-                _dataService.UpdateObject(newEvent);
-
-                stopwatch.Stop();
-                time = stopwatch.ElapsedMilliseconds;
-                _statisticsService.NotifyAvgTimeSql(subscription, (int)time, "DefaultReceivingManager.RaiseEvent() update messages.");
-
-                _statisticsService.NotifyMessageReceived(subscription);
             }
         }
     }

@@ -82,7 +82,18 @@
                             break;
                         }
 
-                        RecievingManager.AcceptMessage(job.Message);
+
+                        ServiceBusMessage serviceBusMessage = new ServiceBusMessage
+                        {
+                            Attachment = job.Message.Attachment,
+                            Body = job.Message.Body,
+                            ClientID = job.Message.ClientID,
+                            MessageTypeID = job.Message.MessageTypeID,
+                            Tags = job.Message.Tags,
+                            Priority = job.Message.Priority
+                        };
+
+                        RecievingManager.AcceptMessage(serviceBusMessage);
                     }
                 }
 
