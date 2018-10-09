@@ -75,13 +75,13 @@
             // Act.
             WebResponse response = request.GetResponse();
 
-            MessageInfoFromESB[] res;
+            ServiceBusMessageInfo[] res;
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
                 var msg = reader.ReadToEnd();
                 var serializer = new JavaScriptSerializer();
-                res = serializer.Deserialize<MessageInfoFromESB[]>(msg);
+                res = serializer.Deserialize<ServiceBusMessageInfo[]>(msg);
             }
 
             // Assert.
@@ -89,7 +89,7 @@
             Assert.True(res[0].Id == message1Id && res[1].Id == message2Id);
             Assert.True(res[0].Priority == 1 && res[1].Priority == 2);
             Assert.True(res[0].MessageTypeID == messageType1Id && res[1].MessageTypeID == messageType2Id);
-            Assert.True(res.All(r => r.MessageFormingTime == messageTime));
+            Assert.True(res.All(r => r.FormingTime == messageTime));
         }
 
         /// <summary>
