@@ -267,28 +267,175 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             return this._managementClient.GetQueueAsync(queueName, this._vhost).Result.Messages;
         }
 
-        public MessageInfoFromESB[] GetMessagesInfo(string clientId, int maxCount = 0)
+        /// <summary>
+        /// Получить информацию о сообщениях, которые есть, но еще не отправлены указанному клиенту.
+        /// </summary>
+        /// <param name="clientId">Идентификатор клиента.</param>
+        /// <param name="maxCount">Максимальное количество возвращаемых записей. Если равно 0, возвращается информация о всех имеющихся сообщениях.</param>
+        /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
+        public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, int maxCount = 0)
         {
-            // TODO: реализовать
-            throw new System.NotImplementedException();
+            string queueNamePrefix = _namingManager.GetClientQueuePrefix(clientId);
+            IEnumerable<Queue> queues = _managementClient.GetQueuesAsync().Result;
+            IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueNamePrefix));
+
+            List<ServiceBusMessageInfo> rmqMessagesInfo = new List<ServiceBusMessageInfo>();
+            foreach (Queue clientQueue in clientQueues)
+            {
+                var messages = _managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
+                foreach (var message in messages)
+                {
+                    ServiceBusMessageInfo msg = new ServiceBusMessageInfo
+                    {
+                        // TODO: Добавить заполнение других свойств.
+                        MessageTypeID = _namingManager.GetMessageType(message.RoutingKey),
+                    };
+
+                    rmqMessagesInfo.Add(msg);
+                }
+
+                if (maxCount > 0 && rmqMessagesInfo.Count >= maxCount)
+                {
+                    rmqMessagesInfo.Take(maxCount);
+                    break;
+                }
+            }
+
+            return rmqMessagesInfo;
         }
 
-        public MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, int maxCount = 0)
+        /// <summary>
+        /// Получить информацию о сообщениях, которые есть, но еще не отправлены указанному клиенту.
+        /// </summary>
+        /// <param name="clientId">Идентификатор клиента.</param>
+        /// <param name="messageTypeId">Идентификатор типа сообщений.</param>
+        /// <param name="maxCount">Максимальное количество возвращаемых записей. Если равно 0, возвращается информация о всех имеющихся сообщениях.</param>
+        /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
+        public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, int maxCount = 0)
         {
-            // TODO: реализовать
-            throw new System.NotImplementedException();
+            var queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
+            IEnumerable<Queue> queues = _managementClient.GetQueuesAsync().Result;
+            IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueName));
+
+            List<ServiceBusMessageInfo> rmqMessagesInfo = new List<ServiceBusMessageInfo>();
+            foreach (Queue clientQueue in clientQueues)
+            {
+                var messages = _managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
+                foreach (var message in messages)
+                {
+                    ServiceBusMessageInfo msg = new ServiceBusMessageInfo
+                    {
+                        // TODO: Добавить заполнение других свойств.
+                        MessageTypeID = messageTypeId,
+                    };
+
+                    rmqMessagesInfo.Add(msg);
+                }
+
+                if (maxCount > 0 && rmqMessagesInfo.Count >= maxCount)
+                {
+                    rmqMessagesInfo.Take(maxCount);
+                    break;
+                }
+            }
+
+            return rmqMessagesInfo;
         }
 
-        public MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount = 0)
+        /// <summary>
+        /// Получить информацию о сообщениях, которые есть, но еще не отправлены указанному клиенту.
+        /// </summary>
+        /// <param name="clientId">Идентификатор клиента.</param>
+        /// <param name="messageTypeId">Идентификатор типа сообщения.</param>
+        /// <param name="groupName">Имя группы сообщения.</param>
+        /// <param name="maxCount">Максимальное количество возвращаемых записей. Если равно 0, возвращается информация о всех имеющихся сообщениях.</param>
+        /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
+        public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount = 0)
         {
-            // TODO: реализовать
-            throw new System.NotImplementedException();
+            var queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
+            IEnumerable<Queue> queues = _managementClient.GetQueuesAsync().Result;
+            IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueName));
+
+            List<ServiceBusMessageInfo> rmqMessagesInfo = new List<ServiceBusMessageInfo>();
+            foreach (Queue clientQueue in clientQueues)
+            {
+                var messages = _managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
+                foreach (var message in messages)
+                {
+                    // TODO: Исправить считывание групп.
+                    if (message.Properties.Headers.Where(pr => pr.Key.StartsWith("__gruop" + groupName)).ToArray().Length != 0)
+                    {
+                        ServiceBusMessageInfo msg = new ServiceBusMessageInfo
+                        {
+                            // TODO: Добавить заполнение других свойств.
+                            MessageTypeID = _namingManager.GetMessageType(message.RoutingKey),
+                        };
+
+                        rmqMessagesInfo.Add(msg);
+                    }
+                }
+
+                if (maxCount > 0 && rmqMessagesInfo.Count >= maxCount)
+                {
+                    rmqMessagesInfo.Take(maxCount);
+                    break;
+                }
+            }
+
+            return rmqMessagesInfo;
         }
 
-        public MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount = 0)
+        /// <summary>
+        /// Получить информацию о сообщениях, которые есть, но еще не отправлены указанному клиенту.
+        /// </summary>
+        /// <param name="clientId">Идентификатор клиента.</param>
+        /// <param name="messageTypeId">Идентификатор типа сообщений.</param>
+        /// <param name="tags">Теги, которые должно содержать сообщение.</param>
+        /// <param name="maxCount">Максимальное количество возвращаемых записей. Если равно 0, возвращается информация о всех имеющихся сообщениях.</param>
+        /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
+        public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount = 0)
         {
-            // TODO: реализовать
-            throw new System.NotImplementedException();
+            var queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
+            IEnumerable<Queue> queues = _managementClient.GetQueuesAsync().Result;
+            IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueName));
+
+            List<ServiceBusMessageInfo> rmqMessagesInfo = new List<ServiceBusMessageInfo>();
+            foreach (Queue clientQueue in clientQueues)
+            {
+                var messages = _managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
+                foreach (var message in messages)
+                {
+                    var haveAllTags = true;
+                    foreach (string tag in tags)
+                    {
+                        var headerTag = message.Properties.Headers.Where(pr => pr.Key.StartsWith(_converter.GetTagPropertiesPrefix(tag)));
+                        if (headerTag.ToArray().Length == 0)
+                        {
+                            haveAllTags = false;
+                            break;
+                        }
+                    }
+
+                    if (haveAllTags)
+                    {
+                        ServiceBusMessageInfo msg = new ServiceBusMessageInfo
+                        {
+                            // TODO: Добавить заполнение других свойств.
+                            MessageTypeID = _namingManager.GetMessageType(message.RoutingKey),
+                        };
+
+                        rmqMessagesInfo.Add(msg);
+                    }
+                }
+
+                if (maxCount > 0 && rmqMessagesInfo.Count >= maxCount)
+                {
+                    rmqMessagesInfo.Take(maxCount);
+                    break;
+                }
+            }
+
+            return rmqMessagesInfo;
         }
 
         /// <summary>

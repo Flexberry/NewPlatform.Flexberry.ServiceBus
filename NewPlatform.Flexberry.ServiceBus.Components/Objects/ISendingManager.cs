@@ -11,6 +11,7 @@
 namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
+    using System.Collections.Generic;
     using System.Xml;
     
     
@@ -47,26 +48,26 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         // *** End programmer edit section *** (ISendingManager.GetCurrentMessageCount System.String System.String CustomAttributes)
         int GetCurrentMessageCount(string clientId, string messageTypeId);
-        
+
         // *** Start programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.Int32 CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.Int32 CustomAttributes)
-        MessageInfoFromESB[] GetMessagesInfo(string clientId, int maxCount = 0);
-        
+        IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, int maxCount = 0);
+
         // *** Start programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.String System.Int32 CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.String System.Int32 CustomAttributes)
-        MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, int maxCount = 0);
-        
+        IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, int maxCount = 0);
+
         // *** Start programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.String System.String System.Int32 CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.String System.String System.Int32 CustomAttributes)
-        MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount = 0);
-        
+        IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount = 0);
+
         // *** Start programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.String string[] System.Int32 CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.String string[] System.Int32 CustomAttributes)
-        MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount = 0);
+        IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount = 0);
         
         // *** Start programmer edit section *** (ISendingManager.ReadMessage System.String CustomAttributes)
 

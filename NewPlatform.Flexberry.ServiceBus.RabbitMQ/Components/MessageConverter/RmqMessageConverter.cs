@@ -98,5 +98,15 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
             return result;
         }
+
+        /// <summary>
+        /// Получить префикс для тэгов.
+        /// </summary>
+        /// <param name="tag">Имя тэга.</tag>
+        /// <returns>Префикс для тэгов.</returns>
+        public string GetTagPropertiesPrefix(string tag)
+        {
+            return $"{_tagPropertiesPrefix}{tag}";
+        }
     }
 }
