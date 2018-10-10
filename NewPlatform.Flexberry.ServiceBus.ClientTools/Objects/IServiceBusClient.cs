@@ -34,52 +34,52 @@ namespace NewPlatform.Flexberry.ServiceBus
 
 
         // *** Start programmer edit section *** (IServiceBusClient.GetMessageInfo System.String System.String CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "GetMessageInfo")]
         // *** End programmer edit section *** (IServiceBusClient.GetMessageInfo System.String System.String CustomAttributes)
         NewPlatform.Flexberry.ServiceBus.ServiceBusMessageInfo GetMessageInfo(string clientId, string messageTypeId);
 
         // *** Start programmer edit section *** (IServiceBusClient.SendMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "SendMessage")]
         // *** End programmer edit section *** (IServiceBusClient.SendMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
         void SendMessage(NewPlatform.Flexberry.ServiceBus.ServiceBusMessage message);
 
         // *** Start programmer edit section *** (IServiceBusClient.SendMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage System.String CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "SendMessageWithGroup")]
         // *** End programmer edit section *** (IServiceBusClient.SendMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage System.String CustomAttributes)
         void SendMessage(NewPlatform.Flexberry.ServiceBus.ServiceBusMessage message, string group);
 
         // *** Start programmer edit section *** (IServiceBusClient.GetMessage System.String System.String CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "GetMessage")]
         // *** End programmer edit section *** (IServiceBusClient.GetMessage System.String System.String CustomAttributes)
         NewPlatform.Flexberry.ServiceBus.ServiceBusMessage GetMessage(string clientId, string messageTypeId);
 
         // *** Start programmer edit section *** (IServiceBusClient.GetMessage System.String System.String System.String CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "GetMessageWithGroup")]
         // *** End programmer edit section *** (IServiceBusClient.GetMessage System.String System.String System.String CustomAttributes)
         NewPlatform.Flexberry.ServiceBus.ServiceBusMessage GetMessage(string clientId, string messageTypeId, string group);
 
         // *** Start programmer edit section *** (IServiceBusClient.GetMessage System.String System.String string[] CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "GetMessageWithTags")]
         // *** End programmer edit section *** (IServiceBusClient.GetMessage System.String System.String string[] CustomAttributes)
         NewPlatform.Flexberry.ServiceBus.ServiceBusMessage GetMessage(string clientId, string messageTypeId, string[] tags);
 
         // *** Start programmer edit section *** (IServiceBusClient.GetMessageInfo System.String System.String System.String CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "GetMessageInfoWithGroup")]
         // *** End programmer edit section *** (IServiceBusClient.GetMessageInfo System.String System.String System.String CustomAttributes)
         NewPlatform.Flexberry.ServiceBus.ServiceBusMessageInfo GetMessageInfo(string clientId, string messageTypeId, string group);
 
         // *** Start programmer edit section *** (IServiceBusClient.GetMessageInfo System.String System.String string[] CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "GetMessageInfoWithTags")]
         // *** End programmer edit section *** (IServiceBusClient.GetMessageInfo System.String System.String string[] CustomAttributes)
         NewPlatform.Flexberry.ServiceBus.ServiceBusMessageInfo GetMessageInfo(string clientId, string messageTypeId, string[] tags);
 
         // *** Start programmer edit section *** (IServiceBusClient.GetCurrentMessageCount System.String System.String CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "GetCurrentMessageCountByMessageType")]
         // *** End programmer edit section *** (IServiceBusClient.GetCurrentMessageCount System.String System.String CustomAttributes)
         int GetCurrentMessageCount(string clientId, string messageTypeId);
 
         // *** Start programmer edit section *** (IServiceBusClient.GetCurrentMessageCount System.String CustomAttributes)
-        [OperationContract]
+        [OperationContract(Name = "GetCurrentMessageCount")]
         // *** End programmer edit section *** (IServiceBusClient.GetCurrentMessageCount System.String CustomAttributes)
         int GetCurrentMessageCount(string clientId);
     }
