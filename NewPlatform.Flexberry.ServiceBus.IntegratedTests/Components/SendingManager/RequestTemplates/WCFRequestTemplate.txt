@@ -1,7 +1,7 @@
 @("\\s*")@*
 *@<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">@("\\s*")@*
   *@<s:Header>@("\\s*")@*
-    *@<a:Action s:mustUnderstand="1">http://tempuri.org/IServiceBusCallbackSubscriber/AcceptMessage</a:Action>@("\\s*")@*
+    *@<a:Action s:mustUnderstand="1">http://tempuri.org/IServiceBusCallbackClient/AcceptMessage</a:Action>@("\\s*")@*
     *@<a:MessageID>urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}</a:MessageID>@("\\s*")@*
     *@<a:ReplyTo>@("\\s*")@*
       *@<a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>@("\\s*")@*
