@@ -1,6 +1,5 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus
 {
-    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -45,7 +44,7 @@
         /// <returns>Информация о найденных типах событий.</returns>
         public NameCommentStruct[] GetEvntTypesFromBus(string clientId)
         {
-            return _subscriptionsManager.GetSubscriptions(clientId, true).Select(x => new NameCommentStruct
+            return _subscriptionsManager.GetSubscriptions(clientId).Select(x => new NameCommentStruct
             {
                 Id = x.MessageType.ID,
                 Name = x.MessageType.Name,
@@ -60,7 +59,7 @@
         /// <returns>Информация о найденных типах сообщений.</returns>
         public NameCommentStruct[] GetMsgTypesFromBus(string clientId)
         {
-            return _subscriptionsManager.GetSubscriptions(clientId, true).Select(x => new NameCommentStruct
+            return _subscriptionsManager.GetSubscriptions(clientId).Select(x => new NameCommentStruct
             {
                 Id = x.MessageType.ID,
                 Name = x.MessageType.Name,

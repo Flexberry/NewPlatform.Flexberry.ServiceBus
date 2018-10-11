@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
+    using NewPlatform.Flexberry.ServiceBus.Components.ObjectRepository;
 
     /// <summary>
     /// Default implementation of <see cref="IObjectRepository"/> using <see cref="IDataService"/>.
@@ -150,21 +150,7 @@
         /// <param name="messageTypeId">Message type's ID.</param>
         public void CreateSendingPermission(string clientId, string messageTypeId)
         {
-            Guid primaryKeyClient = ServiceHelper.ConvertClientIdToPrimaryKey(clientId, _dataService, _statisticsService);
-            Client currentClient = ServiceHelper.GetClient(primaryKeyClient, _dataService, _statisticsService);
-
-            Guid primaryKeyMessageType = ServiceHelper.ConvertClientIdToPrimaryKey(messageTypeId, _dataService, _statisticsService);
-            MessageType currentMessageType = ServiceHelper.GetMessageType(primaryKeyMessageType, _dataService, _statisticsService);
-
-            SendingPermission currentSendingPermission = new SendingPermission { Client = currentClient, MessageType = currentMessageType };
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            _dataService.UpdateObject(currentSendingPermission);
-
-            stopwatch.Stop();
-            long time = stopwatch.ElapsedMilliseconds;
-            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.CreateSendingPermission() update sendingPermission.");
+            CommonMetodsObjectRepository.CreateSendingPermission(clientId, messageTypeId, _dataService, _statisticsService);
         }
 
         /// <summary>
@@ -174,32 +160,7 @@
         /// <param name="messageTypeId">Message type's ID.</param>
         public void DeleteSendingPermission(string clientId, string messageTypeId)
         {
-            Guid primaryKeyClient = ServiceHelper.ConvertClientIdToPrimaryKey(clientId, _dataService, _statisticsService);
-            Client currentClient = ServiceHelper.GetClient(primaryKeyClient, _dataService, _statisticsService);
-
-            Guid primaryKeyMessageType = ServiceHelper.ConvertClientIdToPrimaryKey(messageTypeId, _dataService, _statisticsService);
-            MessageType currentMessageType = ServiceHelper.GetMessageType(primaryKeyMessageType, _dataService, _statisticsService);
-
-            SendingPermission currentSendingPermission = new SendingPermission { Client = currentClient, MessageType = currentMessageType };
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            _dataService.LoadObject(currentSendingPermission);
-
-            stopwatch.Stop();
-            long time = stopwatch.ElapsedMilliseconds;
-            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.DeleteSendingPermission() load sendingPermission.");
-
-            currentSendingPermission.SetStatus(ObjectStatus.Deleted);
-
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            _dataService.UpdateObject(currentSendingPermission);
-
-            stopwatch.Stop();
-            time = stopwatch.ElapsedMilliseconds;
-            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.DeleteSendingPermission() update sendingPermission.");
+            CommonMetodsObjectRepository.DeleteSendingPermission(clientId, messageTypeId, _dataService, _statisticsService);
         }
 
         /// <summary>

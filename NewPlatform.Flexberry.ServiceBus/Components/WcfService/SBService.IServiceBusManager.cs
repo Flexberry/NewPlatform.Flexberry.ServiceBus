@@ -1,6 +1,7 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus
 {
     using System.Collections.Generic;
+    using System.Linq;
     using ICSSoft.STORMNET;
 
     /// <summary>
@@ -139,8 +140,9 @@
         IEnumerable<ServiceBusSubscription> IServiceBusManager.GetSubscriptions(string clientId)
         {
             IEnumerable<Subscription> subscriptions = _subscriptionsManager.GetSubscriptions(false);
+            IEnumerable<Subscription> clientSubscriptions = subscriptions.Where(x => x.Client.ID == clientId);
             List<ServiceBusSubscription> serviceBusSubscriptions = new List<ServiceBusSubscription>();
-            foreach (var subscription in subscriptions)
+            foreach (var subscription in clientSubscriptions)
             {
                 ServiceBusSubscription serviceBusSubscription = new ServiceBusSubscription
                 {
@@ -186,17 +188,11 @@
         string[] IServiceBusManager.GetSendingPermissions(string clientId)
         {
             IEnumerable<SendingPermission> sendingPermissions = _objectRepository.GetAllRestrictions();
+            IEnumerable<SendingPermission> clientSendingPermissions = sendingPermissions.Where(x => x.Client.ID == clientId);
             List<string> serviceBusSendingPermissions = new List<string>();
-            foreach (var sendingPermission in sendingPermissions)
+            foreach (var sendingPermission in clientSendingPermissions)
             {
-                var sendingPermissionString = string.Format(
-                    "{0}({1}): {2}({3})",
-                    sendingPermission.Client.Name,
-                    sendingPermission.Client.ID,
-                    sendingPermission.MessageType.Name,
-                    sendingPermission.MessageType.ID
-                    );
-                serviceBusSendingPermissions.Add(sendingPermissionString);
+                serviceBusSendingPermissions.Add(sendingPermission.MessageType.ID);
             }
 
             return serviceBusSendingPermissions.ToArray();
