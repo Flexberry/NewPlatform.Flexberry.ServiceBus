@@ -52,13 +52,13 @@
             }
 
             var channelFactory =
-                new ChannelFactory<IServiceBusCallbackSubscriber>(
+                new ChannelFactory<IServiceBusCallbackClient>(
                     new BasicHttpBinding(),
                     new EndpointAddress(
                         new Uri(Client.Address),
                         AddressHeader.CreateAddressHeader("headerName", Regex.Replace(Client.Address, ".asmx$", string.Empty), "headerValue")));
 
-            IServiceBusCallbackSubscriber channel = channelFactory.CreateChannel();
+            IServiceBusCallbackClient channel = channelFactory.CreateChannel();
             ((IClientChannel)channel).Open();
 
             ServiceBusMessage messageFromEsb = ServiceHelper.CreateWcfMessageFromEsb(

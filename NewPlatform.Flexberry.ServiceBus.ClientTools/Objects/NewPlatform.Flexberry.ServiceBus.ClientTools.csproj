@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IServiceBusCallbackSubscriber.cs" />
+    <Compile Include="IServiceBusCallbackClient.cs" />
     <Compile Include="IServiceBusClient.cs" />
     <Compile Include="IServiceBusComponent.cs">
       <SubType>Code</SubType>

@@ -22,7 +22,7 @@
         /// </summary>
         /// <param name="message">Структура данных, описывающая отправляемое сообщение.</param>
         /// <param name="group">Имя группы.</param>
-        void IServiceBusClient.SendMessage(ServiceBusMessage message, string group)
+        void IServiceBusClient.SendMessageWithGroup(ServiceBusMessage message, string group)
         {
             _receivingManager.AcceptMessage(message, group);
         }
@@ -66,7 +66,7 @@
         /// <param name="messageTypeId">Идентификатор типа сообщения, которое нужно получить.</param>
         /// <param name="group">Имя группы запрашиваемого сообщения.</param>
         /// <returns>Найденное сообщение, либо <c>null</c>.</returns>
-        ServiceBusMessage IServiceBusClient.GetMessage(string clientId, string messageTypeId, string group)
+        ServiceBusMessage IServiceBusClient.GetMessageWithGroup(string clientId, string messageTypeId, string group)
         {
             Message message = _sendingManager.ReadMessage(clientId, messageTypeId, group);
             ServiceBusMessage result = null;
@@ -99,7 +99,7 @@
         /// <param name="messageTypeId">Тип запрашиваемого сообщения.</param>
         /// <param name="tags">Тэги, которые должно содержать сообщение.</param>
         /// <returns>Найденное сообщение или <c>null</c>.</returns>
-        ServiceBusMessage IServiceBusClient.GetMessage(string clientId, string messageTypeId, string[] tags)
+        ServiceBusMessage IServiceBusClient.GetMessageWithTags(string clientId, string messageTypeId, string[] tags)
         {
             Message message = _sendingManager.ReadMessage(clientId, messageTypeId, tags);
             ServiceBusMessage result = null;
@@ -144,7 +144,7 @@
         /// <param name="messageTypeId">Строковой идентификатор типа сообщения.</param>
         /// <param name="group">Имя группы.</param>
         /// <returns>Информация о приоритете и времени формирования сообщения. Если ни одного сообщения не найдено, то <c>null</c>.</returns>
-        ServiceBusMessageInfo IServiceBusClient.GetMessageInfo(string clientId, string messageTypeId, string group)
+        ServiceBusMessageInfo IServiceBusClient.GetMessageInfoWithGroup(string clientId, string messageTypeId, string group)
         {
             ServiceBusMessageInfo info = _sendingManager.GetMessagesInfo(clientId, messageTypeId, group, 1).FirstOrDefault();
             return info == null ? null : new ServiceBusMessageInfo { Priority = info.Priority, FormingTime = info.FormingTime };
@@ -157,7 +157,7 @@
         /// <param name="messageTypeId">Строковой идентификатор типа сообщения.</param>
         /// <param name="tags">Теги.</param>
         /// <returns>Информация о приоритете и времени формирования сообщения. Если ни одного сообщения не найдено, то <c>null</c>.</returns>
-        ServiceBusMessageInfo IServiceBusClient.GetMessageInfo(string clientId, string messageTypeId, string[] tags)
+        ServiceBusMessageInfo IServiceBusClient.GetMessageInfoWithTags(string clientId, string messageTypeId, string[] tags)
         {
             ServiceBusMessageInfo info = _sendingManager.GetMessagesInfo(clientId, messageTypeId, tags, 1).FirstOrDefault();
             return info == null ? null : new ServiceBusMessageInfo { Priority = info.Priority, FormingTime = info.FormingTime };
@@ -175,7 +175,7 @@
         /// <returns>
         /// Количество сообщений.
         /// </returns>
-        int IServiceBusClient.GetCurrentMessageCount(string clientId, string messageTypeId)
+        int IServiceBusClient.GetCurrentMessageCountByMessageType(string clientId, string messageTypeId)
         {
             return _sendingManager.GetCurrentMessageCount(clientId, messageTypeId);
         }

@@ -5,13 +5,13 @@
     /// <summary>
     /// В данном классе шина выступает в роли клиента, принимая сообщения
     /// </summary>
-    public partial class SBService : IServiceBusCallbackSubscriber
+    public partial class SBService : IServiceBusCallbackClient
     {
         /// <summary>
         /// Принять сообщение от шины.
         /// </summary>
         /// <param name="message">Принимаемое сообщение.</param>
-        void IServiceBusCallbackSubscriber.AcceptMessage(ServiceBusMessage message)
+        void IServiceBusCallbackClient.AcceptMessage(ServiceBusMessage message)
         {
             var msgFor = new ServiceBusMessage
             {
@@ -33,7 +33,7 @@
             }
             else
             {
-                (this as IServiceBusClient).SendMessage(msgFor, message.Group);
+                (this as IServiceBusClient).SendMessageWithGroup(msgFor, message.Group);
             }
         }
 
@@ -41,7 +41,7 @@
         /// Получить идентификатор шины, выступающей в качестве клиента.
         /// </summary>
         /// <returns>ServiceBusClientKey.</returns>
-        string IServiceBusCallbackSubscriber.GetSourceId()
+        string IServiceBusCallbackClient.GetSourceId()
         {
             return ConfigurationManager.AppSettings["ServiceBusClientKey"];
         }
