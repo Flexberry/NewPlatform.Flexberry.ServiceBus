@@ -48,7 +48,7 @@
                 GetMockSendingManager(),
                 GetMockDataService(),
                 GetMockStatisticsService());
-            var messageForESB = new MessageForESB()
+            var messageForESB = new ServiceBusMessage()
             {
                 ClientID = sender.ID,
                 MessageTypeID = messageType.ID,
@@ -90,7 +90,7 @@
                 GetMockSendingManager(),
                 GetMockDataService(),
                 GetMockStatisticsService());
-            var messageForESB = new MessageForESB()
+            var messageForESB = new ServiceBusMessage()
             {
                 ClientID = sender.ID,
                 MessageTypeID = messageType.ID,

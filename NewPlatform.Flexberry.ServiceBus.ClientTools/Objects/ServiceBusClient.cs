@@ -40,7 +40,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         
         private int? fConnectionsLimit;
         
-        private bool fSequentialSent = false;
+        private bool? fSequentialSent = false;
 
         // *** Start programmer edit section *** (ServiceBusClient CustomMembers)
 
@@ -239,14 +239,14 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (ServiceBusClient.SequentialSent CustomAttributes)
         [DataMember]
         // *** End programmer edit section *** (ServiceBusClient.SequentialSent CustomAttributes)
-        public virtual bool SequentialSent
+        public virtual bool? SequentialSent
         {
             get
             {
                 // *** Start programmer edit section *** (ServiceBusClient.SequentialSent Get start)
 
                 // *** End programmer edit section *** (ServiceBusClient.SequentialSent Get start)
-                bool result = this.fSequentialSent;
+                bool? result = this.fSequentialSent;
                 // *** Start programmer edit section *** (ServiceBusClient.SequentialSent Get end)
 
                 // *** End programmer edit section *** (ServiceBusClient.SequentialSent Get end)

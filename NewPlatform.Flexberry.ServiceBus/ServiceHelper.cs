@@ -55,27 +55,27 @@
         /// <param name="messageTypeID">Идентификатор типа собщения.</param>
         /// <param name="msgBody">Тело сообещния.</param>
         /// <param name="senderName">Имя отправителя сообщения.</param>
-        /// <param name="groupID">Имя группы сообщения.</param>
+        /// <param name="group">Имя группы сообщения.</param>
         /// <param name="tags">Теги собщения.</param>
         /// <param name="attachment">Вложение сообщения.</param>
         /// <returns>Сформированный объект для отправки сообщения.</returns>
-        public static MessageFromESB CreateWcfMessageFromEsb(
+        public static ServiceBusMessage CreateWcfMessageFromEsb(
             DateTime formTime,
             String messageTypeID,
             String msgBody,
             String senderName,
-            String groupID,
+            String group,
             Dictionary<string, string> tags,
             byte[] attachment)
         {
-            var msg = new MessageFromESB
-                             {
+            var msg = new ServiceBusMessage
+            {
                                  MessageFormingTime = formTime,
                                  MessageTypeID = messageTypeID,
                                  Body = msgBody,
                                  Attachment = attachment,
                                  SenderName = senderName,
-                                 GroupID = groupID,
+                                 Group = group,
                                  Tags = tags
                              };
 
@@ -266,7 +266,7 @@
         /// <param name="messageFor">Сообщение, пришедшее в шину.</param>
         /// <param name="esb">Создаваемое в БД сообщение.</param>
         /// <param name="sender">Отправитель, если он уже известен.</param>
-        public static void AddSenderToMessage(MessageForESB messageFor, Message esb, Client sender, IDataService dataService, ILogger logger, IStatisticsService statisticsService)
+        public static void AddSenderToMessage(ServiceBusMessage messageFor, Message esb, Client sender, IDataService dataService, ILogger logger, IStatisticsService statisticsService)
         {
             var senderKnown = false;
             if (messageFor.Tags != null && messageFor.Tags.ContainsKey(SenderNameTag))
@@ -369,7 +369,7 @@
         /// </summary>
         /// <param name="messageFor">Сообщение, пришедшее в шину.</param>
         /// <param name="msg">Сообщение, сохраняемое в БД.</param>
-        public static void SaveTag(MessageForESB messageFor, Message msg)
+        public static void SaveTag(ServiceBusMessage messageFor, Message msg)
         {
             // Получение словаря тегов из строки.
             var tags = GetTagDictionary(msg);
@@ -399,7 +399,7 @@
         /// <param name="subscription">Подписка, по которой осуществляется создание сообщения в БД.</param>
         /// <param name="messageWithGroup">Сообщение, сохраняемое в БД.</param>
         /// <param name="groupName">Имя группы сообщения.</param>
-        public static void SetMessageWithGroupValues(MessageForESB messageFor, Subscription subscription, Message messageWithGroup, string groupName, IDataService dataService, ILogger logger, IStatisticsService statisticsService)
+        public static void SetMessageWithGroupValues(ServiceBusMessage messageFor, Subscription subscription, Message messageWithGroup, string groupName, IDataService dataService, ILogger logger, IStatisticsService statisticsService)
         {
             messageWithGroup.Group = groupName;
             messageWithGroup.Body = messageFor.Body;

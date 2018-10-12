@@ -240,7 +240,7 @@
         /// Добавить в лог запись о входящем сообщении в шину.
         /// </summary>
         /// <param name="message">Структура данных, описывающая пришедшее сообщение.</param>
-        public virtual void LogIncomingMessage(MessageForESB message)
+        public virtual void LogIncomingMessage(ServiceBusMessage message)
         {
             WriteToLog(
                 string.Format("Получено сообщение от {0}. Тип сообщения {1}.", _loggerHelper.GetClientName(message.ClientID), _loggerHelper.GetMessageTypeName(message.MessageTypeID)),

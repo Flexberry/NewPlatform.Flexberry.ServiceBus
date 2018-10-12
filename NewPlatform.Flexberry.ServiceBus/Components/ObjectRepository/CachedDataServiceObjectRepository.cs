@@ -7,6 +7,7 @@
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
     using MultiTasking;
+    using NewPlatform.Flexberry.ServiceBus.Components.ObjectRepository;
 
     /// <summary>
     /// Implementation of <see cref="IObjectRepository"/> using <see cref="IDataService"/> with cache.
@@ -29,6 +30,11 @@
         private static readonly List<SendingPermission> Restrictions = new List<SendingPermission>();
 
         /// <summary>
+        /// Cache for cients.
+        /// </summary>
+        private static readonly List<ServiceBusClient> Clients = new List<ServiceBusClient>();
+
+        /// <summary>
         /// Lock object for types of messages.
         /// </summary>
         private static readonly object MessageTypesLockObject = new object();
@@ -42,6 +48,11 @@
         /// Lock object for restrictions.
         /// </summary>
         private static readonly object RestrictionsLockObject = new object();
+
+        /// <summary>
+        /// Lock object for clients.
+        /// </summary>
+        private static readonly object ClientsLockObject = new object();
 
         /// <summary>
         /// Logger.
@@ -154,6 +165,38 @@
         }
 
         /// <summary>
+        /// Create sending permission.
+        /// </summary>
+        /// <param name="clientId">Client's ID.</param>
+        /// <param name="messageTypeId">Message type's ID.</param>
+        public void CreateSendingPermission(string clientId, string messageTypeId)
+        {
+            CommonMetodsObjectRepository.CreateSendingPermission(clientId, messageTypeId, _dataService, _statisticsService);
+        }
+
+        /// <summary>
+        /// Delete sending permission.
+        /// </summary>
+        /// <param name="clientId">Client's ID.</param>
+        /// <param name="messageTypeId">Message type's ID.</param>
+        public void DeleteSendingPermission(string clientId, string messageTypeId)
+        {
+            CommonMetodsObjectRepository.DeleteSendingPermission(clientId, messageTypeId, _dataService, _statisticsService);
+        }
+
+        /// <summary>
+        /// Gets all clients.
+        /// </summary>
+        /// <returns>The list of all stored clients</returns>
+        public IEnumerable<ServiceBusClient> GetAllClients()
+        {
+            lock (ClientsLockObject)
+            {
+                return new List<ServiceBusClient>(Clients);
+            }
+        }
+
+        /// <summary>
         /// Initialize component.
         /// </summary>
         public override void Prepare()
@@ -190,6 +233,7 @@
             MessageTypes.Clear();
             ServiceBuses.Clear();
             Restrictions.Clear();
+            Clients.Clear();
         }
 
         /// <summary>
@@ -236,6 +280,19 @@
                 {
                     Restrictions.Clear();
                     Restrictions.AddRange(restrictions);
+                }
+
+                stopwatch = new Stopwatch();
+                stopwatch.Start();
+                var clients = (from x in _dataService.Query<Client>(Client.Views.EditView) select x).ToList();
+                stopwatch.Stop();
+                time = stopwatch.ElapsedMilliseconds;
+                _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedDataServiceObjectRepository.UpdateFromDb() load clients");
+
+                lock (ClientsLockObject)
+                {
+                    Clients.Clear();
+                    Clients.AddRange(clients.Cast<ServiceBusClient>());
                 }
             }
             catch (Exception exception)

@@ -43,7 +43,7 @@
                     new Subscription() { MessageType = new MessageType() { ID = "Third" } }
                 });
 
-            var wcfService = new WcfService(externalSubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService())
+            var wcfService = new WcfService(externalSubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService(), GetMockObjectRepository())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),
@@ -77,9 +77,9 @@
             serviceBus.Stop();
 
             // Assert.
-            crossSubManager.Verify(r => r.CreateMessageType(It.Is<NameCommentStruct>(ncs => ncs.Id == "First")), Times.Once);
-            crossSubManager.Verify(r => r.CreateMessageType(It.Is<NameCommentStruct>(ncs => ncs.Id == "Second")), Times.Never);
-            crossSubManager.Verify(r => r.CreateMessageType(It.Is<NameCommentStruct>(ncs => ncs.Id == "Third")), Times.Once);
+            crossSubManager.Verify(r => r.CreateMessageType(It.Is<ServiceBusMessageType>(ncs => ncs.Id == "First")), Times.Once);
+            crossSubManager.Verify(r => r.CreateMessageType(It.Is<ServiceBusMessageType>(ncs => ncs.Id == "Second")), Times.Never);
+            crossSubManager.Verify(r => r.CreateMessageType(It.Is<ServiceBusMessageType>(ncs => ncs.Id == "Third")), Times.Once);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@
             // External bus with WCF service with specified address.
             const string clientId = "myid";
             var externalSubManager = new Mock<ISubscriptionsManager>();
-            var wcfService = new WcfService(externalSubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService())
+            var wcfService = new WcfService(externalSubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService(), GetMockObjectRepository())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),

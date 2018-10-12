@@ -329,7 +329,7 @@
                 throw new Exception(string.Format("Не найдена подписка для типа сообщения {0}.", messageType));
             var subscription = subscriptions.First();
 
-            var dummyMessageForEsb = new MessageForESB()
+            var dummyMessageForEsb = new ServiceBusMessage()
             {
                 ClientID = senderId,
                 MessageTypeID = messageType,

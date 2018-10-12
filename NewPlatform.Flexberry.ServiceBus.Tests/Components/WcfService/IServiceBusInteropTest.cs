@@ -28,7 +28,7 @@
                         MessageType = new MessageType() { ID = TestNCS.Id, Description = TestNCS.Comment, Name = TestNCS.Name }
                     }
                 });
-            service = new WcfService(SubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService())
+            service = new WcfService(SubManager.Object, GetMockSendingManager(), GetMockReceivingManager(), GetMockLogger(), GetMockStatisticsService(), GetMockObjectRepository())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),
@@ -58,27 +58,6 @@
         }
 
         /// <summary>
-        /// Test for AddNewEvntType method.
-        /// </summary>
-        [Fact]
-        public void TestAddNewEvntType()
-        {
-            // Arrange.
-            var ncstruct = new NameCommentStruct { Id = "TestStruct1", Comment = "123" };
-
-            // Act.
-            fixture.ServiceBus.AddNewEvntType(ncstruct);
-
-            // Assert.
-            fixture.SubManager.Verify(
-                sub =>
-                    sub.CreateEventType(
-                        It.Is<NameCommentStruct>(
-                            ncs => ncs.Id == ncstruct.Id && ncs.Comment == ncstruct.Comment && ncs.Name == ncstruct.Name)),
-                Times.Once);
-        }
-
-        /// <summary>
         /// Test for AddNewMsgType method.
         /// </summary>
         [Fact]
@@ -94,8 +73,8 @@
             fixture.SubManager.Verify(
                 sub =>
                     sub.CreateMessageType(
-                        It.Is<NameCommentStruct>(
-                            ncs => ncs.Id == ncstruct.Id && ncs.Comment == ncstruct.Comment && ncs.Name == ncstruct.Name)),
+                        It.Is<ServiceBusMessageType>(
+                            ncs => ncs.Id == ncstruct.Id && ncs.Description == ncstruct.Comment && ncs.Name == ncstruct.Name)),
                 Times.Once);
         }
 

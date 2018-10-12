@@ -31,7 +31,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <param name="message">Сообщение в формате шины.</param>
         /// <param name="model">AMQP-модель.</param>
         /// <returns>Сообщение со всеми заполненными полями.</returns>
-        private MapMessageBuilder BuildMessage(MessageForESB message, IModel model)
+        private MapMessageBuilder BuildMessage(ServiceBusMessage message, IModel model)
         {
             var messageBuilder = new MapMessageBuilder(model);
 
@@ -54,7 +54,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// Приём сообщения в брокер.
         /// </summary>
         /// <param name="message">Входящее сообщение.</param>
-        public void AcceptMessage(MessageForESB message)
+        public void AcceptMessage(ServiceBusMessage message)
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
@@ -74,7 +74,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// </summary>
         /// <param name="message">Входящее сообщение.</param>
         /// <param name="groupName">Имя группы.</param>
-        public void AcceptMessage(MessageForESB message, string groupName)
+        public void AcceptMessage(ServiceBusMessage message, string groupName)
         {
             // TODO: реализовать
             throw new NotImplementedException();
