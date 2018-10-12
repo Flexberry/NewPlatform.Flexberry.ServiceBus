@@ -7,6 +7,7 @@
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
     using NewPlatform.Flexberry.ServiceBus.Components.ObjectRepository;
+    using ICSSoft.STORMNET;
 
     /// <summary>
     /// Default implementation of <see cref="IObjectRepository"/> using <see cref="IDataService"/>.
@@ -174,13 +175,29 @@
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            IEnumerable<ServiceBusClient> clients = _dataService.LoadObjects(lcs).ToList().Cast<ServiceBusClient>();
+            DataObject[] clients = _dataService.LoadObjects(lcs);
 
             stopwatch.Stop();
             long time = stopwatch.ElapsedMilliseconds;
             _statisticsService.NotifyAvgTimeSql(null, (int)time, "DataServiceObjectRepository.GetAllClients() load Clients.");
 
-            return clients;
+            List<ServiceBusClient> serviceBusClients = new List<ServiceBusClient>();
+            foreach (Client client in clients.Cast<Client>().ToList())
+            {
+                ServiceBusClient serviceBusClient = new ServiceBusClient
+                {
+                    Address = client.Address,
+                    ConnectionsLimit = client.ConnectionsLimit,
+                    Description = client.Description,
+                    DnsIdentity = client.DnsIdentity,
+                    Id = client.ID,
+                    Name = client.Name,
+                    SequentialSent = client.SequentialSent,
+                };
+                serviceBusClients.Add(serviceBusClient);
+            }
+
+            return serviceBusClients;
         }
     }
 }

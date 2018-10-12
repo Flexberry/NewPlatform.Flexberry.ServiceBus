@@ -110,6 +110,32 @@
         }
 
         /// <summary>
+        /// Testing TestGetAllClients method with empty data, non-empty data and data stored after cache updating.
+        /// </summary>
+        [Fact]
+        public void TestGetAllClients()
+        {
+            foreach (var dataService in DataServices)
+            {
+                var client1 = new Client() { ID = "Client 1", Name = "Client name 1" };
+                var client2 = new Client() { ID = "Client 2", Name = "Client name 2" };
+                var client3 = new Client() { ID = "Client 3", Name = "Client name 3" };
+                var client4 = new Client() { ID = "Client 4", Name = "Client name 4" };
+
+                DataObject[] objsToUpdate = { client1, client2 };
+
+                DataObject[] additionalObjsToUpdate = { client3, client4 };
+
+                var updatePeriod = 3000;
+                var component = new CachedDataServiceObjectRepository(GetMockLogger(),
+                    (IDataService)dataService.Clone(), GetMockStatisticsService())
+                { UpdatePeriodMilliseconds = updatePeriod };
+
+                TestLoadingAllData(dataService, objsToUpdate, additionalObjsToUpdate, component, component.GetAllClients, updatePeriod, new[] { "ID", "Name" });
+            }
+        }
+
+        /// <summary>
         /// Testing TestGetRestrictionsForClient method with empty data, non-empty data and data stored after cache updating.
         /// </summary>
         [Fact]
@@ -187,7 +213,6 @@
             Func<IEnumerable<TDataObjectType>> methodUnderTest,
             int updatePeriod,
             string[] propertiesToCheck)
-            where TDataObjectType : DataObject
         {
             // Arrange.
             dataService.UpdateObjects(ref objsToUpdate);
