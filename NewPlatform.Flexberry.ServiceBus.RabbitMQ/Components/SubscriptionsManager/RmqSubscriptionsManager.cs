@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Linq;
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
@@ -35,15 +36,22 @@
         }
 
         /// <summary>
-        /// Не используется в модели маршрутизации RabbitMQ.
+        /// Создание пользователя в RabbitMQ.
         /// </summary>
         /// <param name="clientId">Идентификатор клиента.</param>
         /// <param name="name">Имя клиента.</param>
         /// <param name="address">Адрес клиента.</param>
-        /// <exception cref="NotImplementedException">Метод не реализован.</exception>
         public void CreateClient(string clientId, string name, string address = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Если клиента с указанным ID нет в RabbitMQ, то бросается исключение.
+                User client = _managementClient.GetUserAsync(clientId).Result;
+            }
+            catch
+            {
+                _managementClient.CreateUserAsync(new UserInfo(clientId, ConfigurationManager.AppSettings["DefaultRmqUserPassword"])).Wait();
+            }
         }
 
         /// <summary>
