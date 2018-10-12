@@ -15,7 +15,9 @@
 
         private readonly IStatisticsService _statisticsService;
 
-        public SBService(ISubscriptionsManager subscriptionsManager, ISendingManager sendingManager, IReceivingManager receivingManager, IStatisticsService statisticsService)
+        private readonly IObjectRepository _objectRepository;
+
+        public SBService(ISubscriptionsManager subscriptionsManager, ISendingManager sendingManager, IReceivingManager receivingManager, IStatisticsService statisticsService, IObjectRepository objectRepository)
         {
             if (subscriptionsManager == null)
                 throw new ArgumentNullException(nameof(subscriptionsManager));
@@ -29,10 +31,14 @@
             if (statisticsService == null)
                 throw new ArgumentNullException(nameof(statisticsService));
 
+            if (statisticsService == null)
+                throw new ArgumentNullException(nameof(objectRepository));
+
             _subscriptionsManager = subscriptionsManager;
             _sendingManager = sendingManager;
             _receivingManager = receivingManager;
             _statisticsService = statisticsService;
+            _objectRepository = objectRepository;
         }
     }
 }

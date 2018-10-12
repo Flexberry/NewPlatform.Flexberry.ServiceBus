@@ -97,9 +97,9 @@
             {
                 // Arrange.
                 const string localName = "LocalTestName";
-                var messageForEsb = new MessageForESB { Tags = new Dictionary<string, string> { }, ClientID = DatabaseFixture.ClientId };
-                var messageForEsb2 = new MessageForESB { ClientID = "A7A7E36D-4A5F-4329-B8B1-22FC6F9C2AEE" };
-                var messageForEsb3 = new MessageForESB();
+                var messageForEsb = new ServiceBusMessage { Tags = new Dictionary<string, string> { }, ClientID = DatabaseFixture.ClientId };
+                var messageForEsb2 = new ServiceBusMessage { ClientID = "A7A7E36D-4A5F-4329-B8B1-22FC6F9C2AEE" };
+                var messageForEsb3 = new ServiceBusMessage();
                 var message = new Message();
                 var message2 = new Message();
                 var message3 = new Message();
@@ -128,7 +128,7 @@
             {
                 // Arrange.
                 const string groupName = "LocalTestGroup";
-                var msgForEsb = new MessageForESB
+                var msgForEsb = new ServiceBusMessage
                 {
                     Body = "Some text",
                     Priority = 1,

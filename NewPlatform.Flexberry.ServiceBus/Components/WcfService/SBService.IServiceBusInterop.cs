@@ -1,6 +1,5 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus
 {
-    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -14,7 +13,13 @@
         /// <param name="evntType">Информация о создаваемом типе событий.</param>
         public void AddNewEvntType(NameCommentStruct evntType)
         {
-            _subscriptionsManager.CreateEventType(evntType);
+            ServiceBusMessageType serviceBusMessageType = new ServiceBusMessageType
+            {
+                Id = evntType.Id,
+                Name = evntType.Name,
+                Description = evntType.Comment
+            };
+            _subscriptionsManager.CreateMessageType(serviceBusMessageType);
         }
 
         /// <summary>
@@ -23,7 +28,13 @@
         /// <param name="msgType">Информация о создаваемом типе сообщений.</param>
         public void AddNewMsgType(NameCommentStruct msgType)
         {
-            _subscriptionsManager.CreateMessageType(msgType);
+            ServiceBusMessageType serviceBusMessageType = new ServiceBusMessageType
+            {
+                Id = msgType.Id,
+                Name = msgType.Name,
+                Description = msgType.Comment
+            };
+            _subscriptionsManager.CreateMessageType(serviceBusMessageType);
         }
 
         /// <summary>

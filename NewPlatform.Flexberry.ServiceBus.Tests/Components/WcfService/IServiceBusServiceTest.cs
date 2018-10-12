@@ -24,7 +24,7 @@
             SubManager = new Mock<ISubscriptionsManager>();
             SendManager = new Mock<ISendingManager>();
             RecManager = new Mock<IReceivingManager>();
-            service = new WcfService(SubManager.Object, SendManager.Object, RecManager.Object, GetMockLogger(), GetMockStatisticsService())
+            service = new WcfService(SubManager.Object, SendManager.Object, RecManager.Object, GetMockLogger(), GetMockStatisticsService(), GetMockObjectRepository())
             {
                 UseWcfSettingsFromConfig = false,
                 Binding = new BasicHttpBinding(),
@@ -85,25 +85,6 @@
 
             // Assert.
             fixture.SubManager.Verify(sub => sub.DeleteClient(clientId), Times.Once);
-        }
-
-        /// <summary>
-        /// Test for DoesEventRisen method.
-        /// </summary>
-        [Fact]
-        public void TestDoesEventRisen()
-        {
-            // Arrange.
-            const string clientId = "Client3";
-            const string eventId = "Event1";
-            fixture.SendManager.Setup(send => send.CheckEventIsRaised(clientId, eventId)).Returns(true);
-
-            // Act.
-            var res = fixture.ServiceBus.DoesEventRisen(clientId, eventId);
-
-            // Assert.
-            fixture.SendManager.Verify(send => send.CheckEventIsRaised(clientId, eventId), Times.Once);
-            Assert.True(res);
         }
 
         /// <summary>
@@ -190,7 +171,7 @@
             const string messageTypeId = "messageType3";
             const int priority = 5;
             var currentTime = DateTime.Now;
-            fixture.SendManager.Setup(send => send.GetMessagesInfo(clientId, messageTypeId, It.IsAny<int>())).Returns(new[] { new MessageInfoFromESB { Priority = priority, MessageFormingTime = currentTime } });
+            fixture.SendManager.Setup(send => send.GetMessagesInfo(clientId, messageTypeId, It.IsAny<int>())).Returns(new[] { new ServiceBusMessageInfo { Priority = priority, FormingTime = currentTime } });
 
             // Act.
             var res = fixture.ServiceBus.GetMessageInfo(clientId, messageTypeId);
@@ -245,7 +226,7 @@
             const string groupId = "Group3";
             const int priority = 4;
             var currentTime = DateTime.Now;
-            fixture.SendManager.Setup(send => send.GetMessagesInfo(clientId, messageTypeId, groupId, It.IsAny<int>())).Returns(new[] { new MessageInfoFromESB { Priority = priority, MessageFormingTime = currentTime } });
+            fixture.SendManager.Setup(send => send.GetMessagesInfo(clientId, messageTypeId, groupId, It.IsAny<int>())).Returns(new[] { new ServiceBusMessageInfo { Priority = priority, FormingTime = currentTime } });
 
             // Act.
             var res = fixture.ServiceBus.GetMessageInfoWithGroup(clientId, messageTypeId, groupId);
@@ -299,30 +280,13 @@
             const string messageTypeId = "messageType7";
             const int priority = 3;
             var currentTime = DateTime.Now;
-            fixture.SendManager.Setup(send => send.GetMessagesInfo(clientId, messageTypeId, new string[] { }, It.IsAny<int>())).Returns(new[] { new MessageInfoFromESB { Priority = priority, MessageFormingTime = currentTime } });
+            fixture.SendManager.Setup(send => send.GetMessagesInfo(clientId, messageTypeId, new string[] { }, It.IsAny<int>())).Returns(new[] { new ServiceBusMessageInfo { Priority = priority, FormingTime = currentTime } });
 
             // Act.
             var res = fixture.ServiceBus.GetMessageInfoWithTags(clientId, messageTypeId, new string[] { });
 
             // Assert.
             Assert.True(res.FormingTime == currentTime && res.Priority == priority);
-        }
-
-        /// <summary>
-        /// Test for RiseEventOnESB method.
-        /// </summary>
-        [Fact]
-        public void TestRiseEventOnESB()
-        {
-            // Arrange.
-            const string clientId = "Client12";
-            const string eventTypeId = "eventType1";
-
-            // Act.
-            fixture.ServiceBus.RiseEventOnESB(clientId, eventTypeId);
-
-            // Assert.
-            fixture.RecManager.Verify(rec => rec.RaiseEvent(clientId, eventTypeId), Times.Once);
         }
 
         /// <summary>
@@ -343,7 +307,7 @@
             fixture.RecManager.Verify(
                 rec =>
                     rec.AcceptMessage(
-                        It.Is<MessageForESB>(mes => mes.ClientID == clientId && mes.MessageTypeID == messageTypeId)),
+                        It.Is<ServiceBusMessage>(mes => mes.ClientID == clientId && mes.MessageTypeID == messageTypeId)),
                 Times.Once);
         }
 
@@ -366,7 +330,7 @@
             fixture.RecManager.Verify(
                 rec =>
                     rec.AcceptMessage(
-                        It.Is<MessageForESB>(mes => mes.ClientID == clientId && mes.MessageTypeID == messageTypeId), groupId),
+                        It.Is<ServiceBusMessage>(mes => mes.ClientID == clientId && mes.MessageTypeID == messageTypeId), groupId),
                 Times.Once);
         }
 

@@ -96,12 +96,12 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (IServiceBusManager.CreateSendingPermission System.String CustomAttributes)
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusManager.CreateSendingPermission System.String CustomAttributes)
-        void CreateSendingPermission(string clientId);
+        void CreateSendingPermission(string clientId, string messageTypeId);
 
         // *** Start programmer edit section *** (IServiceBusManager.DeleteSendingPermission System.String CustomAttributes)
         [OperationContract]
         // *** End programmer edit section *** (IServiceBusManager.DeleteSendingPermission System.String CustomAttributes)
-        void DeleteSendingPermission(string clientId);
+        void DeleteSendingPermission(string clientId, string messageTypeId);
 
         // *** Start programmer edit section *** (IServiceBusManager.GetSendingPermissions System.String CustomAttributes)
         [OperationContract]

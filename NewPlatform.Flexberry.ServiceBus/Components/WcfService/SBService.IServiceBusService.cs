@@ -38,7 +38,8 @@
         /// <returns><c>true</c>, если уведомление существует в БД, иначе <c>false</c>.</returns>
         public bool DoesEventRisen(string clientId, string eventTypeId)
         {
-            return _sendingManager.CheckEventIsRaised(clientId, eventTypeId);
+            Message message = _sendingManager.ReadMessage(clientId, eventTypeId);
+            return message != null ? true : false;
         }
 
         /// <summary>
@@ -84,14 +85,16 @@
             MessageFromESB result = null;
             if (message != null)
             {
-                result = ServiceHelper.CreateWcfMessageFromEsb(
-                    message.ReceivingTime,
-                    message.MessageType.ID,
-                    message.Body,
-                    message.Sender,
-                    message.Group,
-                    ServiceHelper.GetTagDictionary(message),
-                    message.BinaryAttachment);
+                result = new MessageFromESB
+                {
+                    MessageFormingTime = message.ReceivingTime,
+                    MessageTypeID = message.MessageType.ID,
+                    Body = message.Body,
+                    Attachment = message.BinaryAttachment,
+                    SenderName = message.Sender,
+                    GroupID = message.Group,
+                    Tags = ServiceHelper.GetTagDictionary(message),
+                };
 
                 if (result.Tags.ContainsKey("sendingWay"))
                     result.Tags["sendingWay"] += '/' + ConfigurationManager.AppSettings.Get("ServiceID4SB");
@@ -112,8 +115,8 @@
         /// <returns>Информация о приоритете и времени формирования сообщения. Если ни одного сообщения не найдено, то <c>null</c>.</returns>
         public MessageOrderingInformation GetMessageInfo(string clientId, string messageTypeId)
         {
-            MessageInfoFromESB info = _sendingManager.GetMessagesInfo(clientId, messageTypeId, 1).FirstOrDefault();
-            return info == null ? null : new MessageOrderingInformation { Priority = info.Priority, FormingTime = info.MessageFormingTime };
+            ServiceBusMessageInfo info = _sendingManager.GetMessagesInfo(clientId, messageTypeId, 1).FirstOrDefault();
+            return info == null ? null : new MessageOrderingInformation { Priority = info.Priority, FormingTime = info.FormingTime };
         }
 
         /// <summary>
@@ -129,14 +132,16 @@
             MessageFromESB result = null;
             if (message != null)
             {
-                result = ServiceHelper.CreateWcfMessageFromEsb(
-                    message.ReceivingTime,
-                    message.MessageType.ID,
-                    message.Body,
-                    message.Sender,
-                    message.Group,
-                    ServiceHelper.GetTagDictionary(message),
-                    message.BinaryAttachment);
+                result = new MessageFromESB
+                {
+                    MessageFormingTime = message.ReceivingTime,
+                    MessageTypeID = message.MessageType.ID,
+                    Body = message.Body,
+                    Attachment = message.BinaryAttachment,
+                    SenderName = message.Sender,
+                    GroupID = message.Group,
+                    Tags = ServiceHelper.GetTagDictionary(message),
+                };
 
                 if (result.Tags.ContainsKey("sendingWay"))
                     result.Tags["sendingWay"] += '/' + ConfigurationManager.AppSettings.Get("ServiceID4SB");
@@ -158,8 +163,8 @@
         /// <returns>Информация о приоритете и времени формирования сообщения. Если ни одного сообщения не найдено, то <c>null</c>.</returns>
         public MessageOrderingInformation GetMessageInfoWithGroup(string clientId, string messageTypeId, string groupName)
         {
-            MessageInfoFromESB info = _sendingManager.GetMessagesInfo(clientId, messageTypeId, groupName, 1).FirstOrDefault();
-            return info == null ? null : new MessageOrderingInformation { Priority = info.Priority, FormingTime = info.MessageFormingTime };
+            ServiceBusMessageInfo info = _sendingManager.GetMessagesInfo(clientId, messageTypeId, groupName, 1).FirstOrDefault();
+            return info == null ? null : new MessageOrderingInformation { Priority = info.Priority, FormingTime = info.FormingTime };
         }
 
         /// <summary>
@@ -175,14 +180,16 @@
             MessageFromESB result = null;
             if (message != null)
             {
-                result = ServiceHelper.CreateWcfMessageFromEsb(
-                    message.ReceivingTime,
-                    message.MessageType.ID,
-                    message.Body,
-                    message.Sender,
-                    message.Group,
-                    ServiceHelper.GetTagDictionary(message),
-                    message.BinaryAttachment);
+                result = new MessageFromESB
+                {
+                    MessageFormingTime = message.ReceivingTime,
+                    MessageTypeID = message.MessageType.ID,
+                    Body = message.Body,
+                    Attachment = message.BinaryAttachment,
+                    SenderName = message.Sender,
+                    GroupID = message.Group,
+                    Tags = ServiceHelper.GetTagDictionary(message),
+                };
 
                 if (result.Tags.ContainsKey("sendingWay"))
                     result.Tags["sendingWay"] += '/' + ConfigurationManager.AppSettings.Get("ServiceID4SB");
@@ -204,8 +211,8 @@
         /// <returns>Информация о приоритете и времени формирования сообщения. Если ни одного сообщения не найдено, то <c>null</c>.</returns>
         public MessageOrderingInformation GetMessageInfoWithTags(string clientId, string messageTypeId, string[] tags)
         {
-            MessageInfoFromESB info = _sendingManager.GetMessagesInfo(clientId, messageTypeId, tags, 1).FirstOrDefault();
-            return info == null ? null : new MessageOrderingInformation { Priority = info.Priority, FormingTime = info.MessageFormingTime };
+            ServiceBusMessageInfo info = _sendingManager.GetMessagesInfo(clientId, messageTypeId, tags, 1).FirstOrDefault();
+            return info == null ? null : new MessageOrderingInformation { Priority = info.Priority, FormingTime = info.FormingTime };
         }
 
         /// <summary>
@@ -219,7 +226,13 @@
         /// </param>
         public void RiseEventOnESB(string clientId, string eventTypeId)
         {
-            _receivingManager.RaiseEvent(clientId, eventTypeId);
+            ServiceBusMessage serviceBusMessage = new ServiceBusMessage
+            {
+                MessageTypeID = eventTypeId,
+                ClientID = clientId
+            };
+
+            _receivingManager.AcceptMessage(serviceBusMessage);
         }
 
         /// <summary>
@@ -228,7 +241,17 @@
         /// <param name="message">Структура данных, описывающая отправляемое сообщение.</param>
         public void SendMessageToESB(MessageForESB message)
         {
-            _receivingManager.AcceptMessage(message);
+            ServiceBusMessage serviceBusMessage = new ServiceBusMessage
+            {
+                Body = message.Body,
+                MessageTypeID = message.MessageTypeID,
+                ClientID = message.ClientID,
+                Tags = message.Tags,
+                Attachment = message.Attachment,
+                Priority = message.Priority
+            };
+
+            _receivingManager.AcceptMessage(serviceBusMessage);
         }
 
         /// <summary>
@@ -238,7 +261,17 @@
         /// <param name="groupName">Имя группы.</param>
         public void SendMessageToESBWithUseGroup(MessageForESB message, string groupName)
         {
-            _receivingManager.AcceptMessage(message, groupName);
+            ServiceBusMessage serviceBusMessage = new ServiceBusMessage
+            {
+                Body = message.Body,
+                MessageTypeID = message.MessageTypeID,
+                ClientID = message.ClientID,
+                Tags = message.Tags,
+                Attachment = message.Attachment,
+                Priority = message.Priority
+            };
+
+            _receivingManager.AcceptMessage(serviceBusMessage, groupName);
         }
 
         /// <summary>

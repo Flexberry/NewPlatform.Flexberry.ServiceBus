@@ -163,7 +163,7 @@
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedSubscriptionsManager.DeleteClient() load messages.");
-                
+
                 objectsToDelete = objectsToDelete.Concat(new DataObject[] { client }).ToArray();
                 objectsToDelete.ForEach(obj => obj.SetStatus(ObjectStatus.Deleted));
             }
@@ -182,13 +182,13 @@
         /// Создать тип сообщений.
         /// </summary>
         /// <param name="msgTypeInfo">Информация о создаваемом типе сообщений: идентификатор, наименование, комментарий.</param>
-        public void CreateMessageType(NameCommentStruct msgTypeInfo)
+        public void CreateMessageType(ServiceBusMessageType msgTypeInfo)
         {
             var msgType = new MessageType()
             {
                 ID = msgTypeInfo.Id,
                 Name = msgTypeInfo.Name,
-                Description = msgTypeInfo.Comment
+                Description = msgTypeInfo.Description
             };
 
             Stopwatch stopwatch = new Stopwatch();
@@ -199,15 +199,6 @@
             stopwatch.Stop();
             long time = stopwatch.ElapsedMilliseconds;
             _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedSubscriptionsManager.CreateMessageType() update TypeMessage.");
-        }
-
-        /// <summary>
-        /// Создать тип событий.
-        /// </summary>
-        /// <param name="eventTypeInfo">Информация о создаваемом типе событий: идентификатор, наименование, комментарий.</param>
-        public void CreateEventType(NameCommentStruct eventTypeInfo)
-        {
-            CreateMessageType(eventTypeInfo);
         }
 
         /// <summary>
@@ -376,6 +367,186 @@
             stopwatch.Stop();
             long time = stopwatch.ElapsedMilliseconds;
             _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedSubscriptionsManager.UpdateAllSubscriptions() update Client.");
+        }
+
+        /// <summary>
+        /// Обновить клиента.
+        /// </summary>
+        /// <param name="clientId">Идентификатор клиента, которого нужно обновить.</param>
+        /// <param name="client">Новые данные клиента.</param>
+        public void UpdateClient(string clientId, ServiceBusClient client)
+        {
+            Guid primaryKey = ServiceHelper.ConvertClientIdToPrimaryKey(clientId, _dataService, _statisticsService);
+            Client currentClient = ServiceHelper.GetClient(primaryKey, _dataService, _statisticsService);
+
+            if (client.Address != null)
+            {
+                currentClient.Address = client.Address;
+            }
+
+            if (client.Name != null)
+            {
+                currentClient.Name = client.Name;
+            }
+
+            if (client.Description != null)
+            {
+                currentClient.Description = client.Description;
+            }
+
+            if (client.DnsIdentity != null)
+            {
+                currentClient.DnsIdentity = client.DnsIdentity;
+            }
+
+            if (client.ConnectionsLimit != null)
+            {
+                currentClient.ConnectionsLimit = client.ConnectionsLimit;
+            }
+
+            if (client.SequentialSent != null)
+            {
+                bool sequentialSent = client.SequentialSent.Value;
+                currentClient.SequentialSent = sequentialSent;
+            }
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            _dataService.UpdateObject(currentClient);
+
+            stopwatch.Stop();
+            long time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.UpdateClient() update client.");
+        }
+
+        /// <summary>
+        /// Обновить тип сообщения.
+        /// </summary>
+        /// <param name="messageTypeId">Идентификатор типа сообщения.</param>
+        /// <param name="messageType">Новые данные типа сообщения.</param>
+        public void UpdateMessageType(string messageTypeId, ServiceBusMessageType messageType)
+        {
+            Guid primaryKey = ServiceHelper.ConvertMessageTypeIdToPrimaryKey(messageTypeId, _dataService, _statisticsService);
+            MessageType currentMessageType = ServiceHelper.GetMessageType(primaryKey, _dataService, _statisticsService);
+
+            if (messageType.Name != null)
+            {
+                currentMessageType.Name = messageType.Name;
+            }
+
+            if (messageType.Description != null)
+            {
+                currentMessageType.Description = messageType.Description;
+            }
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            _dataService.UpdateObject(currentMessageType);
+
+            stopwatch.Stop();
+            long time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.UpdateMessageType() update messageType.");
+        }
+
+        /// <summary>
+        /// Удалить тип сообщения.
+        /// </summary>
+        /// <param name="messageTypeId">Идентификатор типа сообщения.</param>
+        public void DeleteMessageType(string messageTypeId)
+        {
+            Guid primaryKey = ServiceHelper.ConvertMessageTypeIdToPrimaryKey(messageTypeId, _dataService, _statisticsService);
+            MessageType currentMessageType = ServiceHelper.GetMessageType(primaryKey, _dataService, _statisticsService);
+
+            currentMessageType.SetStatus(ObjectStatus.Deleted);
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            _dataService.UpdateObject(currentMessageType);
+
+            stopwatch.Stop();
+            long time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.DeleteMessageType() update messageType.");
+        }
+
+        /// <summary>
+        /// Обновить подписку.
+        /// </summary>
+        /// <param name="subscriptionId">Идентификатор подписки, которую нужно обновить.</param>
+        /// <param name="subscription">Новые данные подписки.</param>
+        public void UpdateSubscription(string subscriptionId, ServiceBusSubscription subscription)
+        {
+            Subscription currentSubscription = new Subscription { __PrimaryKey = subscriptionId };
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            _dataService.LoadObject(currentSubscription);
+
+            stopwatch.Stop();
+            long time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.UpdateSubscription() load subscription.");
+
+            if (subscription.ExpiryDate != null)
+            {
+                currentSubscription.ExpiryDate = subscription.ExpiryDate.Value;
+            }
+
+            if (subscription.Description != null)
+            {
+                currentSubscription.Description = subscription.Description;
+            }
+
+            if (subscription.Callback != null)
+            {
+                bool callback = subscription.Callback.Value;
+                currentSubscription.IsCallback = callback;
+            }
+
+            TransportType transportType;
+            EnumCaption.TryGetValueFor(subscription.SendBy, out transportType);
+            if (transportType != default(TransportType))
+            {
+                currentSubscription.TransportType = transportType;
+            }
+
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            _dataService.UpdateObject(currentSubscription);
+
+            stopwatch.Stop();
+            time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.UpdateSubscription() update subscription.");
+        }
+
+        /// <summary>
+        /// Удалить подписку.
+        /// </summary>
+        /// <param name="subscriptionId">Идентификатор подписки, которую нужно удалить.</param>
+        public void DeleteSubscription(string subscriptionId)
+        {
+            Subscription currentSubscription = new Subscription { __PrimaryKey = subscriptionId };
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            _dataService.LoadObject(currentSubscription);
+
+            stopwatch.Stop();
+            long time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.DeleteSubscription() load subscription.");
+
+            currentSubscription.SetStatus(ObjectStatus.Deleted);
+
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            _dataService.UpdateObject(currentSubscription);
+
+            stopwatch.Stop();
+            time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.DeleteSubscription() update subscription.");
         }
 
         /// <summary>

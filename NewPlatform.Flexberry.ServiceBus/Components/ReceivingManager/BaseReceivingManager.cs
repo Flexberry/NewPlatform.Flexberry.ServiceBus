@@ -5,10 +5,8 @@
     /// </summary>
     internal abstract class BaseReceivingManager : BaseServiceBusComponent, IReceivingManager
     {
-        public abstract void AcceptMessage(MessageForESB message);
+        public abstract void AcceptMessage(ServiceBusMessage message);
 
-        public abstract void AcceptMessage(MessageForESB message, string groupName);
-
-        public abstract void RaiseEvent(string clientId, string eventTypeId);
+        public abstract void AcceptMessage(ServiceBusMessage message, string groupName);
     }
 }

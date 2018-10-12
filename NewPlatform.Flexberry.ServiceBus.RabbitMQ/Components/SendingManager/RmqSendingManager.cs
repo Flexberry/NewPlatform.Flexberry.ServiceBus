@@ -267,30 +267,6 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             return this._managementClient.GetQueueAsync(queueName, this._vhost).Result.Messages;
         }
 
-        public MessageInfoFromESB[] GetMessagesInfo(string clientId, int maxCount = 0)
-        {
-            // TODO: реализовать
-            throw new System.NotImplementedException();
-        }
-
-        public MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, int maxCount = 0)
-        {
-            // TODO: реализовать
-            throw new System.NotImplementedException();
-        }
-
-        public MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount = 0)
-        {
-            // TODO: реализовать
-            throw new System.NotImplementedException();
-        }
-
-        public MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount = 0)
-        {
-            // TODO: реализовать
-            throw new System.NotImplementedException();
-        }
-
         /// <summary>
         /// Метод не реализован.
         /// </summary>
@@ -388,6 +364,26 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
             // похоже нет способа понять есть ли сообщение с заданным ID, поэтому только так
             return true;
+        }
+
+        IEnumerable<ServiceBusMessageInfo> ISendingManager.GetMessagesInfo(string clientId, int maxCount)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<ServiceBusMessageInfo> ISendingManager.GetMessagesInfo(string clientId, string messageTypeId, int maxCount)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<ServiceBusMessageInfo> ISendingManager.GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<ServiceBusMessageInfo> ISendingManager.GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount)
+        {
+            throw new NotImplementedException();
         }
     }
 }

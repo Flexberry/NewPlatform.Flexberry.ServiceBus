@@ -51,11 +51,11 @@
             byte[] attachment = Encoding.Unicode.GetBytes(msgBody);
 
             // Act.
-            MessageFromESB msg = ServiceHelper.CreateWcfMessageFromEsb(formTime, messageTypeId, msgBody, senderName, groupId, tags, attachment);
+            ServiceBusMessage msg = ServiceHelper.CreateWcfMessageFromEsb(formTime, messageTypeId, msgBody, senderName, groupId, tags, attachment);
 
             // Assert.
             Assert.True(msg.MessageFormingTime == formTime && msg.MessageTypeID == messageTypeId && msg.Body == msgBody &&
-                        msg.SenderName == senderName && msg.GroupID == groupId && msg.Tags == tags &&
+                        msg.SenderName == senderName && msg.Group == groupId && msg.Tags == tags &&
                         msg.Attachment == attachment);
         }
 
@@ -199,7 +199,7 @@
         public void TestAddSenderToMessage()
         {
             // Arrange.
-            var messageForESB = new MessageForESB() { Tags = new Dictionary<string, string>() };
+            var messageForESB = new ServiceBusMessage() { Tags = new Dictionary<string, string>() };
             var message = new Message();
             messageForESB.Tags.Add("senderName", "sender");
 
@@ -218,7 +218,7 @@
         {
             // Arrange.
             var tags = new Dictionary<string, string> { { "MessageForESBTag", "MessageForESBTagValue" } };
-            var messageForEsb = new MessageForESB { ClientID = "guid", Tags = tags };
+            var messageForEsb = new ServiceBusMessage { ClientID = "guid", Tags = tags };
             var message = new Message() { Tags = "MessageTag:TagValue;sendingWay:start" };
             var message2 = new Message() { Tags = "MessageTag:TagValue" };
 

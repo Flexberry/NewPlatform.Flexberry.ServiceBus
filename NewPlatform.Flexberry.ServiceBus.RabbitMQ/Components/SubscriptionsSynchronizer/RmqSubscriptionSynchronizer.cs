@@ -115,11 +115,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             {
                 if (!esbSubscriptions.Any(x => this.IsSubscriptionEquals(mqSubscription, x)))
                 {
-                    this._esbSubscriptionsManager.CreateMessageType(new NameCommentStruct()
+                    this._esbSubscriptionsManager.CreateMessageType(new ServiceBusMessageType()
                     {
                         Name = mqSubscription.Client.ID,
                         Id = mqSubscription.Client.ID,
-                        Comment = "Подписка создана автоматически при синхронизации подписок"
+                        Description = "Подписка создана автоматически при синхронизации подписок"
                     });
                     this._esbSubscriptionsManager.CreateClient(mqSubscription.Client.ID, mqSubscription.Client.Name);
 

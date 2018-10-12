@@ -1,6 +1,7 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Web.Http;
     using Components;
@@ -32,7 +33,7 @@
         /// <param name="clientId">Идентификатор получателя сообщения.</param>
         /// <returns>Список сообщений, отсортированный по приоритету и времени формирования.</returns>
         [Route("Messages")]
-        public virtual MessageInfoFromESB[] GetMessages(string clientId)
+        public virtual IEnumerable<ServiceBusMessageInfo> GetMessages(string clientId)
         {
             return _sendingManager.GetMessagesInfo(clientId);
         }
@@ -107,7 +108,7 @@
         /// <param name="value">Структура данных, описывающая отправляемое сообщение.</param>
         [Route("Message")]
         [HttpPost]
-        public virtual void PostMessage([FromBody] MessageForESB value)
+        public virtual void PostMessage([FromBody] ServiceBusMessage value)
         {
             _receivingManager.AcceptMessage(value);
         }

@@ -53,7 +53,7 @@
             log4net.ThreadContext.Properties["linkedMessage"] = string.Empty;
         }
 
-        public void LogIncomingMessage(MessageForESB message)
+        public void LogIncomingMessage(ServiceBusMessage message)
         {
             log4net.ThreadContext.Properties["title"] = "Получено сообщение";
             LogService.LogInfo(

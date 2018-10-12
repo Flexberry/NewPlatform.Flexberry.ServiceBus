@@ -31,6 +31,11 @@
         /// </summary>
         private readonly IStatisticsService _statisticsService;
 
+        /// <summary>
+        /// Object repository.
+        /// </summary>
+        private readonly IObjectRepository _objectRepository;
+
         private readonly ILogger _logger;
 
         /// <summary>
@@ -75,7 +80,7 @@
         /// <param name="sendingManager">The sending manager.</param>
         /// <param name="receivingManager">The receiving manager.</param>
         /// <param name="logger">The logger.</param>
-        public WcfService(ISubscriptionsManager subscriptionsManager, ISendingManager sendingManager, IReceivingManager receivingManager, ILogger logger, IStatisticsService statisticsService)
+        public WcfService(ISubscriptionsManager subscriptionsManager, ISendingManager sendingManager, IReceivingManager receivingManager, ILogger logger, IStatisticsService statisticsService, IObjectRepository objectRepository)
         {
             if (subscriptionsManager == null)
                 throw new ArgumentNullException(nameof(subscriptionsManager));
@@ -92,11 +97,15 @@
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
 
+            if (logger == null)
+                throw new ArgumentNullException(nameof(objectRepository));
+
             _subscriptionsManager = subscriptionsManager;
             _sendingManager = sendingManager;
             _receivingManager = receivingManager;
             _logger = logger;
             _statisticsService = statisticsService;
+            _objectRepository = objectRepository;
         }
 
         /// <summary>
@@ -105,7 +114,7 @@
         /// </summary>
         public override void Start()
         {
-            var service = new SBService(_subscriptionsManager, _sendingManager, _receivingManager, _statisticsService);
+            var service = new SBService(_subscriptionsManager, _sendingManager, _receivingManager, _statisticsService, _objectRepository);
 
             if (UseWcfSettingsFromConfig)
             {

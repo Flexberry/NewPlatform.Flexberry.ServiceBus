@@ -125,15 +125,15 @@
         /// <param name="message">The message.</param>
         /// <param name="password">The password.</param>
         /// <param name="group">The group.</param>
-        /// <returns>The <see cref="MessageForESB"/>.</returns>
-        private static MessageForESB GetDataFromBody(Message message, out string password, out string group)
+        /// <returns>The <see cref="ServiceBusMessage"/>.</returns>
+        private static ServiceBusMessage GetDataFromBody(Message message, out string password, out string group)
         {
             var xDoc = new XmlDocument
                 {
                     InnerXml = Encoding.UTF8.GetString(Encoding.GetEncoding(1251).GetBytes(message.ToMailMessage().Body)).Trim()
                 };
 
-            var msg = new MessageForESB();
+            var msg = new ServiceBusMessage();
 
             group = string.Empty;
             password = string.Empty;
@@ -295,7 +295,7 @@
             string password;
             string group;
 
-            MessageForESB msg = GetDataFromBody(message, out password, out group);
+            ServiceBusMessage msg = GetDataFromBody(message, out password, out group);
 
             if (fileName != "empty")
             {
@@ -322,7 +322,7 @@
             string password;
             string group;
 
-            MessageForESB msg = GetDataFromBody(msgs[0].msg, out password, out group);
+            ServiceBusMessage msg = GetDataFromBody(msgs[0].msg, out password, out group);
 
             var attList = new List<Attach>();
             foreach (Header header in msgs)

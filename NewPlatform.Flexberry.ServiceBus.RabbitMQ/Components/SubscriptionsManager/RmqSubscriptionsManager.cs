@@ -75,7 +75,7 @@
         /// Создание точки обмена по типу сообщения.
         /// </summary>
         /// <param name="msgTypeInfo">Структура, описывающая тип сообщения.</param>
-        public void CreateMessageType(NameCommentStruct msgTypeInfo)
+        public void CreateMessageType(ServiceBusMessageType msgTypeInfo)
         {
             var exchangeName = this._namingManager.GetExchangeName(msgTypeInfo.Id);
             var exchangeInfo = new ExchangeInfo(exchangeName, ExchangeType.Topic, autoDelete: false, durable: true, @internal: false, arguments: null);
@@ -88,7 +88,7 @@
         /// В RabbitMQ аналогично созданию обычного типа сообщения.
         /// </summary>
         /// <param name="eventTypeInfo">Структура, описывающая тип сообщения.</param>
-        public void CreateEventType(NameCommentStruct eventTypeInfo)
+        public void CreateEventType(ServiceBusMessageType eventTypeInfo)
         {
             this.CreateMessageType(eventTypeInfo);
         }
@@ -208,6 +208,31 @@
             }
 
             return result;
+        }
+
+        public void UpdateClient(string clientId, ServiceBusClient client)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateMessageType(string messageTypeId, ServiceBusMessageType messageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteMessageType(string messageTypeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateSubscription(string subscriptionId, ServiceBusSubscription subscription)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteSubscription(string subscriptionId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
