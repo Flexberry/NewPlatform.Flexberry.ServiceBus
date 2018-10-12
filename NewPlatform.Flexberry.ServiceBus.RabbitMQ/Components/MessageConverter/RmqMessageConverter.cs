@@ -19,7 +19,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// </summary>
         /// <param name="msg">Сообщение из шины.</param>
         /// <returns>Словарь "имя свойства - значения"</returns>
-        public IDictionary<string, object> GetBodyProperties(MessageForESB msg)
+        public IDictionary<string, object> GetBodyProperties(ServiceBusMessage msg)
         {
             var result = new Dictionary<string, object>();
 
@@ -42,7 +42,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// </summary>
         /// <param name="msg">Сообщение для шины.</param>
         /// <returns>Словарь "имя свойства - значения"</returns>
-        public IDictionary<string, object> GetProperties(MessageForESB msg)
+        public IDictionary<string, object> GetProperties(ServiceBusMessage msg)
         {
             var properties = new Dictionary<string, object>();
             if (msg.Tags != null)

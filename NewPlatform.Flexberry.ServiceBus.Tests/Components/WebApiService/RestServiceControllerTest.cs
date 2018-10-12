@@ -68,20 +68,20 @@
             request.Method = "GET";
             fixture.SendManager.Setup(send => send.GetMessagesInfo(clientId, It.IsAny<int>())).Returns(new[]
             {
-                new MessageInfoFromESB { Id = message1Id, MessageFormingTime = messageTime, Priority = 1, MessageTypeID = messageType1Id },
-                new MessageInfoFromESB { Id = message2Id, MessageFormingTime = messageTime, Priority = 2, MessageTypeID = messageType2Id }
+                new ServiceBusMessageInfo { Id = message1Id, FormingTime = messageTime, Priority = 1, MessageTypeID = messageType1Id },
+                new ServiceBusMessageInfo { Id = message2Id, FormingTime = messageTime, Priority = 2, MessageTypeID = messageType2Id }
             });
 
             // Act.
             WebResponse response = request.GetResponse();
 
-            MessageInfoFromESB[] res;
+            ServiceBusMessageInfo[] res;
             using (var stream = response.GetResponseStream())
             using (var reader = new StreamReader(stream))
             {
                 var msg = reader.ReadToEnd();
                 var serializer = new JavaScriptSerializer();
-                res = serializer.Deserialize<MessageInfoFromESB[]>(msg);
+                res = serializer.Deserialize<ServiceBusMessageInfo[]>(msg);
             }
 
             // Assert.
@@ -89,7 +89,7 @@
             Assert.True(res[0].Id == message1Id && res[1].Id == message2Id);
             Assert.True(res[0].Priority == 1 && res[1].Priority == 2);
             Assert.True(res[0].MessageTypeID == messageType1Id && res[1].MessageTypeID == messageType2Id);
-            Assert.True(res.All(r => r.MessageFormingTime == messageTime));
+            Assert.True(res.All(r => r.FormingTime == messageTime));
         }
 
         /// <summary>
@@ -205,7 +205,7 @@
             request.GetResponse();
 
             // Assert.
-            fixture.RecManager.Verify(rec => rec.AcceptMessage(It.Is<MessageForESB>(msg => msg.ClientID == clientId && msg.MessageTypeID == messageTypeId)), Times.Once);
+            fixture.RecManager.Verify(rec => rec.AcceptMessage(It.Is<ServiceBusMessage>(msg => msg.ClientID == clientId && msg.MessageTypeID == messageTypeId)), Times.Once);
         }
 
         /// <summary>

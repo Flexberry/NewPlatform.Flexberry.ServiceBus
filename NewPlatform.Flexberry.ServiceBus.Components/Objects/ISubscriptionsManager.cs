@@ -43,16 +43,6 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** End programmer edit section *** (ISubscriptionsManager.DeleteClient System.String CustomAttributes)
         void DeleteClient(string clientId);
         
-        // *** Start programmer edit section *** (ISubscriptionsManager.CreateMessageType NewPlatform.Flexberry.ServiceBus.NameCommentStruct CustomAttributes)
-
-        // *** End programmer edit section *** (ISubscriptionsManager.CreateMessageType NewPlatform.Flexberry.ServiceBus.NameCommentStruct CustomAttributes)
-        void CreateMessageType(NewPlatform.Flexberry.ServiceBus.NameCommentStruct msgTypeInfo);
-        
-        // *** Start programmer edit section *** (ISubscriptionsManager.CreateEventType NewPlatform.Flexberry.ServiceBus.NameCommentStruct CustomAttributes)
-
-        // *** End programmer edit section *** (ISubscriptionsManager.CreateEventType NewPlatform.Flexberry.ServiceBus.NameCommentStruct CustomAttributes)
-        void CreateEventType(NewPlatform.Flexberry.ServiceBus.NameCommentStruct eventTypeInfo);
-        
         // *** Start programmer edit section *** (ISubscriptionsManager.GetSubscriptions System.Boolean CustomAttributes)
 
         // *** End programmer edit section *** (ISubscriptionsManager.GetSubscriptions System.Boolean CustomAttributes)
@@ -82,5 +72,35 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         // *** End programmer edit section *** (ISubscriptionsManager.UpdateAllSubscriptions System.String CustomAttributes)
         void UpdateAllSubscriptions(string clientId);
+        
+        // *** Start programmer edit section *** (ISubscriptionsManager.UpdateClient System.String NewPlatform.Flexberry.ServiceBus.ServiceBusClient CustomAttributes)
+
+        // *** End programmer edit section *** (ISubscriptionsManager.UpdateClient System.String NewPlatform.Flexberry.ServiceBus.ServiceBusClient CustomAttributes)
+        void UpdateClient(string clientId, NewPlatform.Flexberry.ServiceBus.ServiceBusClient client);
+        
+        // *** Start programmer edit section *** (ISubscriptionsManager.CreateMessageType NewPlatform.Flexberry.ServiceBus.ServiceBusMessageType CustomAttributes)
+
+        // *** End programmer edit section *** (ISubscriptionsManager.CreateMessageType NewPlatform.Flexberry.ServiceBus.ServiceBusMessageType CustomAttributes)
+        void CreateMessageType(NewPlatform.Flexberry.ServiceBus.ServiceBusMessageType msgTypeInfo);
+        
+        // *** Start programmer edit section *** (ISubscriptionsManager.UpdateMessageType System.String NewPlatform.Flexberry.ServiceBus.ServiceBusMessageType CustomAttributes)
+
+        // *** End programmer edit section *** (ISubscriptionsManager.UpdateMessageType System.String NewPlatform.Flexberry.ServiceBus.ServiceBusMessageType CustomAttributes)
+        void UpdateMessageType(string messageTypeId, NewPlatform.Flexberry.ServiceBus.ServiceBusMessageType messageType);
+        
+        // *** Start programmer edit section *** (ISubscriptionsManager.DeleteMessageType System.String CustomAttributes)
+
+        // *** End programmer edit section *** (ISubscriptionsManager.DeleteMessageType System.String CustomAttributes)
+        void DeleteMessageType(string messageTypeId);
+        
+        // *** Start programmer edit section *** (ISubscriptionsManager.UpdateSubscription System.String NewPlatform.Flexberry.ServiceBus.ServiceBusSubscription CustomAttributes)
+
+        // *** End programmer edit section *** (ISubscriptionsManager.UpdateSubscription System.String NewPlatform.Flexberry.ServiceBus.ServiceBusSubscription CustomAttributes)
+        void UpdateSubscription(string subscriptionId, NewPlatform.Flexberry.ServiceBus.ServiceBusSubscription subscription);
+        
+        // *** Start programmer edit section *** (ISubscriptionsManager.DeleteSubscription System.String CustomAttributes)
+
+        // *** End programmer edit section *** (ISubscriptionsManager.DeleteSubscription System.String CustomAttributes)
+        void DeleteSubscription(string subscriptionId);
     }
 }

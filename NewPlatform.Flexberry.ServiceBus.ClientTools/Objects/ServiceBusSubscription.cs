@@ -34,7 +34,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         
         private DateTime? fExpiryDate;
         
-        private bool fCallback;
+        private bool? fCallback;
         
         private string fSendBy;
         
@@ -144,14 +144,14 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** Start programmer edit section *** (ServiceBusSubscription.Callback CustomAttributes)
         [DataMember]
         // *** End programmer edit section *** (ServiceBusSubscription.Callback CustomAttributes)
-        public virtual bool Callback
+        public virtual bool? Callback
         {
             get
             {
                 // *** Start programmer edit section *** (ServiceBusSubscription.Callback Get start)
 
                 // *** End programmer edit section *** (ServiceBusSubscription.Callback Get start)
-                bool result = this.fCallback;
+                bool? result = this.fCallback;
                 // *** Start programmer edit section *** (ServiceBusSubscription.Callback Get end)
 
                 // *** End programmer edit section *** (ServiceBusSubscription.Callback Get end)

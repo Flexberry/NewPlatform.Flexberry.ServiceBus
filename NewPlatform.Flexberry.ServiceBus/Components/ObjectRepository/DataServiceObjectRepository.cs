@@ -6,6 +6,7 @@
     using System.Linq;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
+    using NewPlatform.Flexberry.ServiceBus.Components.ObjectRepository;
 
     /// <summary>
     /// Default implementation of <see cref="IObjectRepository"/> using <see cref="IDataService"/>.
@@ -140,6 +141,46 @@
             _statisticsService.NotifyAvgTimeSql(null, (int)time, "DataServiceObjectRepository.GetRestrictionsForMsgType() load OutboundMessageTypeRestriction");
 
             return dobjs;
+        }
+
+        /// <summary>
+        /// Create sending permission.
+        /// </summary>
+        /// <param name="clientId">Client's ID.</param>
+        /// <param name="messageTypeId">Message type's ID.</param>
+        public void CreateSendingPermission(string clientId, string messageTypeId)
+        {
+            CommonMetodsObjectRepository.CreateSendingPermission(clientId, messageTypeId, _dataService, _statisticsService);
+        }
+
+        /// <summary>
+        /// Delete sending permission.
+        /// </summary>
+        /// <param name="clientId">Client's ID.</param>
+        /// <param name="messageTypeId">Message type's ID.</param>
+        public void DeleteSendingPermission(string clientId, string messageTypeId)
+        {
+            CommonMetodsObjectRepository.DeleteSendingPermission(clientId, messageTypeId, _dataService, _statisticsService);
+        }
+
+        /// <summary>
+        /// Gets all clients.
+        /// </summary>
+        /// <returns>The list of all stored clients</returns>
+        public IEnumerable<ServiceBusClient> GetAllClients()
+        {
+            LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Client), Client.Views.EditView);
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            IEnumerable<ServiceBusClient> clients = _dataService.LoadObjects(lcs).ToList().Cast<ServiceBusClient>();
+
+            stopwatch.Stop();
+            long time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DataServiceObjectRepository.GetAllClients() load Clients.");
+
+            return clients;
         }
     }
 }

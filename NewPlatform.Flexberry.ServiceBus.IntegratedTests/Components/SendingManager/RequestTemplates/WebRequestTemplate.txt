@@ -5,20 +5,23 @@
   *@</s:Header>@("\\s*")@*
   *@<s:Body>@("\\s*")@*
     *@<AcceptMessage xmlns="http://tempuri.org/">@("\\s*")@*
-    *@<msg xmlns:a="http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">@("\\s*")@*
+    *@<message xmlns:a="http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">@("\\s*")@*
       *@@if (Model.Attachment == null) {@*
         *@<a:Attachment/>@("\\s*")@*
       *@} else {@*
         *@<a:Attachment>@Model.Attachment</a:Attachment>@("\\s*")@*
       *@}@*
       *@<a:Body>@Model.Body</a:Body>@("\\s*")@*
+	  *@<a:ClientID i:nil="true"/>@("\\s*")@*
       *@@if (Model.Group == null) {@*
-        *@<a:GroupID i:nil="true"/>@("\\s*")@*
+        *@<a:Group i:nil="true"/>@("\\s*")@*
       *@} else {@*
-        *@<a:GroupID>@Model.Group</a:GroupID>@("\\s*")@*
+        *@<a:Group>@Model.Group</a:Group>@("\\s*")@*
       *@}@*
+	  *@<a:Id i:nil="true"/>@("\\s*")@*
       *@<a:MessageFormingTime>@Model.ReceivingTime.ToString("yyyy-MM-ddTHH:mm:ss.ff")@("[\\d]?")</a:MessageFormingTime>@("\\s*")@*
       *@<a:MessageTypeID>@Model.MessageType.ID</a:MessageTypeID>@("\\s*")@*
+	  *@<a:Priority>@Model.Priority</a:Priority>@("\\s*")@*
       *@@if (Model.Sender == null) {@*
         *@<a:SenderName i:nil="true"/>@("\\s*")@*
       *@} else {@*
@@ -34,7 +37,7 @@
         *@}@*
         *@</a:Tags>@("\\s*")@*
       *@}@*
-    *@</msg>@("\\s*")@*
+    *@</message>@("\\s*")@*
     *@</AcceptMessage>@("\\s*")@*
   *@</s:Body>@("\\s*")@*
 *@</s:Envelope>@("\\s*")

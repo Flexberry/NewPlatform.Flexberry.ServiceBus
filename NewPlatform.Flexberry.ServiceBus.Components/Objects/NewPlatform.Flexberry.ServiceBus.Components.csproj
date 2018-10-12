@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IExternalStatisticsCollector.cs" />
     <Compile Include="IMessageConverter.cs" />
     <Compile Include="IStatisticsCompressorService.cs">
       <SubType>Code</SubType>

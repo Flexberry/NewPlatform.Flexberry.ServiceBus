@@ -369,6 +369,7 @@
     <Compile Include="Components\Logger\Log4NetLogger.cs" />
     <Compile Include="Components\Logger\LoggerHelper.cs" />
     <Compile Include="Components\ObjectRepository\CachedDataServiceObjectRepository.cs" />
+    <Compile Include="Components\ObjectRepository\CommonMetodsObjectRepository.cs" />
     <Compile Include="Components\ObjectRepository\DataServiceObjectRepository.cs" />
     <Compile Include="Components\RerouterService\Configuration\MessageRerouterConfiguration.cs" />
     <Compile Include="Components\RerouterService\Configuration\RecieverElement.cs" />
@@ -377,6 +378,9 @@
     <Compile Include="Components\RerouterService\MessageInfo.cs" />
     <Compile Include="Components\RerouterService\RerouterService.cs" />
     <Compile Include="Components\RerouterService\SerializationUtils.cs" />
+    <Compile Include="Components\WcfService\SBService.IServiceBusCallbackClient.cs" />
+    <Compile Include="Components\WcfService\SBService.IServiceBusClient.cs" />
+    <Compile Include="Components\WcfService\SBService.IServiceBusManager.cs" />
     <Compile Include="MessageSenders\MessageSenderCreator.cs" />
     <Compile Include="Components\SendingManager\PrioritySendingManager.cs" />
     <Compile Include="Components\StatisticsService\DefaultStatisticsCompressorService.cs" />

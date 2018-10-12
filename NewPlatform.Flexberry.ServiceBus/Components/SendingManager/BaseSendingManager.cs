@@ -127,7 +127,7 @@
         /// <param name="clientId">Идентификатор клиента.</param>
         /// <param name="maxCount">Максимальное количество возвращаемых записей. Если равно 0, возвращается информация о всех имеющихся сообщениях.</param>
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
-        public virtual MessageInfoFromESB[] GetMessagesInfo(string clientId, int maxCount = 0)
+        public virtual IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, int maxCount = 0)
         {
             Guid clientPk = ServiceHelper.ConvertClientIdToPrimaryKey(clientId, _dataService, _statistics);
 
@@ -153,16 +153,16 @@
             long time = stopwatch.ElapsedMilliseconds;
             _statistics.NotifyAvgTimeSql(null, (int)time, "BaseSendingManager.GetMessagesInfo(string clientId) load messages.");
 
-            MessageInfoFromESB[] esbMessages = new MessageInfoFromESB[messages.Length];
+            ServiceBusMessageInfo[] esbMessages = new ServiceBusMessageInfo[messages.Length];
             for (int i = 0; i < messages.Length; i++)
             {
                 var msg = (Message)messages[i];
 
-                esbMessages[i] = new MessageInfoFromESB
+                esbMessages[i] = new ServiceBusMessageInfo
                 {
                     Id = msg.__PrimaryKey.ToString(),
                     MessageTypeID = msg.MessageType.ID,
-                    MessageFormingTime = msg.ReceivingTime,
+                    FormingTime = msg.ReceivingTime,
                     Priority = msg.Priority
                 };
             }
@@ -177,7 +177,7 @@
         /// <param name="messageTypeId">Идентификатор типа сообщений.</param>
         /// <param name="maxCount">Максимальное количество возвращаемых записей. Если равно 0, возвращается информация о всех имеющихся сообщениях.</param>
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
-        public virtual MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, int maxCount = 0)
+        public virtual IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, int maxCount = 0)
         {
             Guid clientPk = ServiceHelper.ConvertClientIdToPrimaryKey(clientId, _dataService, _statistics);
             Guid messageTypePk = ServiceHelper.ConvertMessageTypeIdToPrimaryKey(messageTypeId, _dataService, _statistics);
@@ -215,11 +215,11 @@
             long time = stopwatch.ElapsedMilliseconds;
             _statistics.NotifyAvgTimeSql(null, (int)time, "BaseSendingManager.GetMessagesInfo(string clientId, string messageTypeId) load messages.");
 
-            return messageObjects.Cast<Message>().Select(x => new MessageInfoFromESB()
+            return messageObjects.Cast<Message>().Select(x => new ServiceBusMessageInfo()
             {
                 Id = x.__PrimaryKey.ToString(),
                 MessageTypeID = x.MessageType.ID,
-                MessageFormingTime = x.ReceivingTime,
+                FormingTime = x.ReceivingTime,
                 Priority = x.Priority
             }).ToArray();
         }
@@ -232,7 +232,7 @@
         /// <param name="groupName">Имя группы сообщения.</param>
         /// <param name="maxCount">Максимальное количество возвращаемых записей. Если равно 0, возвращается информация о всех имеющихся сообщениях.</param>
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
-        public virtual MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount = 0)
+        public virtual IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount = 0)
         {
             Guid clientPk = ServiceHelper.ConvertClientIdToPrimaryKey(clientId, _dataService, _statistics);
             Guid messageTypePk = ServiceHelper.ConvertMessageTypeIdToPrimaryKey(messageTypeId, _dataService, _statistics);
@@ -272,11 +272,11 @@
             long time = stopwatch.ElapsedMilliseconds;
             _statistics.NotifyAvgTimeSql(null, (int)time, "BaseSendingManager.GetMessagesInfo(string clientId, string messageTypeId, string groupName) load messages.");
 
-            return messageObjects.Cast<Message>().Select(x => new MessageInfoFromESB()
+            return messageObjects.Cast<Message>().Select(x => new ServiceBusMessageInfo()
             {
                 Id = x.__PrimaryKey.ToString(),
                 MessageTypeID = x.MessageType.ID,
-                MessageFormingTime = x.ReceivingTime,
+                FormingTime = x.ReceivingTime,
                 Priority = x.Priority
             }).ToArray();
         }
@@ -289,7 +289,7 @@
         /// <param name="tags">Теги, которые должно содержать сообщение.</param>
         /// <param name="maxCount">Максимальное количество возвращаемых записей. Если равно 0, возвращается информация о всех имеющихся сообщениях.</param>
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
-        public virtual MessageInfoFromESB[] GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount = 0)
+        public virtual IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount = 0)
         {
             Guid clientPk = ServiceHelper.ConvertClientIdToPrimaryKey(clientId, _dataService, _statistics);
             Guid messageTypePk = ServiceHelper.ConvertMessageTypeIdToPrimaryKey(messageTypeId, _dataService, _statistics);
@@ -338,11 +338,11 @@
                 })
                 .Select(
                     x =>
-                    new MessageInfoFromESB()
+                    new ServiceBusMessageInfo()
                     {
                         Id = x.__PrimaryKey.ToString(),
                         MessageTypeID = x.MessageType.ID,
-                        MessageFormingTime = x.ReceivingTime,
+                        FormingTime = x.ReceivingTime,
                         Priority = x.Priority
                     })
                 .ToArray();

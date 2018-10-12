@@ -57,5 +57,20 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         // *** End programmer edit section *** (IObjectRepository.GetRestrictionsForMsgType System.String CustomAttributes)
         System.Collections.Generic.IEnumerable<SendingPermission> GetRestrictionsForMsgType(string messageTypeId);
+        
+        // *** Start programmer edit section *** (IObjectRepository.CreateSendingPermission System.String CustomAttributes)
+
+        // *** End programmer edit section *** (IObjectRepository.CreateSendingPermission System.String CustomAttributes)
+        void CreateSendingPermission(string clientId, string messageTypeId);
+        
+        // *** Start programmer edit section *** (IObjectRepository.DeleteSendingPermission System.String CustomAttributes)
+
+        // *** End programmer edit section *** (IObjectRepository.DeleteSendingPermission System.String CustomAttributes)
+        void DeleteSendingPermission(string clientId, string messageTypeId);
+        
+        // *** Start programmer edit section *** (IObjectRepository.GetAllClients CustomAttributes)
+
+        // *** End programmer edit section *** (IObjectRepository.GetAllClients CustomAttributes)
+        System.Collections.Generic.IEnumerable<ServiceBusClient> GetAllClients();
     }
 }

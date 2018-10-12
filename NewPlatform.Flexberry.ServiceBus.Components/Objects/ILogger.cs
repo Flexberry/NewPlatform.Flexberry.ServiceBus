@@ -43,10 +43,10 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** End programmer edit section *** (ILogger.LogError System.String System.String NewPlatform.Flexberry.ServiceBus.Message CustomAttributes)
         void LogError(string title, string message, NewPlatform.Flexberry.ServiceBus.Message linkedMessage = null);
         
-        // *** Start programmer edit section *** (ILogger.LogIncomingMessage NewPlatform.Flexberry.ServiceBus.MessageForESB CustomAttributes)
+        // *** Start programmer edit section *** (ILogger.LogIncomingMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
 
-        // *** End programmer edit section *** (ILogger.LogIncomingMessage NewPlatform.Flexberry.ServiceBus.MessageForESB CustomAttributes)
-        void LogIncomingMessage(NewPlatform.Flexberry.ServiceBus.MessageForESB message);
+        // *** End programmer edit section *** (ILogger.LogIncomingMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
+        void LogIncomingMessage(NewPlatform.Flexberry.ServiceBus.ServiceBusMessage message);
         
         // *** Start programmer edit section *** (ILogger.LogOutgoingMessage NewPlatform.Flexberry.ServiceBus.Message CustomAttributes)
 

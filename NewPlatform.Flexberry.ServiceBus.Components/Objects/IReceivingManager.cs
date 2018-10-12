@@ -33,19 +33,14 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** End programmer edit section *** (IReceivingManager CustomMembers)
 
         
-        // *** Start programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.MessageForESB CustomAttributes)
+        // *** Start programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
 
-        // *** End programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.MessageForESB CustomAttributes)
-        void AcceptMessage(NewPlatform.Flexberry.ServiceBus.MessageForESB message);
+        // *** End programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
+        void AcceptMessage(NewPlatform.Flexberry.ServiceBus.ServiceBusMessage message);
         
-        // *** Start programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.MessageForESB System.String CustomAttributes)
+        // *** Start programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage System.String CustomAttributes)
 
-        // *** End programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.MessageForESB System.String CustomAttributes)
-        void AcceptMessage(NewPlatform.Flexberry.ServiceBus.MessageForESB message, string groupName);
-        
-        // *** Start programmer edit section *** (IReceivingManager.RaiseEvent System.String System.String CustomAttributes)
-
-        // *** End programmer edit section *** (IReceivingManager.RaiseEvent System.String System.String CustomAttributes)
-        void RaiseEvent(string clientId, string eventTypeId);
+        // *** End programmer edit section *** (IReceivingManager.AcceptMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage System.String CustomAttributes)
+        void AcceptMessage(NewPlatform.Flexberry.ServiceBus.ServiceBusMessage message, string groupName);
     }
 }

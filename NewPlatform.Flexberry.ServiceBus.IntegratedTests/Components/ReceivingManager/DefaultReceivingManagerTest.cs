@@ -44,7 +44,7 @@
                     GetMockSendingManager(),
                     dataService,
                     GetMockStatisticsService());
-                var messageForESB = new MessageForESB()
+                var serviceBusMessage = new ServiceBusMessage()
                 {
                     ClientID = sender.ID,
                     MessageTypeID = messageType.ID,
@@ -53,14 +53,14 @@
                 };
 
                 // Act.
-                component.AcceptMessage(messageForESB);
+                component.AcceptMessage(serviceBusMessage);
 
                 // Assert.
                 var messages = dataService.LoadObjects(LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.MessageEditView))
                     .Cast<Message>()
                     .ToList();
                 Assert.Equal(1, messages.Count);
-                Assert.Equal(messageForESB.Body, messages[0].Body);
+                Assert.Equal(serviceBusMessage.Body, messages[0].Body);
                 Assert.Equal(recipient.ID, messages[0].Recipient.ID);
                 Assert.Equal(messageType.ID, messages[0].MessageType.ID);
             }
@@ -103,7 +103,7 @@
                     GetMockSendingManager(),
                     dataService,
                     GetMockStatisticsService());
-                var messageForESB = new MessageForESB()
+                var serviceBusMessage = new ServiceBusMessage()
                 {
                     ClientID = sender.ID,
                     MessageTypeID = messageType.ID,
@@ -112,7 +112,7 @@
                 };
 
                 // Act.
-                component.AcceptMessage(messageForESB);
+                component.AcceptMessage(serviceBusMessage);
 
                 // Assert.
                 var recipientIds = recipients.Cast<Client>().OrderBy(recipient => recipient.ID).Select(recipient => recipient.ID).ToList();
@@ -123,7 +123,7 @@
                 Assert.Equal(random, messages.Count);
                 for (int i = 0; i < random; i++)
                 {
-                    Assert.Equal(messageForESB.Body, messages[i].Body);
+                    Assert.Equal(serviceBusMessage.Body, messages[i].Body);
                     Assert.Equal(recipientIds[i], messages[i].Recipient.ID);
                     Assert.Equal(messageType.ID, messages[i].MessageType.ID);
                 }
@@ -158,14 +158,14 @@
                     GetMockSendingManager(),
                     dataService,
                     GetMockStatisticsService());
-                var messageForESB = new MessageForESB()
+                var messageForESB = new ServiceBusMessage()
                 {
                     ClientID = sender.ID,
                     MessageTypeID = messageType.ID,
                     Body = "BodyBum!",
                     Tags = new Dictionary<string, string>() { { "senderName", sender.ID } },
                 };
-                var newMessageForESB = new MessageForESB()
+                var newMessageForESB = new ServiceBusMessage()
                 {
                     ClientID = sender.ID,
                     MessageTypeID = messageType.ID,
@@ -217,14 +217,14 @@
                     GetMockSendingManager(),
                     dataService,
                     GetMockStatisticsService());
-                var messageForESB = new MessageForESB()
+                var messageForESB = new ServiceBusMessage()
                 {
                     ClientID = sender.ID,
                     MessageTypeID = messageType.ID,
                     Body = "BodyBum!",
                     Tags = new Dictionary<string, string>() { { "senderName", sender.ID } },
                 };
-                var messageWithGroupForESB = new MessageForESB()
+                var messageWithGroupForESB = new ServiceBusMessage()
                 {
                     ClientID = sender.ID,
                     MessageTypeID = messageType.ID,
@@ -290,14 +290,14 @@
                     GetMockSendingManager(),
                     dataService,
                     GetMockStatisticsService());
-                var messageForESB = new MessageForESB()
+                var messageForESB = new ServiceBusMessage()
                 {
                     ClientID = sender.ID,
                     MessageTypeID = messageType.ID,
                     Body = "BodyBum!",
                     Tags = new Dictionary<string, string>() { { "senderName", sender.ID } },
                 };
-                var newMessageForESB = new MessageForESB()
+                var newMessageForESB = new ServiceBusMessage()
                 {
                     ClientID = sender.ID,
                     MessageTypeID = messageType.ID,
@@ -329,48 +329,6 @@
                         Assert.Equal(messageType.ID, messagesGroup.Messages[i].MessageType.ID);
                     }
                 }
-            }
-        }
-
-        [Fact]
-        public void TestRaiseEvent()
-        {
-            foreach (var dataService in DataServices)
-            {
-                // Arrange.
-                var sender = new Client() { ID = "senderId" };
-                var recipient = new Client() { ID = "recipientId" };
-                var eventType = new MessageType() { ID = "eventTypeId" };
-                var subscription = new Subscription() { Client = recipient, MessageType = eventType };
-                var dataObjects = new DataObject[] { sender, recipient, eventType, subscription };
-                var mockObjectRepository = new Mock<IObjectRepository>();
-                var mockSubscriptionManager = new Mock<ISubscriptionsManager>();
-                dataService.UpdateObjects(ref dataObjects);
-                mockObjectRepository
-                    .Setup(or => or.GetRestrictionsForClient(It.Is<string>(id => id == sender.ID)))
-                    .Returns(new[] { new SendingPermission() { Client = sender, MessageType = eventType } });
-                mockSubscriptionManager
-                    .Setup(sm => sm.GetSubscriptionsForMsgType(It.Is<string>(id => id == eventType.ID), It.Is<string>(id => id == sender.ID)))
-                    .Returns(new[] { subscription });
-
-                var component = new DefaultReceivingManager(
-                    GetMockLogger(),
-                    mockObjectRepository.Object,
-                    mockSubscriptionManager.Object,
-                    GetMockSendingManager(),
-                    dataService,
-                    GetMockStatisticsService());
-
-                // Act.
-                component.RaiseEvent(sender.ID, eventType.ID);
-
-                // Assert.
-                var events = dataService.LoadObjects(LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.MessageEditView))
-                    .Cast<Message>()
-                    .ToList();
-                Assert.Equal(1, events.Count);
-                Assert.Equal(recipient.ID, events[0].Recipient.ID);
-                Assert.Equal(eventType.ID, events[0].MessageType.ID);
             }
         }
     }

@@ -93,38 +93,38 @@
                 var byClientIdAndMessageTypeIdAndTagsWithMax = component.GetMessagesInfo(recipient.ID, messageType.ID, new[] { "Color", "Name" }, random / 2);
 
                 // Assert.
-                Assert.Equal(random * 3, byClientId.Length);
-                Assert.Equal(random, byClientIdWithMax.Length);
+                Assert.Equal(random * 3, byClientId.ToArray().Length);
+                Assert.Equal(random, byClientIdWithMax.ToArray().Length);
 
-                Assert.Equal(random, byClientIdAndMessageTypeId.Length);
-                Assert.True(byClientIdAndMessageTypeId.All<MessageInfoFromESB>(messageInfo => messageInfo.Priority == 1));
-                Assert.True(byClientIdAndMessageTypeId.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageTypeID == secondMessageType.ID));
-                Assert.True(byClientIdAndMessageTypeId.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageFormingTime == now.AddYears(1)));
+                Assert.Equal(random, byClientIdAndMessageTypeId.ToArray().Length);
+                Assert.True(byClientIdAndMessageTypeId.All<ServiceBusMessageInfo>(messageInfo => messageInfo.Priority == 1));
+                Assert.True(byClientIdAndMessageTypeId.All<ServiceBusMessageInfo>(messageInfo => messageInfo.MessageTypeID == secondMessageType.ID));
+                Assert.True(byClientIdAndMessageTypeId.All<ServiceBusMessageInfo>(messageInfo => messageInfo.FormingTime == now.AddYears(1)));
 
-                Assert.Equal(random / 2, byClientIdAndMessageTypeIdWithMax.Length);
-                Assert.True(byClientIdAndMessageTypeIdWithMax.All<MessageInfoFromESB>(messageInfo => messageInfo.Priority == 1));
-                Assert.True(byClientIdAndMessageTypeIdWithMax.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageTypeID == secondMessageType.ID));
-                Assert.True(byClientIdAndMessageTypeIdWithMax.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageFormingTime == now.AddYears(1)));
+                Assert.Equal(random / 2, byClientIdAndMessageTypeIdWithMax.ToArray().Length);
+                Assert.True(byClientIdAndMessageTypeIdWithMax.All<ServiceBusMessageInfo>(messageInfo => messageInfo.Priority == 1));
+                Assert.True(byClientIdAndMessageTypeIdWithMax.All<ServiceBusMessageInfo>(messageInfo => messageInfo.MessageTypeID == secondMessageType.ID));
+                Assert.True(byClientIdAndMessageTypeIdWithMax.All<ServiceBusMessageInfo>(messageInfo => messageInfo.FormingTime == now.AddYears(1)));
 
-                Assert.Equal(random, byClientIdAndMessageTypeIdAndGroup.Length);
-                Assert.True(byClientIdAndMessageTypeIdAndGroup.All<MessageInfoFromESB>(messageInfo => messageInfo.Priority == 2));
-                Assert.True(byClientIdAndMessageTypeIdAndGroup.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageTypeID == messageType.ID));
-                Assert.True(byClientIdAndMessageTypeIdAndGroup.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageFormingTime == now.AddYears(2)));
+                Assert.Equal(random, byClientIdAndMessageTypeIdAndGroup.ToArray().Length);
+                Assert.True(byClientIdAndMessageTypeIdAndGroup.All<ServiceBusMessageInfo>(messageInfo => messageInfo.Priority == 2));
+                Assert.True(byClientIdAndMessageTypeIdAndGroup.All<ServiceBusMessageInfo>(messageInfo => messageInfo.MessageTypeID == messageType.ID));
+                Assert.True(byClientIdAndMessageTypeIdAndGroup.All<ServiceBusMessageInfo>(messageInfo => messageInfo.FormingTime == now.AddYears(2)));
 
-                Assert.Equal(random / 2, byClientIdAndMessageTypeIdAndGroupWithMax.Length);
-                Assert.True(byClientIdAndMessageTypeIdAndGroupWithMax.All<MessageInfoFromESB>(messageInfo => messageInfo.Priority == 2));
-                Assert.True(byClientIdAndMessageTypeIdAndGroupWithMax.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageTypeID == messageType.ID));
-                Assert.True(byClientIdAndMessageTypeIdAndGroupWithMax.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageFormingTime == now.AddYears(2)));
+                Assert.Equal(random / 2, byClientIdAndMessageTypeIdAndGroupWithMax.ToArray().Length);
+                Assert.True(byClientIdAndMessageTypeIdAndGroupWithMax.All<ServiceBusMessageInfo>(messageInfo => messageInfo.Priority == 2));
+                Assert.True(byClientIdAndMessageTypeIdAndGroupWithMax.All<ServiceBusMessageInfo>(messageInfo => messageInfo.MessageTypeID == messageType.ID));
+                Assert.True(byClientIdAndMessageTypeIdAndGroupWithMax.All<ServiceBusMessageInfo>(messageInfo => messageInfo.FormingTime == now.AddYears(2)));
 
-                Assert.Equal(random, byClientIdAndMessageTypeIdAndTags.Length);
-                Assert.True(byClientIdAndMessageTypeIdAndTags.All<MessageInfoFromESB>(messageInfo => messageInfo.Priority == 3));
-                Assert.True(byClientIdAndMessageTypeIdAndTags.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageTypeID == messageType.ID));
-                Assert.True(byClientIdAndMessageTypeIdAndTags.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageFormingTime == now.AddYears(3)));
+                Assert.Equal(random, byClientIdAndMessageTypeIdAndTags.ToArray().Length);
+                Assert.True(byClientIdAndMessageTypeIdAndTags.All<ServiceBusMessageInfo>(messageInfo => messageInfo.Priority == 3));
+                Assert.True(byClientIdAndMessageTypeIdAndTags.All<ServiceBusMessageInfo>(messageInfo => messageInfo.MessageTypeID == messageType.ID));
+                Assert.True(byClientIdAndMessageTypeIdAndTags.All<ServiceBusMessageInfo>(messageInfo => messageInfo.FormingTime == now.AddYears(3)));
 
-                Assert.Equal(random / 2, byClientIdAndMessageTypeIdAndTagsWithMax.Length);
-                Assert.True(byClientIdAndMessageTypeIdAndTagsWithMax.All<MessageInfoFromESB>(messageInfo => messageInfo.Priority == 3));
-                Assert.True(byClientIdAndMessageTypeIdAndTagsWithMax.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageTypeID == messageType.ID));
-                Assert.True(byClientIdAndMessageTypeIdAndTagsWithMax.All<MessageInfoFromESB>(messageInfo => messageInfo.MessageFormingTime == now.AddYears(3)));
+                Assert.Equal(random / 2, byClientIdAndMessageTypeIdAndTagsWithMax.ToArray().Length);
+                Assert.True(byClientIdAndMessageTypeIdAndTagsWithMax.All<ServiceBusMessageInfo>(messageInfo => messageInfo.Priority == 3));
+                Assert.True(byClientIdAndMessageTypeIdAndTagsWithMax.All<ServiceBusMessageInfo>(messageInfo => messageInfo.MessageTypeID == messageType.ID));
+                Assert.True(byClientIdAndMessageTypeIdAndTagsWithMax.All<ServiceBusMessageInfo>(messageInfo => messageInfo.FormingTime == now.AddYears(3)));
             }
         }
 
