@@ -332,6 +332,10 @@
       <Project>{82b674c0-ab1c-4c83-b451-39d4812c51ca}</Project>
       <Name>NewPlatform.Flexberry.ServiceBus.Components</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus.RabbitMQ\NewPlatform.Flexberry.ServiceBus.RabbitMQ.csproj">
+      <Project>{4ae4e878-f8a8-45ef-ac27-877210f684c7}</Project>
+      <Name>NewPlatform.Flexberry.ServiceBus.RabbitMQ</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus\NewPlatform.Flexberry.ServiceBus.csproj">
       <Project>{67040f2c-82a9-4ac2-b21d-298c161fe08f}</Project>
       <Name>NewPlatform.Flexberry.ServiceBus</Name>
