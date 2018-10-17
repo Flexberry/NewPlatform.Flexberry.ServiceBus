@@ -62,9 +62,9 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <param name="bodyProperties">Свойства тела сообщения.</param>
         /// <param name="properties">Свойства сообщения (тэги).</param>
         /// <returns>Сообщение в формате шины.</returns>
-        public Message ConvertFromMqFormat(byte[] messagePayload, IDictionary<string, object> properties)
+        public MessageWithNotTypedPk ConvertFromMqFormat(byte[] messagePayload, IDictionary<string, object> properties)
         {
-            var result = new Message();
+            var result = new MessageWithNotTypedPk();
 
             BasicProperties rmqProperties = new RabbitMQ.Client.Framing.BasicProperties();
             rmqProperties.Headers = properties;
