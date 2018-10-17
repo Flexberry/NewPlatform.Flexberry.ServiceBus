@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using RabbitMQ.Client.Content;
 using RabbitMQ.Client.Impl;
 
@@ -13,6 +14,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         private string _bodyPropertyName => "body";
 
         private string _senderIdPropepertyName => "senderId";
+
+        /// <summary>
+        /// Свойство сообщения RabbitMQ, в котором хранится Timestamp сообщения
+        /// </summary>
+        protected string TimestampPropertyName => "timestamp_in_ms";
 
         private string _tagPropertiesPrefix = "__tag";
 
@@ -94,10 +100,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 result.Sender = (string)mapMessageReader.Body[this._senderIdPropepertyName];
             }
 
-            if (mapMessageReader.Properties.Headers != null)
+            var headers = mapMessageReader.Properties.Headers;
+            if (headers != null)
             {
                 var messageTags = new Dictionary<string, string>();
-                foreach (var property in mapMessageReader.Properties.Headers)
+                foreach (var property in headers)
                 {
                     if (property.Key.StartsWith(this._tagPropertiesPrefix))
                     {
@@ -105,7 +112,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                     }
                 }
 
-                result.Tags = messageTags.Select(x => $"{x.Key}:{x.Value}").Aggregate((x, y) => $"{x}, {y}");
+                if (headers.ContainsKey(this.TimestampPropertyName))
+                {
+                    var unixtimestamp = (long)headers[this.TimestampPropertyName];
+                    result.ReceivingTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddMilliseconds(unixtimestamp);
+                }
+
+                result.Tags = messageTags.Any() ? messageTags.Select(x => $"{x.Key}:{x.Value}").Aggregate((x, y) => $"{x}, {y}") : "";
             }
 
             return result;
