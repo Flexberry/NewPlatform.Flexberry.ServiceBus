@@ -12,6 +12,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         private string _bodyPropertyName => "body";
 
+        private string _senderIdPropepertyName => "senderId";
+
         private string _tagPropertiesPrefix = "__tag";
 
         /// <summary>
@@ -31,6 +33,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             if (msg.Body != null)
             {
                 result[this._bodyPropertyName] = msg.Body;
+            }
+
+            if (msg.ClientID != null)
+            {
+                result[this._senderIdPropepertyName] = msg.ClientID;
             }
 
             return result;
@@ -80,6 +87,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             if (bodyProperties.ContainsKey(this._attachmentPropertyName))
             {
                 result.BinaryAttachment = (byte[])mapMessageReader.Body[this._attachmentPropertyName];
+            }
+
+            if (bodyProperties.ContainsKey(this._senderIdPropepertyName))
+            {
+                result.Sender = (string)mapMessageReader.Body[this._senderIdPropepertyName];
             }
 
             if (mapMessageReader.Properties.Headers != null)
