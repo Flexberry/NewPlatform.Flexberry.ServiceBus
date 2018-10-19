@@ -21,7 +21,7 @@
             Guid primaryKeyClient = ServiceHelper.ConvertClientIdToPrimaryKey(clientId, dataService, statisticsService);
             Client currentClient = ServiceHelper.GetClient(primaryKeyClient, dataService, statisticsService);
 
-            Guid primaryKeyMessageType = ServiceHelper.ConvertClientIdToPrimaryKey(messageTypeId, dataService, statisticsService);
+            Guid primaryKeyMessageType = ServiceHelper.ConvertMessageTypeIdToPrimaryKey(messageTypeId, dataService, statisticsService);
             MessageType currentMessageType = ServiceHelper.GetMessageType(primaryKeyMessageType, dataService, statisticsService);
 
             SendingPermission currentSendingPermission = new SendingPermission { Client = currentClient, MessageType = currentMessageType };
@@ -44,27 +44,23 @@
         /// <param name="statisticsService">Statistics service.</param>
         public static void DeleteSendingPermission(string clientId, string messageTypeId, IDataService dataService, IStatisticsService statisticsService)
         {
-            Guid primaryKeyClient = ServiceHelper.ConvertClientIdToPrimaryKey(clientId, dataService, statisticsService);
-            Guid primaryKeyMessageType = ServiceHelper.ConvertClientIdToPrimaryKey(messageTypeId, dataService, statisticsService);
-
             ExternalLangDef langDef = ExternalLangDef.LanguageDef;
             LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(SendingPermission), SendingPermission.Views.ServiceBusView);
             lcs.LimitFunction = langDef.GetFunction(
                 langDef.funcAND,
                 langDef.GetFunction(
                     langDef.funcEQ,
-                    new VariableDef(langDef.GuidType, Information.ExtractPropertyPath<SendingPermission>(x => x.Client.ID)),
-                    primaryKeyClient),
+                    new VariableDef(langDef.StringType, Information.ExtractPropertyPath<SendingPermission>(x => x.Client.ID)),
+                    clientId),
                 langDef.GetFunction(
                     langDef.funcEQ,
-                    new VariableDef(langDef.GuidType, Information.ExtractPropertyPath<SendingPermission>(x => x.MessageType.ID)),
-                    primaryKeyMessageType));
+                    new VariableDef(langDef.StringType, Information.ExtractPropertyPath<SendingPermission>(x => x.MessageType.ID)),
+                    messageTypeId));
             lcs.ReturnTop = 1;
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            dataService.LoadObjects(lcs);
             DataObject[] currentSendingPermission = dataService.LoadObjects(lcs);
 
             stopwatch.Stop();

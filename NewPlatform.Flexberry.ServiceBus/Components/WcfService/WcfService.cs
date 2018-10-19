@@ -97,7 +97,7 @@
             if (logger == null)
                 throw new ArgumentNullException(nameof(logger));
 
-            if (logger == null)
+            if (objectRepository == null)
                 throw new ArgumentNullException(nameof(objectRepository));
 
             _subscriptionsManager = subscriptionsManager;
