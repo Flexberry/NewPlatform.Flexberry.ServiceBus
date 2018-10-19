@@ -168,7 +168,7 @@
         /// Gets all clients.
         /// </summary>
         /// <returns>The list of all stored clients</returns>
-        public IEnumerable<ServiceBusClient> GetAllClients()
+        public IEnumerable<Client> GetAllClients()
         {
             LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Client), Client.Views.EditView);
 
@@ -181,23 +181,7 @@
             long time = stopwatch.ElapsedMilliseconds;
             _statisticsService.NotifyAvgTimeSql(null, (int)time, "DataServiceObjectRepository.GetAllClients() load Clients.");
 
-            List<ServiceBusClient> serviceBusClients = new List<ServiceBusClient>();
-            foreach (Client client in clients.Cast<Client>().ToList())
-            {
-                ServiceBusClient serviceBusClient = new ServiceBusClient
-                {
-                    Address = client.Address,
-                    ConnectionsLimit = client.ConnectionsLimit,
-                    Description = client.Description,
-                    DnsIdentity = client.DnsIdentity,
-                    Id = client.ID,
-                    Name = client.Name,
-                    SequentialSent = client.SequentialSent,
-                };
-                serviceBusClients.Add(serviceBusClient);
-            }
-
-            return serviceBusClients;
+            return clients.Cast<Client>().ToList();
         }
     }
 }

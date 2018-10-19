@@ -213,6 +213,7 @@
             Func<IEnumerable<TDataObjectType>> methodUnderTest,
             int updatePeriod,
             string[] propertiesToCheck)
+            where TDataObjectType : DataObject
         {
             // Arrange.
             dataService.UpdateObjects(ref objsToUpdate);
