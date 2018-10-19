@@ -296,7 +296,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
                 if (maxCount > 0 && rmqMessagesInfo.Count >= maxCount)
                 {
-                    rmqMessagesInfo.Take(maxCount);
+                    rmqMessagesInfo = rmqMessagesInfo.Take(maxCount).ToList();
                     break;
                 }
             }
@@ -334,7 +334,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
                 if (maxCount > 0 && rmqMessagesInfo.Count >= maxCount)
                 {
-                    rmqMessagesInfo.Take(maxCount);
+                    rmqMessagesInfo = rmqMessagesInfo.Take(maxCount).ToList();
                     break;
                 }
             }
@@ -377,7 +377,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
                 if (maxCount > 0 && rmqMessagesInfo.Count >= maxCount)
                 {
-                    rmqMessagesInfo.Take(maxCount);
+                    rmqMessagesInfo = rmqMessagesInfo.Take(maxCount).ToList();
                     break;
                 }
             }
@@ -430,7 +430,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
                 if (maxCount > 0 && rmqMessagesInfo.Count >= maxCount)
                 {
-                    rmqMessagesInfo.Take(maxCount);
+                    rmqMessagesInfo = rmqMessagesInfo.Take(maxCount).ToList();
                     break;
                 }
             }
