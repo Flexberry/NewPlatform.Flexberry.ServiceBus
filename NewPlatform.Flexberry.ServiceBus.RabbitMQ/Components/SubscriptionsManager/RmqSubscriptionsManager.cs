@@ -48,9 +48,17 @@
                 // Если клиента с указанным ID нет в RabbitMQ, то бросается исключение.
                 User client = _managementClient.GetUserAsync(clientId).Result;
             }
-            catch
+            catch(AggregateException ex)
             {
-                _managementClient.CreateUserAsync(new UserInfo(clientId, ConfigurationManager.AppSettings["DefaultRmqUserPassword"])).Wait();
+                if (ex.InnerException.GetType() == typeof(UnexpectedHttpStatusCodeException) && ((UnexpectedHttpStatusCodeException)ex.InnerException).StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    this._managementClient.CreateUserAsync(new UserInfo(clientId, ConfigurationManager.AppSettings["DefaultRmqUserPassword"])).Wait();
+                }
+                else
+                {
+                    throw ex;
+                }
+                
             }
         }
 
