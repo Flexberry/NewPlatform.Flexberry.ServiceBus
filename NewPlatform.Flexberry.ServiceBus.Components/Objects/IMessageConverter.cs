@@ -16,5 +16,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         IDictionary<string, object> GetProperties(ServiceBusMessage msg);
 
         Message ConvertFromMqFormat(byte[] messagePayload, IDictionary<string, object> properties);
+
+        string GetTagPropertiesPrefix(string tag);
     }
 }

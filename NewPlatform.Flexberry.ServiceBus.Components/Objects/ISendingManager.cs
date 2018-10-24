@@ -9,10 +9,7 @@
 //------------------------------------------------------------------------------
 
 namespace NewPlatform.Flexberry.ServiceBus.Components
-{
-    using System;
-    using System.Xml;
-    
+{   
     
     // *** Start programmer edit section *** (Using statements)
 
@@ -47,7 +44,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         // *** End programmer edit section *** (ISendingManager.GetCurrentMessageCount System.String System.String CustomAttributes)
         int GetCurrentMessageCount(string clientId, string messageTypeId);
-        
+
         // *** Start programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.Int32 CustomAttributes)
 
         // *** End programmer edit section *** (ISendingManager.GetMessagesInfo System.String System.Int32 CustomAttributes)
