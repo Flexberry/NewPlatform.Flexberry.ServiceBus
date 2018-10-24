@@ -97,7 +97,26 @@
         /// <returns>Все клиенты.</returns>
         IEnumerable<ServiceBusClient> IServiceBusManager.GetClients()
         {
-            return _objectRepository.GetAllClients();
+            var allClients = _objectRepository.GetAllClients();
+            List<ServiceBusClient> serviceBusClients = new List<ServiceBusClient>();
+            foreach (var client in allClients)
+            {
+                ServiceBusClient serviceBusClient = new ServiceBusClient
+                {
+                    Id = client.ID,
+                    Name = client.Name,
+                    Description = client.Description,
+                    Address = client.Address,
+                    ConnectionsLimit = client.ConnectionsLimit,
+                    DnsIdentity = client.DnsIdentity,
+                    SequentialSent = client.SequentialSent
+
+                };
+
+                serviceBusClients.Add(serviceBusClient);
+            }
+
+            return serviceBusClients;
         }
 
         /// <summary>

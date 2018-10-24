@@ -32,7 +32,7 @@
         /// <summary>
         /// Cache for cients.
         /// </summary>
-        private static readonly List<ServiceBusClient> Clients = new List<ServiceBusClient>();
+        private static readonly List<Client> Clients = new List<Client>();
 
         /// <summary>
         /// Lock object for types of messages.
@@ -188,11 +188,11 @@
         /// Gets all clients.
         /// </summary>
         /// <returns>The list of all stored clients</returns>
-        public IEnumerable<ServiceBusClient> GetAllClients()
+        public IEnumerable<Client> GetAllClients()
         {
             lock (ClientsLockObject)
             {
-                return new List<ServiceBusClient>(Clients);
+                return new List<Client>(Clients);
             }
         }
 
@@ -292,7 +292,7 @@
                 lock (ClientsLockObject)
                 {
                     Clients.Clear();
-                    Clients.AddRange(clients.Cast<ServiceBusClient>());
+                    Clients.AddRange(clients);
                 }
             }
             catch (Exception exception)

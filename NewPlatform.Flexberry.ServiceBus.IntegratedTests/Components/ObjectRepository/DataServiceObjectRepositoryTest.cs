@@ -257,6 +257,107 @@
             }
         }
 
+        /// <summary>
+        /// Testing GetAllClients method with empty and non-empty data.
+        /// </summary>
+        /// <param name="clients">
+        /// Test Collection of clients.
+        /// </param>
+        [Theory]
+        [MemberData("ClientsData")]
+        public void TestGetAllClients(IEnumerable<DataObject> clients)
+        {
+            foreach (var dataService in DataServices)
+            {
+                // Arrange.
+                var objsToUpdate = clients.ToArray();
+                if (objsToUpdate.Length > 0)
+                {
+                    dataService.UpdateObjects(ref objsToUpdate);
+                }
+
+                // Reset DataObjects status
+                foreach (var item in objsToUpdate)
+                {
+                    item.Prototyping(false);
+                }
+
+                var component = new DataServiceObjectRepository(dataService, GetMockStatisticsService());
+
+                // Act.
+                var actualList = component.GetAllClients();
+
+                // Assert.
+                Assert.Equal(objsToUpdate.Length, actualList.Count());
+
+                if (objsToUpdate.Length > 0)
+                {
+                    ObjectRepositoryTestHelper.CheckPropertiesOfAllObjects(actualList, objsToUpdate, new[] { "ID", "Name" });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Testing CreateSendingPermission method.
+        /// </summary>
+        [Fact]
+        public void TestCreateSendingPermission()
+        {
+            foreach (var dataService in DataServices)
+            {
+                var clientId = "Client 1";
+                var messageTypeId = "Message type 1";
+                var client = new Client() { ID = clientId, Name = "Client name 1" };
+                var messageType = new MessageType() { ID = messageTypeId, Name = "Message type name 1" };
+
+                DataObject[] objsToUpdate = { client, messageType };
+                dataService.UpdateObjects(ref objsToUpdate);
+
+                var component = new DataServiceObjectRepository(dataService, GetMockStatisticsService());
+
+                var actualList = component.GetRestrictionsForClient(clientId);
+                Assert.Equal(actualList.Count(), 0);
+
+                // Act.
+                component.CreateSendingPermission(clientId, messageTypeId);
+
+                var newActualList = component.GetRestrictionsForClient(clientId).Cast<SendingPermission>().ToList();
+                Assert.Equal(newActualList.Count(), 1);
+                Assert.Equal(newActualList[0].Client.ID, clientId);
+                Assert.Equal(newActualList[0].MessageType.ID, messageTypeId);
+            }
+        }
+
+        /// <summary>
+        /// Testing DeleteSendingPermission method.
+        /// </summary>
+        [Fact]
+        public void TestDeleteSendingPermission()
+        {
+            foreach (var dataService in DataServices)
+            {
+                var clientId = "Client 1";
+                var messageTypeId = "Message type 1";
+                var client = new Client() { ID = clientId, Name = "Client name 1" };
+                var messageType = new MessageType() { ID = messageTypeId, Name = "Message type name 1" };
+                var sendingPermission = new SendingPermission() { Client = client, MessageType = messageType };
+
+                DataObject[] objsToUpdate = { client, messageType, sendingPermission };
+                dataService.UpdateObjects(ref objsToUpdate);
+
+                var component = new DataServiceObjectRepository(dataService, GetMockStatisticsService());
+
+                var actualList = component.GetRestrictionsForClient(clientId);
+                Assert.Equal(actualList.Count(), 1);
+
+                // Act.
+                component.DeleteSendingPermission(clientId, messageTypeId);
+
+                var newActualList = component.GetRestrictionsForClient(clientId);
+                Assert.Equal(newActualList.Count(), 0);
+            }
+        }
+
         private static IEnumerable<object[]> BusesData()
         {
             yield return new object[]
@@ -271,6 +372,23 @@
             yield return new object[]
             {
                 new List<Bus>(0)
+            };
+        }
+
+        private static IEnumerable<object[]> ClientsData()
+        {
+            yield return new object[]
+            {
+                new List<Client>
+                {
+                    new Client() { ID = "Client 1", Name = "Client name 1" },
+                    new Client() { ID = "Client 2", Name = "Client name 2" }
+                }
+            };
+
+            yield return new object[]
+            {
+                new List<Client>(0)
             };
         }
 
