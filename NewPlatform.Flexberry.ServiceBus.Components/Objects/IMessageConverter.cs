@@ -16,5 +16,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         IDictionary<string, object> GetProperties(ServiceBusMessage msg);
 
         MessageWithNotTypedPk ConvertFromMqFormat(byte[] messagePayload, IDictionary<string, object> properties);
+
+        string GetTagPropertiesPrefix(string tag);
     }
 }

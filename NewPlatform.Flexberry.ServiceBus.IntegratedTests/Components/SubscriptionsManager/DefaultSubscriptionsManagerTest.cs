@@ -235,5 +235,228 @@
                 Assert.True(subs.All(sub => sub.ExpiryDate > DateTime.Now));
             }
         }
+
+        /// <summary>
+        /// Test UpdateClient.
+        /// </summary>
+        [Fact]
+        public void TestUpdateClient()
+        {
+            foreach (var dataService in DataServices)
+            {
+                // Arrange.
+                const string clientId = "Client ID";
+                const string clientName = "Client name";
+                const string clientAddress = "Client address";
+
+                var service = new DefaultSubscriptionsManager(dataService, GetMockStatisticsService());
+                service.CreateClient(clientId, clientName, clientAddress);
+
+                // Act && Assert.
+                var clientLcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Client), Client.Views.EditView);
+                var clients = dataService.LoadObjects(clientLcs).Cast<Client>().ToList();
+
+                Assert.Equal(clients.Count(), 1);
+                Assert.Equal(clients[0].ID, clientId);
+                Assert.Equal(clients[0].Name, clientName);
+                Assert.Equal(clients[0].Address, clientAddress);
+
+                var newClientData = new ServiceBusClient() {
+                    Name = "New name ID",
+                    ConnectionsLimit = 123,
+                    Address = "New address ID",
+                    Description = "New description ID",
+                    DnsIdentity = "New dnsIdentity ID",
+                    SequentialSent = true
+                };
+                service.UpdateClient(clientId, newClientData);
+
+                var newClients = dataService.LoadObjects(clientLcs).Cast<Client>().ToList();
+                Assert.Equal(newClients.Count(), 1);
+                Assert.Equal(newClients[0].Name, newClientData.Name);
+                Assert.Equal(newClients[0].Address, newClientData.Address);
+                Assert.Equal(newClients[0].ConnectionsLimit, newClientData.ConnectionsLimit);
+                Assert.Equal(newClients[0].Description, newClientData.Description);
+                Assert.Equal(newClients[0].DnsIdentity, newClientData.DnsIdentity);
+                Assert.Equal(newClients[0].SequentialSent, newClientData.SequentialSent);
+            }
+        }
+
+        /// <summary>
+        /// Test UpdateMessageType.
+        /// </summary>
+        [Fact]
+        public void TestUpdateMessageType()
+        {
+            foreach (var dataService in DataServices)
+            {
+                // Arrange.
+                ServiceBusMessageType messageType = new ServiceBusMessageType
+                {
+                    Id = "messageType Id",
+                    Name = "messageType Name",
+                    Description = "messageType Description"
+                };
+
+                var service = new DefaultSubscriptionsManager(dataService, GetMockStatisticsService());
+                service.CreateMessageType(messageType);
+
+                // Act && Assert.
+                var messageTypesLcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(MessageType), MessageType.Views.EditView);
+                var messageTypes = dataService.LoadObjects(messageTypesLcs).Cast<MessageType>().ToList();
+
+                Assert.Equal(messageTypes.Count(), 1);
+                Assert.Equal(messageTypes[0].ID, messageType.Id);
+                Assert.Equal(messageTypes[0].Name, messageType.Name);
+                Assert.Equal(messageTypes[0].Description, messageType.Description);
+
+                ServiceBusMessageType newMessageTypesData = new ServiceBusMessageType()
+                {
+                    Name = "New name ID",
+                    Description = "New description ID",
+                };
+                service.UpdateMessageType(messageType.Id, newMessageTypesData);
+
+                var newMessageTypes = dataService.LoadObjects(messageTypesLcs).Cast<MessageType>().ToList();
+                Assert.Equal(newMessageTypes.Count(), 1);
+                Assert.Equal(newMessageTypes[0].Name, newMessageTypesData.Name);
+                Assert.Equal(newMessageTypes[0].Description, newMessageTypesData.Description);
+            }
+        }
+
+        /// <summary>
+        /// Test DeleteMessageType.
+        /// </summary>
+        [Fact]
+        public void TestDeleteMessageType()
+        {
+            foreach (var dataService in DataServices)
+            {
+                // Arrange.
+                ServiceBusMessageType messageType = new ServiceBusMessageType
+                {
+                    Id = "messageType Id",
+                    Name = "messageType Name",
+                    Description = "messageType Description"
+                };
+
+                var service = new DefaultSubscriptionsManager(dataService, GetMockStatisticsService());
+                service.CreateMessageType(messageType);
+
+                // Act && Assert.
+                var messageTypesLcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(MessageType), MessageType.Views.EditView);
+                var messageTypes = dataService.LoadObjects(messageTypesLcs).Cast<MessageType>().ToList();
+
+                Assert.Equal(messageTypes.Count(), 1);
+                Assert.Equal(messageTypes[0].ID, messageType.Id);
+                Assert.Equal(messageTypes[0].Name, messageType.Name);
+                Assert.Equal(messageTypes[0].Description, messageType.Description);
+
+                service.DeleteMessageType(messageType.Id);
+
+                var newMessageTypes = dataService.LoadObjects(messageTypesLcs).Cast<MessageType>().ToList();
+                Assert.Equal(newMessageTypes.Count(), 0);
+            }
+        }
+
+        /// <summary>
+        /// Test UpdateSubscription.
+        /// </summary>
+        [Fact]
+        public void TestUpdateSubscription()
+        {
+            foreach (var dataService in DataServices)
+            {
+                // Arrange.
+                string clientId = "Client ID";
+                string messageTypeId = "MessageType ID";
+                TransportType transportType = TransportType.WEB;
+                DateTime expiryDate = new DateTime(2015, 7, 20);
+
+                var service = new DefaultSubscriptionsManager(dataService, GetMockStatisticsService());
+
+                service.CreateClient(clientId, "Client name");
+                service.CreateMessageType(new ServiceBusMessageType
+                {
+                    Id = messageTypeId,
+                    Name = "MessageType name",
+                });
+
+                service.SubscribeOrUpdate(clientId, messageTypeId, true, transportType, expiryDate);
+
+                // Act && Assert.
+                var subscriptionLcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Subscription), Subscription.Views.SendingByCallbackView);
+                var subscriptions = dataService.LoadObjects(subscriptionLcs).Cast<Subscription>().ToList();
+
+                Assert.Equal(subscriptions.Count(), 1);
+                Assert.Equal(subscriptions[0].MessageType.ID, messageTypeId);
+                Assert.Equal(subscriptions[0].Client.ID, clientId);
+                Assert.Equal(subscriptions[0].IsCallback, true);
+                Assert.Equal(subscriptions[0].TransportType, transportType);
+                Assert.Equal(subscriptions[0].ExpiryDate, expiryDate);
+
+                ServiceBusSubscription newSubscriptionData = new ServiceBusSubscription()
+                {
+                    Callback = false,
+                    Description = "new description",
+                    ExpiryDate = new DateTime(2017, 8, 20),
+                    SendBy = "MAIL",
+                };
+
+                service.UpdateSubscription(subscriptions[0].__PrimaryKey.ToString(), newSubscriptionData);
+
+                var newSubscriptions = dataService.LoadObjects(subscriptionLcs).Cast<Subscription>().ToList();
+                Assert.Equal(newSubscriptions.Count(), 1);
+                Assert.Equal(newSubscriptions[0].MessageType.ID, messageTypeId);
+                Assert.Equal(newSubscriptions[0].Client.ID, clientId);
+                Assert.Equal(newSubscriptions[0].IsCallback, newSubscriptionData.Callback);
+                Assert.Equal(newSubscriptions[0].TransportType.ToString(), newSubscriptionData.SendBy);
+                Assert.Equal(newSubscriptions[0].ExpiryDate, newSubscriptionData.ExpiryDate);
+            }
+        }
+
+        /// <summary>
+        /// Test DeleteSubscription.
+        /// </summary>
+        [Fact]
+        public void TestDeleteSubscription()
+        {
+            foreach (var dataService in DataServices)
+            {
+                // Arrange.
+                // Arrange.
+                string clientId = "Client ID";
+                string messageTypeId = "MessageType ID";
+                TransportType transportType = TransportType.WEB;
+                DateTime expiryDate = new DateTime(2015, 7, 20);
+
+                var service = new DefaultSubscriptionsManager(dataService, GetMockStatisticsService());
+
+                service.CreateClient(clientId, "Client name");
+                service.CreateMessageType(new ServiceBusMessageType
+                {
+                    Id = messageTypeId,
+                    Name = "MessageType name",
+                });
+
+                service.SubscribeOrUpdate(clientId, messageTypeId, true, transportType, expiryDate);
+
+                // Act && Assert.
+                var subscriptionLcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Subscription), Subscription.Views.SendingByCallbackView);
+                var subscriptions = dataService.LoadObjects(subscriptionLcs).Cast<Subscription>().ToList();
+
+                Assert.Equal(subscriptions.Count(), 1);
+                Assert.Equal(subscriptions[0].MessageType.ID, messageTypeId);
+                Assert.Equal(subscriptions[0].Client.ID, clientId);
+                Assert.Equal(subscriptions[0].IsCallback, true);
+                Assert.Equal(subscriptions[0].TransportType, transportType);
+                Assert.Equal(subscriptions[0].ExpiryDate, expiryDate);
+
+                service.DeleteSubscription(subscriptions[0].__PrimaryKey.ToString());
+
+                var newSubscriptions = dataService.LoadObjects(subscriptionLcs).Cast<Subscription>().ToList();
+                Assert.Equal(newSubscriptions.Count(), 0);
+            }
+        }
     }
 }

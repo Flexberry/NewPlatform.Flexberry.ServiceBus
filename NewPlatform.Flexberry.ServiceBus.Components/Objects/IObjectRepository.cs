@@ -71,6 +71,6 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** Start programmer edit section *** (IObjectRepository.GetAllClients CustomAttributes)
 
         // *** End programmer edit section *** (IObjectRepository.GetAllClients CustomAttributes)
-        System.Collections.Generic.IEnumerable<ServiceBusClient> GetAllClients();
+        System.Collections.Generic.IEnumerable<Client> GetAllClients();
     }
 }
