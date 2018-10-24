@@ -17,6 +17,15 @@ services:
     image: "flexberry/flexberry-service-bus-editor:latest"
     ports:
      - "1818:80"
+  RabbitMq:
+    image: "rabbitmq:3-management"
+    ports: 
+     - "5671:5671"
+     - "5672:5672"
+     - "15671:15671"
+     - "15672:15672"
+     - "25672:25672"
+     - "4369:4369"
 
 volumes:
   FlexberryServiceBusDB: 

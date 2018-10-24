@@ -13,5 +13,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         void UpdateMqSubscriptions(List<Subscription> mqSubscriptions, List<Subscription> esbSubscriptions);
 
         void UpdateEsbSubscriptions(List<Subscription> mqSubscriptions, List<Subscription> esbSubscriptions);
+
+        void SynchronizeSendingPermissions(string clientId = null);
     }
 }
