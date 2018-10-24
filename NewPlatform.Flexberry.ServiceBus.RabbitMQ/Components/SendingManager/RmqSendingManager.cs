@@ -133,7 +133,22 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         private List<RmqConsumer> _consumers;
         private Timer _actualizationTimer;
-        
+
+        private IModel _sharedModel;
+        private IModel SharedModel
+        {
+            get
+            {
+                if (_sharedModel == null || _sharedModel.IsClosed)
+                {
+                    var connection = _connectionFactory.CreateConnection();
+                    _sharedModel = connection.CreateModel();
+                }
+
+                return _sharedModel;
+            }
+        }
+
 
         public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/")
         {
@@ -456,22 +471,18 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Сообщения или null, если сообщения нет.</returns>
         public Message ReadMessage(string clientId, string messageTypeId)
         {
-            Message result = null;
+            MessageWithNotTypedPk result = null;
 
             var queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
-            using (var connection = _connectionFactory.CreateConnection())
-            using (var model = connection.CreateModel())
+            var message = SharedModel.BasicGet(queueName, false);
+            if (message != null)
             {
-                var message = model.BasicGet(queueName, false);
-                if (message != null)
+                result = _converter.ConvertFromMqFormat(message.Body, message.BasicProperties.Headers);
+                result.MessageType = new MessageType()
                 {
-                    result = _converter.ConvertFromMqFormat(message.Body, message.BasicProperties.Headers);
-                    result.MessageType = new MessageType()
-                    {
-                        ID = messageTypeId
-                    };
-                    result.__PrimaryKey = message.DeliveryTag;
-                }
+                    ID = messageTypeId
+                };
+                result.__PrimaryKey = message.DeliveryTag;
             }
 
             return result;
@@ -526,12 +537,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Признак успешеного подтверждения.</returns>
         public bool DeleteMessage(string id)
         {
-            using (var connection = _connectionFactory.CreateConnection())
-            using (var model = connection.CreateModel())
-            {
-                var rmqId = ulong.Parse(id);
-                model.BasicAck(rmqId, false);
-            }
+            var rmqId = ulong.Parse(id);
+            SharedModel.BasicAck(rmqId, false);
 
             // похоже нет способа понять есть ли сообщение с заданным ID, поэтому только так
             return true;

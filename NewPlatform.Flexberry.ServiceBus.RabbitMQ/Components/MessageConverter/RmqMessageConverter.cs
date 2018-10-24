@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using RabbitMQ.Client.Content;
 using RabbitMQ.Client.Impl;
 
@@ -11,6 +12,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         private string _attachmentPropertyName => "attachment";
 
         private string _bodyPropertyName => "body";
+
+        private string _senderIdPropepertyName => "senderId";
+
+        /// <summary>
+        /// Свойство сообщения RabbitMQ, в котором хранится Timestamp сообщения
+        /// </summary>
+        protected string TimestampPropertyName => "timestamp_in_ms";
 
         private string _tagPropertiesPrefix = "__tag";
 
@@ -31,6 +39,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             if (msg.Body != null)
             {
                 result[this._bodyPropertyName] = msg.Body;
+            }
+
+            if (msg.ClientID != null)
+            {
+                result[this._senderIdPropepertyName] = msg.ClientID;
             }
 
             return result;
@@ -62,9 +75,9 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <param name="bodyProperties">Свойства тела сообщения.</param>
         /// <param name="properties">Свойства сообщения (тэги).</param>
         /// <returns>Сообщение в формате шины.</returns>
-        public Message ConvertFromMqFormat(byte[] messagePayload, IDictionary<string, object> properties)
+        public MessageWithNotTypedPk ConvertFromMqFormat(byte[] messagePayload, IDictionary<string, object> properties)
         {
-            var result = new Message();
+            var result = new MessageWithNotTypedPk();
 
             BasicProperties rmqProperties = new RabbitMQ.Client.Framing.BasicProperties();
             rmqProperties.Headers = properties;
@@ -82,10 +95,16 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 result.BinaryAttachment = (byte[])mapMessageReader.Body[this._attachmentPropertyName];
             }
 
-            if (mapMessageReader.Properties.Headers != null)
+            if (bodyProperties.ContainsKey(this._senderIdPropepertyName))
+            {
+                result.Sender = (string)mapMessageReader.Body[this._senderIdPropepertyName];
+            }
+
+            var headers = mapMessageReader.Properties.Headers;
+            if (headers != null)
             {
                 var messageTags = new Dictionary<string, string>();
-                foreach (var property in mapMessageReader.Properties.Headers)
+                foreach (var property in headers)
                 {
                     if (property.Key.StartsWith(this._tagPropertiesPrefix))
                     {
@@ -93,7 +112,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                     }
                 }
 
-                result.Tags = messageTags.Select(x => $"{x.Key}:{x.Value}").Aggregate((x, y) => $"{x}, {y}");
+                if (headers.ContainsKey(this.TimestampPropertyName))
+                {
+                    var unixtimestamp = (long)headers[this.TimestampPropertyName];
+                    result.ReceivingTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddMilliseconds(unixtimestamp);
+                }
+
+                result.Tags = messageTags.Any() ? messageTags.Select(x => $"{x.Key}:{x.Value}").Aggregate((x, y) => $"{x}, {y}") : "";
             }
 
             return result;
