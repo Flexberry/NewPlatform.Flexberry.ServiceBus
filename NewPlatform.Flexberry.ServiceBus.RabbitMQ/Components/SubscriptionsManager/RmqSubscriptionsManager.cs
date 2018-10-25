@@ -69,7 +69,7 @@
         /// <param name="msgTypeInfo">Структура, описывающая тип сообщения.</param>
         public void CreateMessageType(ServiceBusMessageType msgTypeInfo)
         {
-            var exchangeName = this._namingManager.GetExchangeName(msgTypeInfo.Id);
+            var exchangeName = this._namingManager.GetExchangeName(msgTypeInfo.ID);
             var exchangeInfo = new ExchangeInfo(exchangeName, ExchangeType.Topic, autoDelete: false, durable: true, @internal: false, arguments: null);
 
             this._managementClient.CreateExchangeAsync(exchangeInfo, _vhost).Wait();
@@ -160,7 +160,8 @@
         /// <param name="isCallback">Параметр игнорируется. Оставлен для совместимости с интерфейсом.</param>
         /// <param name="transportType">Параметр игнорируется. Оставлен для совместимости с интерфейсом.</param>
         /// <param name="expiryDate">Параметр игнорируется. Оставлен для совместимости с интерфейсом.</param>
-        public void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null)
+        /// <param name="subscribtionId">араметр игнорируется. Оставлен для совместимости с интерфейсом.</param>
+        public void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null, string subscribtionId = null)
         {
             var queueName = this._namingManager.GetClientQueueName(clientId, messageTypeId);
             var exchangeName = this._namingManager.GetExchangeName(messageTypeId);

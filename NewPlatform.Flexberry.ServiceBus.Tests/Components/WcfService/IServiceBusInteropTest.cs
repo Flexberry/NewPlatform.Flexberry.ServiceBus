@@ -74,7 +74,7 @@
                 sub =>
                     sub.CreateMessageType(
                         It.Is<ServiceBusMessageType>(
-                            ncs => ncs.Id == ncstruct.Id && ncs.Description == ncstruct.Comment && ncs.Name == ncstruct.Name)),
+                            ncs => ncs.ID == ncstruct.Id && ncs.Description == ncstruct.Comment && ncs.Name == ncstruct.Name)),
                 Times.Once);
         }
 

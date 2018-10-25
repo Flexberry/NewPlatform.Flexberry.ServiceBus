@@ -160,7 +160,7 @@
 
                 esbMessages[i] = new ServiceBusMessageInfo
                 {
-                    Id = msg.__PrimaryKey.ToString(),
+                    ID = msg.__PrimaryKey.ToString(),
                     MessageTypeID = msg.MessageType.ID,
                     FormingTime = msg.ReceivingTime,
                     Priority = msg.Priority
@@ -217,7 +217,7 @@
 
             return messageObjects.Cast<Message>().Select(x => new ServiceBusMessageInfo()
             {
-                Id = x.__PrimaryKey.ToString(),
+                ID = x.__PrimaryKey.ToString(),
                 MessageTypeID = x.MessageType.ID,
                 FormingTime = x.ReceivingTime,
                 Priority = x.Priority
@@ -274,7 +274,7 @@
 
             return messageObjects.Cast<Message>().Select(x => new ServiceBusMessageInfo()
             {
-                Id = x.__PrimaryKey.ToString(),
+                ID = x.__PrimaryKey.ToString(),
                 MessageTypeID = x.MessageType.ID,
                 FormingTime = x.ReceivingTime,
                 Priority = x.Priority
@@ -340,7 +340,7 @@
                     x =>
                     new ServiceBusMessageInfo()
                     {
-                        Id = x.__PrimaryKey.ToString(),
+                        ID = x.__PrimaryKey.ToString(),
                         MessageTypeID = x.MessageType.ID,
                         FormingTime = x.ReceivingTime,
                         Priority = x.Priority

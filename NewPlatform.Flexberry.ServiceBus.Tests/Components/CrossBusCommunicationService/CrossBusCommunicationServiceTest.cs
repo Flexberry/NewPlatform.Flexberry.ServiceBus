@@ -77,9 +77,9 @@
             serviceBus.Stop();
 
             // Assert.
-            crossSubManager.Verify(r => r.CreateMessageType(It.Is<ServiceBusMessageType>(ncs => ncs.Id == "First")), Times.Once);
-            crossSubManager.Verify(r => r.CreateMessageType(It.Is<ServiceBusMessageType>(ncs => ncs.Id == "Second")), Times.Never);
-            crossSubManager.Verify(r => r.CreateMessageType(It.Is<ServiceBusMessageType>(ncs => ncs.Id == "Third")), Times.Once);
+            crossSubManager.Verify(r => r.CreateMessageType(It.Is<ServiceBusMessageType>(ncs => ncs.ID == "First")), Times.Once);
+            crossSubManager.Verify(r => r.CreateMessageType(It.Is<ServiceBusMessageType>(ncs => ncs.ID == "Second")), Times.Never);
+            crossSubManager.Verify(r => r.CreateMessageType(It.Is<ServiceBusMessageType>(ncs => ncs.ID == "Third")), Times.Once);
         }
 
         /// <summary>

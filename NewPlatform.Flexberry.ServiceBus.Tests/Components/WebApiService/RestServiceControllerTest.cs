@@ -68,8 +68,8 @@
             request.Method = "GET";
             fixture.SendManager.Setup(send => send.GetMessagesInfo(clientId, It.IsAny<int>())).Returns(new[]
             {
-                new ServiceBusMessageInfo { Id = message1Id, FormingTime = messageTime, Priority = 1, MessageTypeID = messageType1Id },
-                new ServiceBusMessageInfo { Id = message2Id, FormingTime = messageTime, Priority = 2, MessageTypeID = messageType2Id }
+                new ServiceBusMessageInfo { ID = message1Id, FormingTime = messageTime, Priority = 1, MessageTypeID = messageType1Id },
+                new ServiceBusMessageInfo { ID = message2Id, FormingTime = messageTime, Priority = 2, MessageTypeID = messageType2Id }
             });
 
             // Act.
@@ -86,7 +86,7 @@
 
             // Assert.
             fixture.SendManager.Verify(send => send.GetMessagesInfo(clientId, It.IsAny<int>()), Times.Once);
-            Assert.True(res[0].Id == message1Id && res[1].Id == message2Id);
+            Assert.True(res[0].ID == message1Id && res[1].ID == message2Id);
             Assert.True(res[0].Priority == 1 && res[1].Priority == 2);
             Assert.True(res[0].MessageTypeID == messageType1Id && res[1].MessageTypeID == messageType2Id);
             Assert.True(res.All(r => r.FormingTime == messageTime));

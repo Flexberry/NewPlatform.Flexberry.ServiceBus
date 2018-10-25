@@ -186,7 +186,7 @@
         {
             var msgType = new MessageType()
             {
-                ID = msgTypeInfo.Id,
+                ID = msgTypeInfo.ID,
                 Name = msgTypeInfo.Name,
                 Description = msgTypeInfo.Description
             };
@@ -265,9 +265,11 @@
         /// <param name="messageTypeId">Тип сообщений подписки.</param><param name="isCallback">Является ли подписка callback.</param>
         /// <param name="transportType">Способ передачи сообщений, если подписка callback, иначе можно передать null.</param>
         /// <param name="expiryDate">Дата прекращения подписки. Если не указана, вычисляется как сумма текущей даты и параметра конфигурации UpdateForATime.</param>
-        public void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null)
+        /// <param name="subscriptionId">Идентификатор подписки, которую нужно обновить или создать.</param>
+        public void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null, string subscriptionId = null)
         {
-            Subscription subscription = GetSubscriptions(clientId, false).FirstOrDefault(x => x.MessageType.ID == messageTypeId || CompareGuid2Str(((KeyGuid)x.MessageType.__PrimaryKey).Guid, messageTypeId));
+            Subscription[] subscriptions = GetSubscriptions(clientId, false).Where(x => x.MessageType.ID == messageTypeId || CompareGuid2Str(((KeyGuid)x.MessageType.__PrimaryKey).Guid, messageTypeId)).ToArray();
+            Subscription subscription = subscriptionId == null ? subscriptions.FirstOrDefault() : subscriptions.FirstOrDefault(s => CompareGuid2Str(((KeyGuid)s.__PrimaryKey).Guid, subscriptionId));
             Stopwatch stopwatch;
             long time;
             if (subscription == null)
@@ -285,7 +287,7 @@
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedSubscriptionsManager.SubscribeOrUpdate() load Client.");
-                
+
                 if (client == null)
                     throw new ArgumentException("clientId");
 
@@ -300,11 +302,15 @@
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedSubscriptionsManager.SubscribeOrUpdate() load TypeMessage.");
-                
+
                 if (messageType == null)
                     throw new ArgumentException("messageTypeId");
 
                 subscription = new Subscription() { Client = client, MessageType = messageType };
+                if (subscriptionId != null)
+                {
+                    subscription.__PrimaryKey = Guid.Parse(subscriptionId);
+                }
             }
 
             subscription.IsCallback = isCallback;

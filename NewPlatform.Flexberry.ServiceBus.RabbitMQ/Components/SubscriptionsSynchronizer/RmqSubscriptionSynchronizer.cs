@@ -100,7 +100,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                     this._esbSubscriptionsManager.CreateMessageType(new ServiceBusMessageType()
                     {
                         Name = mqSubscription.Client.ID,
-                        Id = mqSubscription.Client.ID,
+                        ID = mqSubscription.Client.ID,
                         Description = "Подписка создана автоматически при синхронизации подписок"
                     });
                     this._esbSubscriptionsManager.CreateClient(mqSubscription.Client.ID, mqSubscription.Client.Name);

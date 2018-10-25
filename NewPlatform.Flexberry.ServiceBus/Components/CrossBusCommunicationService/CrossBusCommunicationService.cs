@@ -224,7 +224,7 @@
                         {
                             _logger.LogDebugMessage(nameof(CrossBusCommunicationService), $"Cloning message type {type.Id} ({type.Name}).");
 
-                            ServiceBusMessageType newType = new ServiceBusMessageType { Name = type.Name, Description = type.Comment, Id = type.Id };
+                            ServiceBusMessageType newType = new ServiceBusMessageType { Name = type.Name, Description = type.Comment, ID = type.Id };
                             _subscriptionsManager.CreateMessageType(newType);
                         }
                     }

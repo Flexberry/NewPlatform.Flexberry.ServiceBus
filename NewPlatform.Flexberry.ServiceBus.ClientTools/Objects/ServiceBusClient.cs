@@ -28,7 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     public class ServiceBusClient
     {
         
-        private string fId;
+        private string fID;
         
         private string fName;
         
@@ -48,33 +48,33 @@ namespace NewPlatform.Flexberry.ServiceBus
 
 
         /// <summary>
-        /// Id.
+        /// ID.
         /// </summary>
-        // *** Start programmer edit section *** (ServiceBusClient.Id CustomAttributes)
+        // *** Start programmer edit section *** (ServiceBusClient.ID CustomAttributes)
         [DataMember]
-        // *** End programmer edit section *** (ServiceBusClient.Id CustomAttributes)
-        public virtual string Id
+        // *** End programmer edit section *** (ServiceBusClient.ID CustomAttributes)
+        public virtual string ID
         {
             get
             {
-                // *** Start programmer edit section *** (ServiceBusClient.Id Get start)
+                // *** Start programmer edit section *** (ServiceBusClient.ID Get start)
 
-                // *** End programmer edit section *** (ServiceBusClient.Id Get start)
-                string result = this.fId;
-                // *** Start programmer edit section *** (ServiceBusClient.Id Get end)
+                // *** End programmer edit section *** (ServiceBusClient.ID Get start)
+                string result = this.fID;
+                // *** Start programmer edit section *** (ServiceBusClient.ID Get end)
 
-                // *** End programmer edit section *** (ServiceBusClient.Id Get end)
+                // *** End programmer edit section *** (ServiceBusClient.ID Get end)
                 return result;
             }
             set
             {
-                // *** Start programmer edit section *** (ServiceBusClient.Id Set start)
+                // *** Start programmer edit section *** (ServiceBusClient.ID Set start)
 
-                // *** End programmer edit section *** (ServiceBusClient.Id Set start)
-                this.fId = value;
-                // *** Start programmer edit section *** (ServiceBusClient.Id Set end)
+                // *** End programmer edit section *** (ServiceBusClient.ID Set start)
+                this.fID = value;
+                // *** Start programmer edit section *** (ServiceBusClient.ID Set end)
 
-                // *** End programmer edit section *** (ServiceBusClient.Id Set end)
+                // *** End programmer edit section *** (ServiceBusClient.ID Set end)
             }
         }
 

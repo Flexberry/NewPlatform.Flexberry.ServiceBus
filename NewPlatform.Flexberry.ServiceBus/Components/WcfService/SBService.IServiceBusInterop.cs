@@ -15,7 +15,7 @@
         {
             ServiceBusMessageType serviceBusMessageType = new ServiceBusMessageType
             {
-                Id = evntType.Id,
+                ID = evntType.Id,
                 Name = evntType.Name,
                 Description = evntType.Comment
             };
@@ -30,7 +30,7 @@
         {
             ServiceBusMessageType serviceBusMessageType = new ServiceBusMessageType
             {
-                Id = msgType.Id,
+                ID = msgType.Id,
                 Name = msgType.Name,
                 Description = msgType.Comment
             };
