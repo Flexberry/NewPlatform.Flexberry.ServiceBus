@@ -130,7 +130,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MessageWithNotTypedPk.cs" />
     <Compile Include="SubscriptionStatisticsMonitor.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -152,6 +152,7 @@
     <Compile Include="Components\StatisticsService\RmqStatisticsCollector.cs" />
     <Compile Include="Components\SubscriptionsManager\RmqSubscriptionsManager.cs" />
     <Compile Include="Components\SubscriptionsSynchronizer\RmqSubscriptionSynchronizer.cs" />
+    <Compile Include="MessageWithNotTypedPk.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
