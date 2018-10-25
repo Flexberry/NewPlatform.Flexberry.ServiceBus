@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Компонент преобразования сообщения шины в формат JMS (заголовок и тело)
     /// </summary>

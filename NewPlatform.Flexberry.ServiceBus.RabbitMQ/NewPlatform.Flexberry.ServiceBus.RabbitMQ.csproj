@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\AmqpNamingManager.cs" />
+    <Compile Include="Components\MessageConverter\IMessageConverter.cs" />
     <Compile Include="Components\MessageConverter\RmqMessageConverter.cs" />
     <Compile Include="Components\ReceivingManager\RmqReceivingManager.cs" />
     <Compile Include="Components\SendingManager\RmqSendingManager.cs" />
