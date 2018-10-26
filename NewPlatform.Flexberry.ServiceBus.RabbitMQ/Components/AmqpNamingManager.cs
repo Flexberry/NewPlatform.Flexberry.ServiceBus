@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using System;
+
     /// <summary>
     /// Класс для перевода наименований объектов маршрутизации шины и наименований объектов в AMQP.
     /// </summary>
@@ -11,7 +11,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         public string ClientQueuePrefix => "ics-consumer_";
 
-        private string _queueClientTypeDelimiter = "@";
+        private char _queueClientTypeDelimiter = '@';
 
         /// <summary>
         /// Получить имя точки обмена по типу сообщения в шине.
@@ -85,13 +85,23 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 {
                     ID = queueName.Replace(this.ClientQueuePrefix, string.Empty)
                                      .Replace(routingKey, string.Empty)
-                                     .Replace(this._queueClientTypeDelimiter, string.Empty)
+                                     .Replace(this._queueClientTypeDelimiter.ToString(), string.Empty)
                 },
                 MessageType = new MessageType()
                 {
                     ID = routingKey
                 }
             };
+        }
+
+        /// <summary>
+        /// Returns client ID (0) and message type ID (1) from queue name.
+        /// </summary>
+        /// <param name="queueName">Queue name.</param>
+        /// <returns>Client ID and message type ID.</returns>
+        public string[] GetIDsFromQueueName(string queueName)
+        {
+            return queueName.Replace(ClientQueuePrefix, string.Empty).Split(_queueClientTypeDelimiter);
         }
     }
 }
