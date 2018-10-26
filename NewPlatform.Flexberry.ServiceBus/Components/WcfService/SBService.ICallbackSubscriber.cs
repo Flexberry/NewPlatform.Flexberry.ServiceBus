@@ -60,7 +60,7 @@
             var cbcs = uc.Resolve<CrossBusCommunicationService>();
             var msg = new ServiceBusMessage
             {
-                Id = cbcs.ServiceID4SB,
+                ID = cbcs.ServiceID4SB,
                 MessageTypeID = ИдТипаСобытия
             };
  

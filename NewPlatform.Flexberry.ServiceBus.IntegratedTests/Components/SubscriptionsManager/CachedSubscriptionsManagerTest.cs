@@ -35,19 +35,19 @@
                 service.CreateClient(client2Id, "TestClient2");
                 service.CreateMessageType(new ServiceBusMessageType
                 {
-                    Id = messageType1Id,
+                    ID = messageType1Id,
                     Name = "TestMessageType1",
                     Description = "ForTest"
                 });
                 service.CreateMessageType(new ServiceBusMessageType
                 {
-                    Id = messageType2Id,
+                    ID = messageType2Id,
                     Name = "TestMessageType2",
                     Description = "ForTest"
                 });
                 service.CreateMessageType(new ServiceBusMessageType
                 {
-                    Id = messageType3Id,
+                    ID = messageType3Id,
                     Name = "TestMessageType3",
                     Description = "ForTest"
                 });
@@ -103,6 +103,7 @@
             {
                 // Arrange.
                 const string clientId = "FDF33DF1-5DCA-41F9-A2E4-3B5C7E103452";
+                const string subscribtionId = "30784CD4-41A0-4544-8661-22559611027B";
                 const string messageType1Id = "EB6EC229-5E93-4B76-9993-5A1589787421";
                 const string messageType2Id = "C8802C67-AC1B-497C-A707-5FF4191E0083";
                 const string messageType3Id = "BC3F54C6-4E2F-43DA-B124-A0771F8F200C";
@@ -110,19 +111,19 @@
                 service.CreateClient(clientId, "TestClient1");
                 service.CreateMessageType(new ServiceBusMessageType
                 {
-                    Id = messageType1Id,
+                    ID = messageType1Id,
                     Name = "TestMessageType1",
                     Description = "ForTest"
                 });
                 service.CreateMessageType(new ServiceBusMessageType
                 {
-                    Id = messageType2Id,
+                    ID = messageType2Id,
                     Name = "TestMessageType2",
                     Description = "ForTest"
                 });
                 service.CreateMessageType(new ServiceBusMessageType
                 {
-                    Id = messageType3Id,
+                    ID = messageType3Id,
                     Name = "TestMessageType3",
                     Description = "ForTest"
                 });
@@ -135,8 +136,9 @@
                 Assert.Throws<ArgumentNullException>(() => service.SubscribeOrUpdate(clientId, messageType3Id, true, null));
                 Assert.Throws<ArgumentException>(() => service.SubscribeOrUpdate("B5D96C32-2B50-4514-B123-5D8D961F0AF0", messageType3Id, false, null));
                 Assert.Throws<ArgumentException>(() => service.SubscribeOrUpdate(clientId, "B5D96C32-2B50-4514-B123-5D8D961F0AF0", false, null));
+                service.SubscribeOrUpdate(clientId, messageType3Id, false, null, null, subscribtionId);
                 var subs = service.GetSubscriptions();
-                Assert.Equal(subs.Count(), 2);
+                Assert.Equal(subs.Count(), 3);
                 Assert.True(subs.All(sub => Guid.Parse(sub.Client.ID) == Guid.Parse(clientId) || Guid.Parse(sub.Client.__PrimaryKey.ToString()) == Guid.Parse(clientId)));
                 var sub1 =
                     subs.FirstOrDefault(sub => Guid.Parse(sub.MessageType.ID) == Guid.Parse(messageType1Id) ||
@@ -144,14 +146,19 @@
                 var sub2 =
                     subs.FirstOrDefault(sub => Guid.Parse(sub.MessageType.ID) == Guid.Parse(messageType2Id) ||
                             Guid.Parse(sub.MessageType.__PrimaryKey.ToString()) == Guid.Parse(messageType2Id));
+                var sub3 =
+                    subs.FirstOrDefault(sub => Guid.Parse(sub.MessageType.ID) == Guid.Parse(messageType3Id) ||
+                            Guid.Parse(sub.MessageType.__PrimaryKey.ToString()) == Guid.Parse(messageType3Id));
                 Assert.True(!sub1.IsCallback && sub1.TransportType == TransportType.WCF && DateTime.Now < sub1.ExpiryDate);
                 Assert.True(sub2.IsCallback && sub2.TransportType == TransportType.HTTP && DateTime.Now < sub2.ExpiryDate);
+                Assert.True(!sub3.IsCallback && sub3.TransportType == TransportType.WCF && DateTime.Now < sub3.ExpiryDate && Guid.Parse(sub3.__PrimaryKey.ToString()) == Guid.Parse(subscribtionId));
 
                 // Updating.
                 service.SubscribeOrUpdate(clientId, messageType1Id, true, TransportType.HTTP, DateTime.Now.AddDays(-1));
                 service.SubscribeOrUpdate(clientId, messageType2Id, false, null, DateTime.Now.AddDays(-1));
+                service.SubscribeOrUpdate(clientId, messageType3Id, true, TransportType.HTTP, DateTime.Now.AddDays(-1), subscribtionId);
                 subs = service.GetSubscriptions(false);
-                Assert.Equal(subs.Count(), 2);
+                Assert.Equal(subs.Count(), 3);
                 Assert.True(subs.All(sub => Guid.Parse(sub.Client.ID) == Guid.Parse(clientId) || Guid.Parse(sub.Client.__PrimaryKey.ToString()) == Guid.Parse(clientId)));
                 sub1 =
                     subs.FirstOrDefault(sub => Guid.Parse(sub.MessageType.ID) == Guid.Parse(messageType1Id) ||
@@ -159,13 +166,17 @@
                 sub2 =
                     subs.FirstOrDefault(sub => Guid.Parse(sub.MessageType.ID) == Guid.Parse(messageType2Id) ||
                             Guid.Parse(sub.MessageType.__PrimaryKey.ToString()) == Guid.Parse(messageType2Id));
+                sub3 =
+                    subs.FirstOrDefault(sub => Guid.Parse(sub.MessageType.ID) == Guid.Parse(messageType3Id) ||
+                            Guid.Parse(sub.MessageType.__PrimaryKey.ToString()) == Guid.Parse(messageType3Id));
                 Assert.True(sub1.IsCallback && sub1.TransportType == TransportType.HTTP && DateTime.Now > sub1.ExpiryDate);
                 Assert.True(!sub2.IsCallback && sub2.TransportType == TransportType.HTTP && DateTime.Now > sub2.ExpiryDate);
+                Assert.True(sub3.IsCallback && sub3.TransportType == TransportType.HTTP && DateTime.Now > sub3.ExpiryDate && Guid.Parse(sub3.__PrimaryKey.ToString()) == Guid.Parse(subscribtionId));
 
                 // Update all.
                 service.UpdateAllSubscriptions(clientId);
                 subs = service.GetSubscriptions();
-                Assert.Equal(subs.Count(), 2);
+                Assert.Equal(subs.Count(), 3);
                 Assert.True(subs.All(sub => sub.ExpiryDate > DateTime.Now));
             }
         }

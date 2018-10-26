@@ -49,7 +49,7 @@
             {
                 ServiceBusMessageType serviceBusMessageType = new ServiceBusMessageType
                 {
-                    Id = messageType.ID,
+                    ID = messageType.ID,
                     Name = messageType.Name,
                     Description = messageType.Description
 
@@ -67,7 +67,7 @@
         /// <param name="client">Клиент.</param>
         void IServiceBusManager.CreateClient(ServiceBusClient client)
         {
-            _subscriptionsManager.CreateClient(client.Id, client.Name, client.Address);
+            _subscriptionsManager.CreateClient(client.ID, client.Name, client.Address);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@
             {
                 ServiceBusClient serviceBusClient = new ServiceBusClient
                 {
-                    Id = client.ID,
+                    ID = client.ID,
                     Name = client.Name,
                     Description = client.Description,
                     Address = client.Address,
@@ -129,7 +129,7 @@
             EnumCaption.TryGetValueFor(subscription.SendBy, out transportType);
             bool callback = subscription.Callback ?? false;
 
-            _subscriptionsManager.SubscribeOrUpdate(subscription.ClientId, subscription.MessageTypeId, callback, transportType, subscription.ExpiryDate);
+            _subscriptionsManager.SubscribeOrUpdate(subscription.ClientID, subscription.MessageTypeID, callback, transportType, subscription.ExpiryDate, subscription.ID);
         }
 
         /// <summary>
@@ -165,10 +165,11 @@
             {
                 ServiceBusSubscription serviceBusSubscription = new ServiceBusSubscription
                 {
+                    ID = subscription.__PrimaryKey.ToString(),
                     SendBy = subscription.TransportType.ToString(),
                     Callback = subscription.IsCallback,
-                    ClientId = subscription.Client.ID,
-                    MessageTypeId = subscription.MessageType.ID,
+                    ClientID = subscription.Client.ID,
+                    MessageTypeID = subscription.MessageType.ID,
                     Description = subscription.Description,
                     ExpiryDate = subscription.ExpiryDate
                 };

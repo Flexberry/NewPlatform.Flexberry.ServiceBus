@@ -115,7 +115,7 @@
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            _dataService.UpdateObject(new MessageType { ID = msgTypeInfo.Id, Name = msgTypeInfo.Name, Description = msgTypeInfo.Description });
+            _dataService.UpdateObject(new MessageType { ID = msgTypeInfo.ID, Name = msgTypeInfo.Name, Description = msgTypeInfo.Description });
 
             stopwatch.Stop();
             long time = stopwatch.ElapsedMilliseconds;
@@ -270,7 +270,8 @@
         /// <param name="isCallback">Является ли подписка callback.</param>
         /// <param name="transportType">Способ передачи сообщений, если подписка callback, иначе можно передать null.</param>
         /// <param name="expiryDate">Дата прекращения подписки. Если не указана, вычисляется как сумма текущей даты и параметра конфигурации UpdateForATime.</param>
-        public void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null)
+        /// <param name="subscriptionId">Идентификатор подписки, которую нужно обновить или создать.</param>
+        public void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null, string subscriptionId = null)
         {
             LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Subscription), Subscription.Views.SubscriptionsManagerView);
 
@@ -286,6 +287,10 @@
             stopwatch.Start();
 
             DataObject[] subscriptions = _dataService.LoadObjects(lcs);
+            if (subscriptionId != null)
+            {
+                subscriptions = subscriptions.Where(s => Guid.Parse(s.__PrimaryKey.ToString()) == Guid.Parse(subscriptionId)).ToArray();
+            }
 
             stopwatch.Stop();
             long time = stopwatch.ElapsedMilliseconds;
@@ -300,6 +305,11 @@
                     MessageType = ServiceHelper.GetMessageType(messageTypePk, _dataService, _statisticsService),
                     IsCallback = isCallback
                 };
+
+                if (subscriptionId != null)
+                {
+                    subscription.__PrimaryKey = Guid.Parse(subscriptionId);
+                }
 
                 if (isCallback)
                 {

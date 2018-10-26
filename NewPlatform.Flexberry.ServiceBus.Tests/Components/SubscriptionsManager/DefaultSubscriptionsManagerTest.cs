@@ -28,7 +28,7 @@
         public void TestMessageTypeCreate()
         {
             // Arrange.
-            var messageTypeInfo = new ServiceBusMessageType { Id = "123", Name = "TestMessageType", Description = "ForTest" };
+            var messageTypeInfo = new ServiceBusMessageType { ID = "123", Name = "TestMessageType", Description = "ForTest" };
             var dataServiceMock = new Mock<IDataService>();
             var service = new DefaultSubscriptionsManager(dataServiceMock.Object, GetMockStatisticsService());
 
@@ -36,7 +36,7 @@
             service.CreateMessageType(messageTypeInfo);
 
             // Assert.
-            dataServiceMock.Verify(f => f.UpdateObject(It.Is<MessageType>(t => t.ID == messageTypeInfo.Id && t.Name == messageTypeInfo.Name && t.Description == messageTypeInfo.Description)), Times.Once);
+            dataServiceMock.Verify(f => f.UpdateObject(It.Is<MessageType>(t => t.ID == messageTypeInfo.ID && t.Name == messageTypeInfo.Name && t.Description == messageTypeInfo.Description)), Times.Once);
         }
 
         /// <summary>

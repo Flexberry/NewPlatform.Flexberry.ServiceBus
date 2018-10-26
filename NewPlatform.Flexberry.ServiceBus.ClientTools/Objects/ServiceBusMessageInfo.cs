@@ -28,7 +28,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     public class ServiceBusMessageInfo
     {
         
-        private string fId;
+        private string fID;
         
         private string fMessageTypeID;
         
@@ -42,33 +42,33 @@ namespace NewPlatform.Flexberry.ServiceBus
 
 
         /// <summary>
-        /// Id.
+        /// ID.
         /// </summary>
-        // *** Start programmer edit section *** (ServiceBusMessageInfo.Id CustomAttributes)
+        // *** Start programmer edit section *** (ServiceBusMessageInfo.ID CustomAttributes)
         [DataMember]
-        // *** End programmer edit section *** (ServiceBusMessageInfo.Id CustomAttributes)
-        public virtual string Id
+        // *** End programmer edit section *** (ServiceBusMessageInfo.ID CustomAttributes)
+        public virtual string ID
         {
             get
             {
-                // *** Start programmer edit section *** (ServiceBusMessageInfo.Id Get start)
+                // *** Start programmer edit section *** (ServiceBusMessageInfo.ID Get start)
 
-                // *** End programmer edit section *** (ServiceBusMessageInfo.Id Get start)
-                string result = this.fId;
-                // *** Start programmer edit section *** (ServiceBusMessageInfo.Id Get end)
+                // *** End programmer edit section *** (ServiceBusMessageInfo.ID Get start)
+                string result = this.fID;
+                // *** Start programmer edit section *** (ServiceBusMessageInfo.ID Get end)
 
-                // *** End programmer edit section *** (ServiceBusMessageInfo.Id Get end)
+                // *** End programmer edit section *** (ServiceBusMessageInfo.ID Get end)
                 return result;
             }
             set
             {
-                // *** Start programmer edit section *** (ServiceBusMessageInfo.Id Set start)
+                // *** Start programmer edit section *** (ServiceBusMessageInfo.ID Set start)
 
-                // *** End programmer edit section *** (ServiceBusMessageInfo.Id Set start)
-                this.fId = value;
-                // *** Start programmer edit section *** (ServiceBusMessageInfo.Id Set end)
+                // *** End programmer edit section *** (ServiceBusMessageInfo.ID Set start)
+                this.fID = value;
+                // *** Start programmer edit section *** (ServiceBusMessageInfo.ID Set end)
 
-                // *** End programmer edit section *** (ServiceBusMessageInfo.Id Set end)
+                // *** End programmer edit section *** (ServiceBusMessageInfo.ID Set end)
             }
         }
 

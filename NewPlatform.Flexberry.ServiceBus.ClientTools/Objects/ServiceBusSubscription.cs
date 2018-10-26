@@ -27,10 +27,11 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (ServiceBusSubscription CustomAttributes)
     public class ServiceBusSubscription
     {
+        private string fID;
+
+        private string fClientID;
         
-        private string fClientId;
-        
-        private string fMessageTypeId;
+        private string fMessageTypeID;
         
         private DateTime? fExpiryDate;
         
@@ -44,66 +45,96 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (ServiceBusSubscription CustomMembers)
 
-
         /// <summary>
-        /// ClientId.
+        /// ID.
         /// </summary>
-        // *** Start programmer edit section *** (ServiceBusSubscription.ClientId CustomAttributes)
+        // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID CustomAttributes)
         [DataMember]
-        // *** End programmer edit section *** (ServiceBusSubscription.ClientId CustomAttributes)
-        public virtual string ClientId
+        // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID CustomAttributes)
+        public virtual string ID
         {
             get
             {
-                // *** Start programmer edit section *** (ServiceBusSubscription.ClientId Get start)
+                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Get start)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.ClientId Get start)
-                string result = this.fClientId;
-                // *** Start programmer edit section *** (ServiceBusSubscription.ClientId Get end)
+                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Get start)
+                string result = this.fID;
+                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Get end)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.ClientId Get end)
+                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Get end)
                 return result;
             }
             set
             {
-                // *** Start programmer edit section *** (ServiceBusSubscription.ClientId Set start)
+                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Set start)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.ClientId Set start)
-                this.fClientId = value;
-                // *** Start programmer edit section *** (ServiceBusSubscription.ClientId Set end)
+                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Set start)
+                this.fID = value;
+                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Set end)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.ClientId Set end)
+                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Set end)
             }
         }
 
         /// <summary>
-        /// MessageTypeId.
+        /// ClientID.
         /// </summary>
-        // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeId CustomAttributes)
+        // *** Start programmer edit section *** (ServiceBusSubscription.ClientID CustomAttributes)
         [DataMember]
-        // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeId CustomAttributes)
-        public virtual string MessageTypeId
+        // *** End programmer edit section *** (ServiceBusSubscription.ClientID CustomAttributes)
+        public virtual string ClientID
         {
             get
             {
-                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeId Get start)
+                // *** Start programmer edit section *** (ServiceBusSubscription.ClientID Get start)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeId Get start)
-                string result = this.fMessageTypeId;
-                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeId Get end)
+                // *** End programmer edit section *** (ServiceBusSubscription.ClientID Get start)
+                string result = this.fClientID;
+                // *** Start programmer edit section *** (ServiceBusSubscription.ClientID Get end)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeId Get end)
+                // *** End programmer edit section *** (ServiceBusSubscription.ClientID Get end)
                 return result;
             }
             set
             {
-                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeId Set start)
+                // *** Start programmer edit section *** (ServiceBusSubscription.ClientID Set start)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeId Set start)
-                this.fMessageTypeId = value;
-                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeId Set end)
+                // *** End programmer edit section *** (ServiceBusSubscription.ClientID Set start)
+                this.fClientID = value;
+                // *** Start programmer edit section *** (ServiceBusSubscription.ClientID Set end)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeId Set end)
+                // *** End programmer edit section *** (ServiceBusSubscription.ClientID Set end)
+            }
+        }
+
+        /// <summary>
+        /// MessageTypeID.
+        /// </summary>
+        // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID CustomAttributes)
+        [DataMember]
+        // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID CustomAttributes)
+        public virtual string MessageTypeID
+        {
+            get
+            {
+                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Get start)
+
+                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Get start)
+                string result = this.fMessageTypeID;
+                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Get end)
+
+                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Set start)
+
+                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Set start)
+                this.fMessageTypeID = value;
+                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Set end)
+
+                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Set end)
             }
         }
 

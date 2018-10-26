@@ -66,7 +66,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         // *** Start programmer edit section *** (ISubscriptionsManager.SubscribeOrUpdate System.String System.String System.Boolean TransportType? DateTime? CustomAttributes)
 
         // *** End programmer edit section *** (ISubscriptionsManager.SubscribeOrUpdate System.String System.String System.Boolean TransportType? DateTime? CustomAttributes)
-        void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null);
+        void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null, string subscribtionId = null);
         
         // *** Start programmer edit section *** (ISubscriptionsManager.UpdateAllSubscriptions System.String CustomAttributes)
 

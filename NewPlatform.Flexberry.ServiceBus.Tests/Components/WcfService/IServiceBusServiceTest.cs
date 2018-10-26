@@ -348,7 +348,7 @@
             fixture.ServiceBus.SubscribeClientForEventCallback(clientId, eventTypeId);
 
             // Assert.
-            fixture.SubManager.Verify(sub => sub.SubscribeOrUpdate(clientId, eventTypeId, true, TransportType.WCF, null), Times.Once);
+            fixture.SubManager.Verify(sub => sub.SubscribeOrUpdate(clientId, eventTypeId, true, TransportType.WCF, null, null), Times.Once);
         }
 
         /// <summary>
@@ -365,7 +365,7 @@
             fixture.ServiceBus.SubscribeClientForMessageCallback(clientId, messageTypeId);
 
             // Assert.
-            fixture.SubManager.Verify(sub => sub.SubscribeOrUpdate(clientId, messageTypeId, true, TransportType.WCF, null), Times.Once);
+            fixture.SubManager.Verify(sub => sub.SubscribeOrUpdate(clientId, messageTypeId, true, TransportType.WCF, null, null), Times.Once);
         }
     }
 }
