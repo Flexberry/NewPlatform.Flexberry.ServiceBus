@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using RabbitMQ.Client.Content;
-using RabbitMQ.Client.Impl;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
-    internal class MessageConverter : IMessageConverter
+    using RabbitMQ.Client.Content;
+    using RabbitMQ.Client.Impl;
+
+    internal class RmqMessageConverter : IMessageConverter
     {
         private string _attachmentPropertyName => "attachment";
 
