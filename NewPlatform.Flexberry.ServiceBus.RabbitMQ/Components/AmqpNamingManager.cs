@@ -84,8 +84,8 @@
                 Client = new Client()
                 {
                     ID = queueName.Replace(this.ClientQueuePrefix, string.Empty)
-                                     .Replace(routingKey, string.Empty)
-                                     .Replace(this._queueClientTypeDelimiter.ToString(), string.Empty)
+                                .Replace(routingKey, string.Empty)
+                                .Replace(this._queueClientTypeDelimiter.ToString(), string.Empty)
                 },
                 MessageType = new MessageType()
                 {
@@ -95,13 +95,25 @@
         }
 
         /// <summary>
-        /// Returns client ID (0) and message type ID (1) from queue name.
+        /// Extracts the client ID and message type ID from the queue name.
         /// </summary>
         /// <param name="queueName">Queue name.</param>
-        /// <returns>Client ID and message type ID.</returns>
-        public string[] GetIDsFromQueueName(string queueName)
+        /// <param name="clientId">Extracted from the queue name the client ID.</param>
+        /// <param name="messageTypeId">Extracted from the queue name the message type ID.</param>
+        public void ParseQueueName(string queueName, out string clientId, out string messageTypeId)
         {
-            return queueName.Replace(ClientQueuePrefix, string.Empty).Split(_queueClientTypeDelimiter);
+            if (string.IsNullOrEmpty(queueName))
+            {
+                throw new ArgumentNullException(nameof(queueName));
+            }
+            else if (!queueName.StartsWith(ClientQueuePrefix) || !queueName.Contains(_queueClientTypeDelimiter.ToString()))
+            {
+                throw new ArgumentException(nameof(queueName));
+            }
+
+            string[] ids = queueName.Replace(ClientQueuePrefix, string.Empty).Split(_queueClientTypeDelimiter);
+            clientId = ids[0];
+            messageTypeId = ids[1];
         }
     }
 }

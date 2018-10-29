@@ -33,9 +33,9 @@
         /// <summary>
         /// Initializes a new instance of <see cref="RmqMessageManager"/>.
         /// </summary>
-        /// <param name="managementClient"></param>
-        /// <param name="messageConverter"></param>
-        /// <param name="namingManager"></param>
+        /// <param name="managementClient">The client for manage RabbitMQ.</param>
+        /// <param name="messageConverter">Messages converter from RabbitMQ format to Flexberry Service Bus format.</param>
+        /// <param name="namingManager">The name manager in RabbitMQ.</param>
         public RmqMessageManager(IManagementClient managementClient, IMessageConverter messageConverter, AmqpNamingManager namingManager)
         {
             _managementClient = managementClient ?? throw new ArgumentNullException(nameof(managementClient));
@@ -73,9 +73,11 @@
                 skipped += queue.Messages;
                 if (skipped > offset)
                 {
-                    string[] ids = _namingManager.GetIDsFromQueueName(queue.Name);
-                    var client = new Client() { ID = ids[0] };
-                    var messageType = new MessageType() { ID = ids[1] };
+                    string _clientId;
+                    string _messageTypeId;
+                    _namingManager.ParseQueueName(queue.Name, out _clientId, out _messageTypeId);
+                    var client = new Client() { ID = _clientId };
+                    var messageType = new MessageType() { ID = _messageTypeId };
 
                     int skipInQueue = offset > 0 ? queue.Messages - (skipped - offset) : offset;
                     int getFromQueue = Math.Min(queue.Messages, count + skipInQueue - sbMessages.Count);
@@ -111,8 +113,10 @@
         {
             return queues.Where((q) =>
             {
-                string[] ids = _namingManager.GetIDsFromQueueName(q.Name);
-                return ids[0].Contains(clientId) && ids[1].Contains(messageTypeId);
+                string _clientId;
+                string _messageTypeId;
+                _namingManager.ParseQueueName(q.Name, out _clientId, out _messageTypeId);
+                return _clientId.Contains(clientId) && _messageTypeId.Contains(messageTypeId);
             });
         }
     }
