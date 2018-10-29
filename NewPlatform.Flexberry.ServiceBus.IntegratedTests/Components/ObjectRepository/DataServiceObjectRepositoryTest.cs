@@ -23,7 +23,7 @@
         /// Test Collection of Service Buses.
         /// </param>
         [Theory]
-        [MemberData("BusesData")]
+        [MemberData(nameof(BusesData))]
         public void TestGetAllServiceBuses(IEnumerable<DataObject> buses)
         {
             foreach (var dataService in DataServices)
@@ -63,7 +63,7 @@
         /// Test Collection of Message Types.
         /// </param>
         [Theory]
-        [MemberData("MessageTypesData")]
+        [MemberData(nameof(MessageTypesData))]
         public void TestGetAllMessageTypes(IEnumerable<DataObject> messageTypes)
         {
             foreach (var dataService in DataServices)
@@ -103,7 +103,7 @@
         /// Test Collection of Outbound Message Type Restrictions.
         /// </param>
         [Theory]
-        [MemberData("SendingPermissionsData")]
+        [MemberData(nameof(SendingPermissionsData))]
         public void TestGetAllRestrictions(IEnumerable<DataObject> sendingPermissions)
         {
             foreach (var dataService in DataServices)
@@ -154,7 +154,7 @@
         /// Test Collection of Outbound Message Type Restrictions.
         /// </param>
         [Theory]
-        [MemberData("SendingPermissionsData")]
+        [MemberData(nameof(SendingPermissionsData))]
         public void TestGetRestrictionsForClient(IEnumerable<DataObject> sendingPermissions)
         {
             foreach (var dataService in DataServices)
@@ -209,7 +209,7 @@
         /// Test Collection of Outbound Message Type Restrictions.
         /// </param>
         [Theory]
-        [MemberData("SendingPermissionsData")]
+        [MemberData(nameof(SendingPermissionsData))]
         public void TestGetRestrictionsForMsgType(IEnumerable<DataObject> sendingPermissions)
         {
             foreach (var dataService in DataServices)
@@ -264,7 +264,7 @@
         /// Test Collection of clients.
         /// </param>
         [Theory]
-        [MemberData("ClientsData")]
+        [MemberData(nameof(ClientsData))]
         public void TestGetAllClients(IEnumerable<DataObject> clients)
         {
             foreach (var dataService in DataServices)
@@ -358,7 +358,7 @@
             }
         }
 
-        private static IEnumerable<object[]> BusesData()
+        public static IEnumerable<object[]> BusesData()
         {
             yield return new object[]
             {
@@ -375,7 +375,7 @@
             };
         }
 
-        private static IEnumerable<object[]> ClientsData()
+        public static IEnumerable<object[]> ClientsData()
         {
             yield return new object[]
             {
@@ -392,7 +392,7 @@
             };
         }
 
-        private static IEnumerable<object[]> MessageTypesData()
+        public static IEnumerable<object[]> MessageTypesData()
         {
             yield return new object[]
             {
@@ -409,7 +409,7 @@
             };
         }
 
-        private static IEnumerable<object[]> SendingPermissionsData()
+        public static IEnumerable<object[]> SendingPermissionsData()
         {
             var client1 = new Client() { ID = "Client 1", Name = "Client name 1" };
             var client2 = new Client() { ID = "Client 2", Name = "Client name 2" };
