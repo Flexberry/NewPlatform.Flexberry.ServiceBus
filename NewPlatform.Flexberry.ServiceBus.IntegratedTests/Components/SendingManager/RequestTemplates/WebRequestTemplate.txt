@@ -18,7 +18,7 @@
       *@} else {@*
         *@<a:Group>@Model.Group</a:Group>@("\\s*")@*
       *@}@*
-	  *@<a:Id i:nil="true"/>@("\\s*")@*
+	  *@<a:ID i:nil="true"/>@("\\s*")@*
       *@<a:MessageFormingTime>@Model.ReceivingTime.ToString("yyyy-MM-ddTHH:mm:ss.ff")@("[\\d]?")</a:MessageFormingTime>@("\\s*")@*
       *@<a:MessageTypeID>@Model.MessageType.ID</a:MessageTypeID>@("\\s*")@*
 	  *@<a:Priority>@Model.Priority</a:Priority>@("\\s*")@*
