@@ -2,9 +2,11 @@
 {
     using System;
     using System.Configuration;
-    using ClientTools;
-    using Components;
-    using Microsoft.Practices.Unity;
+
+    using NewPlatform.Flexberry.ServiceBus.ClientTools;
+    using NewPlatform.Flexberry.ServiceBus.Components;
+
+    using Unity;
 
     /// <summary>
     /// В данном классе шина выступает в роли клиента, принимая сообщения

@@ -3,12 +3,14 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+
     using ICSSoft.STORMNET.Business;
-    using IIS.Caseberry.Logging.MsEntLib;
+    using IIS.Caseberry.Logging.Objects;
+
     using Microsoft.Practices.EnterpriseLibrary.Logging;
 
     /// <summary>
-    /// Realization of logger using MS Enterprise Library Loggin through <see cref="CaseberryDatabaseTraceListener"/>.
+    /// Realization of logger using MS Enterprise Library Loggin through <see cref="DatabaseTraceListener"/>.
     /// </summary>
     internal class EnterpriseLibraryLogger : BaseServiceBusComponent, ILogger
     {
@@ -56,7 +58,7 @@
         {
             _dataService = dataService;
             _loggerHelper = new LoggerHelper(dataService);
-            CaseberryDatabaseTraceListener.NewLogEntryAdded += NewLogEntryAdded;
+            DatabaseTraceListener.NewLogEntryAdded += NewLogEntryAdded;
         }
 
         /// <summary>
@@ -158,7 +160,7 @@
         }
 
         /// <summary>
-        /// Обработчик добавления записи лога для <see cref="CaseberryDatabaseTraceListener"/>.
+        /// Обработчик добавления записи лога для <see cref="DatabaseTraceListener"/>.
         /// Добавляет связь между сообщением шины и записью лога при условии, что запись относится к этому сообщению.
         /// </summary>
         /// <param name="sender">Источник события добавления записи лога.</param>
@@ -196,7 +198,7 @@
         /// </summary>
         public override void AfterStop()
         {
-            CaseberryDatabaseTraceListener.NewLogEntryAdded -= NewLogEntryAdded;
+            DatabaseTraceListener.NewLogEntryAdded -= NewLogEntryAdded;
         }
 
         /// <summary>

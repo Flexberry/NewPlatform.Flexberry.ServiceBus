@@ -27,6 +27,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.ConsoleHost", "NewPlatform.Flexberry.ServiceBus.ConsoleHost\NewPlatform.Flexberry.ServiceBus.ConsoleHost.csproj", "{BB36EDD1-1B91-4C51-B0E0-02412DD3BD19}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ServiceBus.WinServiceHost", "NewPlatform.Flexberry.ServiceBus.WinServiceHost\NewPlatform.Flexberry.ServiceBus.WinServiceHost.csproj", "{6F5C2FAA-2E69-49AB-B6F9-40969F4DC719}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4AE4E878-F8A8-45EF-AC27-877210F684C7} = {4AE4E878-F8A8-45EF-AC27-877210F684C7}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{179AA846-7B68-4B25-ABAD-40228754B66D}"
 EndProject

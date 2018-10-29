@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
 
-    using Microsoft.Practices.Unity;
+    using Unity;
     using Microsoft.Practices.Unity.Configuration;
 
     using NewPlatform.Flexberry.ServiceBus.Components;
