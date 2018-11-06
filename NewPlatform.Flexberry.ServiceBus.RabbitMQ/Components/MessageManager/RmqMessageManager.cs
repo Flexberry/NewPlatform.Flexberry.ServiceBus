@@ -7,7 +7,9 @@
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
 
+    using ServiceBusQueue = Queue;
     using ServiceBusMessage = Message;
+    using RabbitMQQueue = EasyNetQ.Management.Client.Model.Queue;
     using RabbitMQMessage = EasyNetQ.Management.Client.Model.Message;
 
     /// <summary>
@@ -67,7 +69,7 @@
             int skipped = 0;
             var sbMessages = new List<ServiceBusMessage>();
 
-            IEnumerable<Queue> queues = FilterQueues(_managementClient.GetQueuesAsync().Result, clientId, messageTypeId);
+            IEnumerable<RabbitMQQueue> queues = FilterQueues(_managementClient.GetQueuesAsync().Result, clientId, messageTypeId);
             foreach (var queue in queues)
             {
                 skipped += queue.Messages;
@@ -103,13 +105,59 @@
         }
 
         /// <summary>
+        /// Returns count queues from RabbitMQ.
+        /// </summary>
+        /// <returns>Count queues from RabbitMQ.</returns>
+        public int CountQueues()
+        {
+            return _managementClient.GetQueuesAsync().Result.Count();
+        }
+
+        /// <summary>
+        /// Returns queues from RabbitMQ.
+        /// </summary>
+        /// <param name="offset">Offset from start.</param>
+        /// <param name="count">Count of queues.</param>
+        /// <returns>Queues from RabbitMQ.</returns>
+        public ServiceBusQueue[] GetQueues(int offset, int count)
+        {
+            IEnumerable<RabbitMQQueue> queues = _managementClient.GetQueuesAsync().Result.Skip(offset).Take(count);
+            return queues.Select((queue) =>
+            {
+                string recipient;
+                string messageType;
+                _namingManager.ParseQueueName(queue.Name, out recipient, out messageType);
+                return new ServiceBusQueue()
+                {
+                    Name = queue.Name,
+                    Recipient = recipient,
+                    MessageType = messageType,
+                    Messages = queue.Messages,
+                    VHost = queue.Vhost,
+                };
+            }).ToArray();
+        }
+
+        /// <summary>
+        /// Removes all messages from the queue.
+        /// </summary>
+        /// <param name="queue">The queue from which to delete messages.</param>
+        public void PurgeQueue(ServiceBusQueue queue)
+        {
+            Vhost vhost = _managementClient.GetVhostAsync(queue.VHost).Result;
+            RabbitMQQueue rmqQueue = _managementClient.GetQueueAsync(queue.Name, vhost).Result;
+
+            _managementClient.PurgeAsync(rmqQueue).Wait();
+        }
+
+        /// <summary>
         /// Filter queues by client ID and message type ID.
         /// </summary>
         /// <param name="queues">Queues for filter.</param>
         /// <param name="clientId">Client ID.</param>
         /// <param name="messageTypeId">Message type ID.</param>
         /// <returns>Filtered queues.</returns>
-        private IEnumerable<Queue> FilterQueues(IEnumerable<Queue> queues, string clientId, string messageTypeId)
+        private IEnumerable<RabbitMQQueue> FilterQueues(IEnumerable<RabbitMQQueue> queues, string clientId, string messageTypeId)
         {
             return queues.Where((q) =>
             {
