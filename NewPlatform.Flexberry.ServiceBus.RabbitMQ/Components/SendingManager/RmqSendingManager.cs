@@ -1,15 +1,19 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using EasyNetQ.Management.Client.Model;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+
     using EasyNetQ.Management.Client;
-    using NewPlatform.Flexberry.ServiceBus.MessageSenders;
+    using EasyNetQ.Management.Client.Model;
+
     using RabbitMQ.Client;
+
+    using NewPlatform.Flexberry.ServiceBus.MessageSenders;
+
+    using Queue = EasyNetQ.Management.Client.Model.Queue;
+    using Message = Message;
 
     /// <summary>
     /// Класс для доставки сообщений из RabbitMQ.

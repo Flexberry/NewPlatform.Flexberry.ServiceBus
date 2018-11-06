@@ -164,6 +164,7 @@
     <Compile Include="Components\MessageManager\RmqMessageManager.cs" />
     <Compile Include="MessageWithNotTypedPk.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NewPlatform.Flexberry.ServiceBus.RabbitMQ.snk" />
