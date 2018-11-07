@@ -3,10 +3,16 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Flexberry.ServiceBus.Components;
+    using System.Threading.Tasks;
+
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.Business.LINQProvider;
+
     using Moq;
+
+    using NewPlatform.Flexberry.ServiceBus.Components;
+
     using Xunit;
 
     public class DefaultReceivingManagerTest : BaseServiceBusIntegratedTest
@@ -329,6 +335,42 @@
                         Assert.Equal(messageType.ID, messagesGroup.Messages[i].MessageType.ID);
                     }
                 }
+            }
+        }
+
+        [Fact]
+        public void TestParallelAcceptMessageWithGroup()
+        {
+            foreach (var dataService in DataServices)
+            {
+                // Arrange.
+                var sender = new Client() { ID = "senderId" };
+                var recipient = new Client() { ID = "recipientId" };
+                var messageType = new MessageType() { ID = "messageTypeId" };
+                var subscription = new Subscription() { Client = recipient, MessageType = messageType, ExpiryDate = DateTime.Now.AddDays(1) };
+                var sendingPermission = new SendingPermission() { Client = sender, MessageType = messageType };
+
+                var dataObjects = new DataObject[] { sender, recipient, messageType, subscription, sendingPermission };
+                dataService.UpdateObjects(ref dataObjects);
+
+                var statisticsService = GetMockStatisticsService();
+                var component = new DefaultReceivingManager(
+                    GetMockLogger(),
+                    new DataServiceObjectRepository(dataService, statisticsService),
+                    new DefaultSubscriptionsManager(dataService, statisticsService),
+                    GetMockSendingManager(),
+                    dataService,
+                    statisticsService);
+
+                // Act.
+                var message = new ServiceBusMessage() { ClientID = sender.ID, MessageTypeID = messageType.ID, Body = string.Empty };
+                Task.WhenAll(
+                    Task.Run(() => component.AcceptMessage(message, "group")),
+                    Task.Run(() => component.AcceptMessage(message, "group")),
+                    Task.Run(() => component.AcceptMessage(message, "group"))).Wait();
+
+                // Assert.
+                Assert.Equal(1, ((SQLDataService)dataService).Query<Message>().Count());
             }
         }
     }
