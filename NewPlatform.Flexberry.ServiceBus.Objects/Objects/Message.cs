@@ -125,6 +125,7 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Body",
             "Attachment",
             "Priority",
+            "Group",
             "MessageType",
             "MessageType.ID",
             "Recipient",
