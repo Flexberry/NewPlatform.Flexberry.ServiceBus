@@ -66,6 +66,16 @@
         /// <returns>Messages from RabbitMQ.</returns>
         public ServiceBusMessage[] GetMessages(int offset, int count, string clientId, string messageTypeId)
         {
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            }
+
+            if (count < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count));
+            }
+
             int skipped = 0;
             var sbMessages = new List<ServiceBusMessage>();
 
@@ -121,6 +131,16 @@
         /// <returns>Queues from RabbitMQ.</returns>
         public ServiceBusQueue[] GetQueues(int offset, int count)
         {
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            }
+
+            if (count < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count));
+            }
+
             IEnumerable<RabbitMQQueue> queues = _managementClient.GetQueuesAsync().Result.Skip(offset).Take(count);
             return queues.Select((queue) =>
             {
@@ -144,6 +164,11 @@
         /// <param name="queue">The queue from which to delete messages.</param>
         public void PurgeQueue(ServiceBusQueue queue)
         {
+            if (queue == null)
+            {
+                throw new ArgumentNullException(nameof(queue));
+            }
+
             Vhost vhost = _managementClient.GetVhostAsync(queue.VHost).Result;
             RabbitMQQueue rmqQueue = _managementClient.GetQueueAsync(queue.Name, vhost).Result;
 
