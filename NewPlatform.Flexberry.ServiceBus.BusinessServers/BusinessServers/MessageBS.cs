@@ -16,6 +16,8 @@ namespace NewPlatform.Flexberry.ServiceBus
 
     // *** Start programmer edit section *** (Using statements)
     using System.Linq;
+
+    using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business.LINQProvider;
     // *** End programmer edit section *** (Using statements)
 
@@ -41,7 +43,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         public virtual ICSSoft.STORMNET.DataObject[] OnUpdateMessage(NewPlatform.Flexberry.ServiceBus.Message UpdatedObject)
         {
             // *** Start programmer edit section *** (OnUpdateMessage)
-            if (!string.IsNullOrEmpty(UpdatedObject.Group) &&
+            if (UpdatedObject.GetStatus() == ObjectStatus.Created && !string.IsNullOrEmpty(UpdatedObject.Group) &&
                 DataService.Query<Message>().Count(m =>
                     m.Recipient.__PrimaryKey == UpdatedObject.Recipient.__PrimaryKey &&
                     m.MessageType.__PrimaryKey == UpdatedObject.MessageType.__PrimaryKey &&
