@@ -11,9 +11,14 @@
     using Microsoft.Owin.Hosting;
 
     using NewPlatform.Flexberry.ServiceBus.Components;
+
     using Owin;
+
     using Xunit;
 
+    /// <summary>
+    /// Tests for <see cref="OptimizedSendingManager"/>.
+    /// </summary>
     public class OptimizedSendingManagerTest : BaseServiceBusIntegratedTest
     {
         public OptimizedSendingManagerTest()
@@ -21,8 +26,11 @@
         {
         }
 
+        /// <summary>
+        /// Test deleting undelivered message with the group.
+        /// </summary>
         [Fact]
-        public void TestDeleteUndeliveredMessageWithGroup()
+        public void TestDeletingUndeliveredMessageWithGroup()
         {
             foreach (var dataService in DataServices)
             {

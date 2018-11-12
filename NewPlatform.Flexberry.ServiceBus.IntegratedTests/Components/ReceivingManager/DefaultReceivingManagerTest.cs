@@ -338,6 +338,9 @@
             }
         }
 
+        /// <summary>
+        /// Test for parallel reception of messages with the group.
+        /// </summary>
         [Fact]
         public void TestParallelAcceptMessageWithGroup()
         {
