@@ -4,11 +4,14 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
+
+    using NewPlatform.Flexberry.ServiceBus.Utils;
 
     /// <summary>
     /// Класс для приема сообщений в шину от клиентов, использующий <see cref="IDataService"/> для работы с сообщениями.
@@ -16,14 +19,9 @@
     internal class DefaultReceivingManager : BaseReceivingManager
     {
         /// <summary>
-        /// A dictionary with locks for receiving messages with a group.
+        /// Instance of <see cref="KeyLocker{T1, T2}"/> for managing locks when receiving messages with a group.
         /// </summary>
-        private readonly Dictionary<Guid, object> locks = new Dictionary<Guid, object>();
-
-        /// <summary>
-        /// Lock to lock access to <see cref="locks"/>.
-        /// </summary>
-        private readonly object lockForLocks = new object();
+        private readonly KeyLocker<Tuple<Guid, string>, object> locker = new KeyLocker<Tuple<Guid, string>, object>();
 
         /// <summary>
         /// Язык для ограничений.
@@ -170,20 +168,10 @@
 
                 foreach (var subscription in subscriptions)
                 {
-                    Guid guid = (KeyGuid)subscription.__PrimaryKey;
+                    Tuple<Guid, string> lockKey = Tuple.Create(((KeyGuid)subscription.__PrimaryKey).Guid, groupName);
                     try
                     {
-                        object @lock;
-                        lock (lockForLocks)
-                        {
-                            if (!locks.TryGetValue(guid, out @lock))
-                            {
-                                @lock = new object();
-                                locks.Add(guid, @lock);
-                            }
-                        }
-
-                        lock (@lock)
+                        lock (locker.GetLock(lockKey))
                         {
                             // Ищем аналогичные сообщения с этой группой.
                             LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.MessageLightView);
@@ -248,7 +236,7 @@
                     }
                     finally
                     {
-                        locks.Remove(guid);
+                        locker.FreeLock(lockKey);
                     }
 
                     _statisticsService.NotifyMessageReceived(subscription);
