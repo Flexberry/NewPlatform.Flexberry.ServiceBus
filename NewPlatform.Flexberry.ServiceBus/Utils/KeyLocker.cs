@@ -1,7 +1,7 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.Utils
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
 
     /// <summary>
     /// Class for creating locks with keys.
@@ -19,7 +19,7 @@
         /// <summary>
         /// Dictionary for storing locks.
         /// </summary>
-        private Dictionary<T1, Lock> locks = new Dictionary<T1, Lock>();
+        private ConcurrentDictionary<T1, Lock> locks = new ConcurrentDictionary<T1, Lock>();
 
         /// <summary>
         /// Returns the lock object for the given key.
@@ -33,21 +33,11 @@
                 throw new ArgumentNullException(nameof(key));
             }
 
-            lock (internalLock)
+            return locks.AddOrUpdate(key, (k) => new Lock(new T2()), (k, v) =>
             {
-                Lock @lock;
-                if (locks.TryGetValue(key, out @lock))
-                {
-                    @lock.LockCount++;
-                }
-                else
-                {
-                    @lock = new Lock(new T2());
-                    locks.Add(key, @lock);
-                }
-
-                return @lock.LockObject;
-            }
+                v.LockCount++;
+                return v;
+            }).LockObject;
         }
 
         /// <summary>
@@ -64,9 +54,9 @@
             lock (internalLock)
             {
                 Lock @lock;
-                if (locks.TryGetValue(key, out @lock) && --@lock.LockCount == 0)
+                if (locks.TryRemove(key, out @lock) && --@lock.LockCount > 0 && !locks.TryAdd(key, @lock))
                 {
-                    locks.Remove(key);
+                    throw new InvalidOperationException("Could not release lock.");
                 }
             }
         }
