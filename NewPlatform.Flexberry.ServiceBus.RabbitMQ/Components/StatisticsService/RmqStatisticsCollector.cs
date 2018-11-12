@@ -1,14 +1,11 @@
-﻿using EasyNetQ.Management.Client;
-using EasyNetQ.Management.Client.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components.StatisticsService
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components.StatisticsService
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+
+    using EasyNetQ.Management.Client;
+    using EasyNetQ.Management.Client.Model;
 
     /// <summary>
     /// Component to collect statistics from Rabbit MQ
