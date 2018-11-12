@@ -141,8 +141,13 @@
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
-            IEnumerable<RabbitMQQueue> queues = _managementClient.GetQueuesAsync().Result.Skip(offset).Take(count);
-            return queues.Select((queue) =>
+            IEnumerable<RabbitMQQueue> queues = _managementClient.GetQueuesAsync().Result;
+            if (queues == null)
+            {
+                throw new InvalidOperationException("Failed to get queue list from RabbitMQ.");
+            }
+
+            return queues.Skip(offset).Take(count).Select((queue) =>
             {
                 string recipient;
                 string messageType;
