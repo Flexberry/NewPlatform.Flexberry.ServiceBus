@@ -214,6 +214,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceBusTest.cs" />
     <Compile Include="ServiceHelperTest.cs" />
+    <Compile Include="Utils\KeyLockerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
