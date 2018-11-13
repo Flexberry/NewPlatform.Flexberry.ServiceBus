@@ -15,10 +15,11 @@ namespace NewPlatform.Flexberry.ServiceBus
 
 
     // *** Start programmer edit section *** (Using statements)
-    using System.Linq;
-
     using ICSSoft.STORMNET;
-    using ICSSoft.STORMNET.Business.LINQProvider;
+    using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+    using ICSSoft.STORMNET.KeyGen;
     // *** End programmer edit section *** (Using statements)
 
 
@@ -34,6 +35,40 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** Start programmer edit section *** (MessageBS CustomMembers)
 
+        /// <summary>
+        /// Returns LCS for loading messages with a specific <paramref name="group"/>, received by subscriptions for the specified <paramref name="client"/> and <paramref name="messageType"/>.
+        /// </summary>
+        /// <param name="client">Client.</param>
+        /// <param name="messageType">Message type.</param>
+        /// <param name="group">Group.</param>
+        /// <param name="view">The view, if not specified, uses <see cref="Message.Views.MessageLightView"/>.</param>
+        /// <returns></returns>
+        public static LoadingCustomizationStruct GetMessagesWithGroupLCS(Client client, MessageType messageType, string group, View view = null)
+        {
+            LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), view ?? Message.Views.MessageLightView);
+
+            lcs.LimitFunction = SQLWhereLanguageDef.LanguageDef.GetFunction(
+                SQLWhereLanguageDef.LanguageDef.funcAND,
+                SQLWhereLanguageDef.LanguageDef.GetFunction(
+                    SQLWhereLanguageDef.LanguageDef.funcEQ,
+                    new VariableDef(SQLWhereLanguageDef.LanguageDef.GuidType, Information.ExtractPropertyPath<Message>(x => x.Recipient)),
+                    ((KeyGuid)client.__PrimaryKey).Guid),
+                SQLWhereLanguageDef.LanguageDef.GetFunction(
+                    SQLWhereLanguageDef.LanguageDef.funcEQ,
+                    new VariableDef(SQLWhereLanguageDef.LanguageDef.GuidType,
+                    Information.ExtractPropertyPath<Message>(x => x.MessageType)),
+                    ((KeyGuid)messageType.__PrimaryKey).Guid),
+                SQLWhereLanguageDef.LanguageDef.GetFunction(
+                    SQLWhereLanguageDef.LanguageDef.funcEQ,
+                    new VariableDef(SQLWhereLanguageDef.LanguageDef.StringType, Information.ExtractPropertyPath<Message>(x => x.Group)),
+                    group),
+                SQLWhereLanguageDef.LanguageDef.GetFunction(
+                    SQLWhereLanguageDef.LanguageDef.funcEQ,
+                    new VariableDef(SQLWhereLanguageDef.LanguageDef.BoolType, Information.ExtractPropertyPath<Message>(x => x.IsSending)),
+                    false));
+
+            return lcs;
+        }
         // *** End programmer edit section *** (MessageBS CustomMembers)
 
 
@@ -44,10 +79,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         {
             // *** Start programmer edit section *** (OnUpdateMessage)
             if (UpdatedObject.GetStatus() == ObjectStatus.Created && !string.IsNullOrEmpty(UpdatedObject.Group) &&
-                DataService.Query<Message>().Count(m =>
-                    m.Recipient.__PrimaryKey == UpdatedObject.Recipient.__PrimaryKey &&
-                    m.MessageType.__PrimaryKey == UpdatedObject.MessageType.__PrimaryKey &&
-                    m.Group == UpdatedObject.Group && m.IsSending == false) > 0)
+                DataService.GetObjectsCount(GetMessagesWithGroupLCS(UpdatedObject.Recipient, UpdatedObject.MessageType, UpdatedObject.Group)) > 0)
             {
                 throw new Exception($"A similar message with the group '{UpdatedObject.Group}' already exists.");
             }

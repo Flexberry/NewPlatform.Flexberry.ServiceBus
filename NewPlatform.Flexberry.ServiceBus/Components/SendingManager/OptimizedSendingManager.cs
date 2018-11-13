@@ -9,8 +9,8 @@
 
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
-    using ICSSoft.STORMNET.Business.LINQProvider;
     using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
 
     using NewPlatform.Flexberry.ServiceBus.MessageSenders;
@@ -288,11 +288,16 @@
             var existNewMessageWithGroup = false;
             if (!string.IsNullOrEmpty(message.Group))
             {
-                existNewMessageWithGroup = ((SQLDataService)_dataService).Query<Message>().Count(m =>
-                    m.__PrimaryKey != message.__PrimaryKey &&
-                    m.Recipient.__PrimaryKey == message.Recipient.__PrimaryKey &&
-                    m.MessageType.__PrimaryKey == message.MessageType.__PrimaryKey &&
-                    m.Group == message.Group && m.IsSending == false) > 0;
+                LoadingCustomizationStruct lcs = MessageBS.GetMessagesWithGroupLCS(message.Recipient, message.MessageType, message.Group);
+                lcs.LimitFunction = _langDef.GetFunction(
+                    _langDef.funcAND,
+                    _langDef.GetFunction(
+                        _langDef.funcNEQ,
+                        new VariableDef(_langDef.GuidType, ExternalLangDef.StormMainObjectKey),
+                        ((KeyGuid)message.__PrimaryKey).Guid),
+                    lcs.LimitFunction);
+
+                existNewMessageWithGroup = _dataService.GetObjectsCount(lcs) > 0;
             }
 
             if (existNewMessageWithGroup || (task.Status == TaskStatus.RanToCompletion && task.Result))

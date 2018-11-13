@@ -174,13 +174,7 @@
                         lock (locker.GetLock(lockKey))
                         {
                             // Ищем аналогичные сообщения с этой группой.
-                            LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.MessageLightView);
-                            lcs.LimitFunction = _langDef.GetFunction(
-                                _langDef.funcAND,
-                                _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.GuidType, Information.ExtractPropertyPath<Message>(x => x.Recipient)), ((KeyGuid)subscription.Client.__PrimaryKey).Guid),
-                                _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.GuidType, Information.ExtractPropertyPath<Message>(x => x.MessageType)), ((KeyGuid)subscription.MessageType.__PrimaryKey).Guid),
-                                _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.StringType, Information.ExtractPropertyPath<Message>(x => x.Group)), groupName),
-                                _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.BoolType, Information.ExtractPropertyPath<Message>(x => x.IsSending)), false));
+                            LoadingCustomizationStruct lcs = MessageBS.GetMessagesWithGroupLCS(subscription.Client, subscription.MessageType, groupName);
 
                             Stopwatch stopwatch = new Stopwatch();
                             stopwatch.Start();
