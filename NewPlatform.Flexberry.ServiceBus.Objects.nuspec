@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ServiceBus.Objects</id>
-    <version>1.2.0-beta01</version>
+    <version>1.2.0-beta02</version>
     <title>Flexberry Service Bus Objects</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
     <licenseUrl>http://flexberry.net</licenseUrl>
     <projectUrl>http://flexberry.net</projectUrl>
-    <iconUrl>http://flexberry.net/portals/_default/skins/flexerry/images/logo_last.png</iconUrl>
+    <iconUrl>https://flexberry.net/img/logo-color.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Objects for Flexberry Service Bus.</description>
     <releaseNotes></releaseNotes>
