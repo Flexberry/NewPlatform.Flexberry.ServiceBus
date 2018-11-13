@@ -6,11 +6,14 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
-    using MessageSenders;
+
+    using NewPlatform.Flexberry.ServiceBus.MessageSenders;
 
     /// <summary>
     /// Класс для отправки сообщений посредством сервиса данных с уменьшенным количеством запросов к БД.
@@ -282,7 +285,22 @@
                 _statisticsService.NotifyDecConnectionCount(subscription);
             }
 
-            if (task.Status == TaskStatus.RanToCompletion && task.Result)
+            var existNewMessageWithGroup = false;
+            if (!string.IsNullOrEmpty(message.Group))
+            {
+                LoadingCustomizationStruct lcs = MessageBS.GetMessagesWithGroupLCS(message.Recipient, message.MessageType, message.Group);
+                lcs.LimitFunction = _langDef.GetFunction(
+                    _langDef.funcAND,
+                    _langDef.GetFunction(
+                        _langDef.funcNEQ,
+                        new VariableDef(_langDef.GuidType, ExternalLangDef.StormMainObjectKey),
+                        ((KeyGuid)message.__PrimaryKey).Guid),
+                    lcs.LimitFunction);
+
+                existNewMessageWithGroup = _dataService.GetObjectsCount(lcs) > 0;
+            }
+
+            if (existNewMessageWithGroup || (task.Status == TaskStatus.RanToCompletion && task.Result))
             {
                 message.SetStatus(ObjectStatus.Deleted);
             }

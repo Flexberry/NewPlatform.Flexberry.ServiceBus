@@ -332,7 +332,22 @@
                 _statisticsService.NotifyDecConnectionCount(subscription);
             }
 
-            if (task.Status == TaskStatus.RanToCompletion && task.Result)
+            var existNewMessageWithGroup = false;
+            if (!string.IsNullOrEmpty(message.Group))
+            {
+                LoadingCustomizationStruct lcs = MessageBS.GetMessagesWithGroupLCS(message.Recipient, message.MessageType, message.Group);
+                lcs.LimitFunction = SQLWhereLanguageDef.LanguageDef.GetFunction(
+                    SQLWhereLanguageDef.LanguageDef.funcAND,
+                    SQLWhereLanguageDef.LanguageDef.GetFunction(
+                        SQLWhereLanguageDef.LanguageDef.funcNEQ,
+                        new VariableDef(SQLWhereLanguageDef.LanguageDef.GuidType, SQLWhereLanguageDef.StormMainObjectKey),
+                        ((KeyGuid)message.__PrimaryKey).Guid),
+                    lcs.LimitFunction);
+
+                existNewMessageWithGroup = _dataService.GetObjectsCount(lcs) > 0;
+            }
+
+            if (existNewMessageWithGroup || (task.Status == TaskStatus.RanToCompletion && task.Result))
             {
                 message.SetStatus(ObjectStatus.Deleted);
             }

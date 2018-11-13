@@ -4,17 +4,25 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
 
+    using NewPlatform.Flexberry.ServiceBus.Utils;
+
     /// <summary>
     /// Класс для приема сообщений в шину от клиентов, использующий <see cref="IDataService"/> для работы с сообщениями.
     /// </summary>
     internal class DefaultReceivingManager : BaseReceivingManager
     {
+        /// <summary>
+        /// Instance of <see cref="KeyLocker{T1, T2}"/> for managing locks when receiving messages with a group.
+        /// </summary>
+        private readonly KeyLocker<Tuple<Guid, string>, object> locker = new KeyLocker<Tuple<Guid, string>, object>();
+
         /// <summary>
         /// Язык для ограничений.
         /// </summary>
@@ -158,69 +166,49 @@
                     return;
                 }
 
+                string signature = $"{nameof(DefaultReceivingManager)}.{nameof(AcceptMessage)}({nameof(ServiceBusMessage)} {nameof(message)}, string {nameof(groupName)})";
                 foreach (var subscription in subscriptions)
                 {
-                    // Ищем аналогичные сообщения с этой группой.
-                    var messageWithGroupView = Message.Views.MessageLightView;
-
-                    LoadingCustomizationStruct lcs = LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), messageWithGroupView);
-                    lcs.LimitFunction = _langDef.GetFunction(
-                        _langDef.funcAND,
-                        _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.GuidType, Information.ExtractPropertyPath<Message>(x => x.Recipient)), ((KeyGuid)subscription.Client.__PrimaryKey).Guid),
-                        _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.GuidType, Information.ExtractPropertyPath<Message>(x => x.MessageType)), ((KeyGuid)subscription.MessageType.__PrimaryKey).Guid),
-                        _langDef.GetFunction(_langDef.funcEQ, new VariableDef(_langDef.StringType, Information.ExtractPropertyPath<Message>(x => x.Group)), groupName));
-
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-
-                    DataObject[] messagesWithGroup = _dataService.LoadObjects(lcs);
-
-                    stopwatch.Stop();
-                    long time = stopwatch.ElapsedMilliseconds;
-                    _statisticsService.NotifyAvgTimeSql(subscription, (int)time, "DefaultReceivingManager.AcceptMessage(MessageForESB message, string groupName) load Сообщения.");
-
-                    if (messagesWithGroup.Length == 0)
+                    Tuple<Guid, string> lockKey = Tuple.Create(((KeyGuid)subscription.__PrimaryKey).Guid, groupName);
+                    object lockObject = locker.GetLock(lockKey);
+                    try
                     {
-                        var msgWithGroup = new Message();
-                        ServiceHelper.SetMessageWithGroupValues(message, subscription, msgWithGroup, groupName, _dataService, _logger, _statisticsService);
-                        msgWithGroup.SendingTime = DateTime.Now;
+                        lock (lockObject)
+                        {
+                            LoadingCustomizationStruct lcs = MessageBS.GetMessagesWithGroupLCS(subscription.Client, subscription.MessageType, groupName);
+                            lcs.ColumnsSort = new[] { new ColumnsSortDef(Information.ExtractPropertyPath<Message>(m => m.SendingTime), SortOrder.Desc) };
 
-                        stopwatch = new Stopwatch();
-                        stopwatch.Start();
+                            Stopwatch stopwatch = Stopwatch.StartNew();
+                            DataObject[] existingMessages = _dataService.LoadObjects(lcs);
+                            stopwatch.Stop();
 
-                        _dataService.UpdateObject(msgWithGroup);
+                            _statisticsService.NotifyAvgTimeSql(subscription, (int)stopwatch.ElapsedMilliseconds, $"{signature} - find existing message.");
 
-                        stopwatch.Stop();
-                        time = stopwatch.ElapsedMilliseconds;
-                        _statisticsService.NotifyAvgTimeSql(subscription, (int)time, "DefaultReceivingManager.AcceptMessage(MessageForESB message, string groupName) update Сообщения.");
+                            var messageWithGroup = new Message();
+                            if (existingMessages.Length > 0)
+                            {
+                                messageWithGroup.SetExistObjectPrimaryKey(existingMessages[0].__PrimaryKey);
 
+                                stopwatch = Stopwatch.StartNew();
+                                _dataService.LoadObject(Message.Views.MessageEditView, messageWithGroup);
+                                stopwatch.Stop();
+
+                                _statisticsService.NotifyAvgTimeSql(subscription, (int)stopwatch.ElapsedMilliseconds, $"{signature} - load existing message.");
+                            }
+
+                            ServiceHelper.SetMessageWithGroupValues(message, subscription, messageWithGroup, groupName, _dataService, _logger, _statisticsService);
+                            messageWithGroup.SendingTime = DateTime.Now;
+
+                            stopwatch = Stopwatch.StartNew();
+                            _dataService.UpdateObject(messageWithGroup);
+                            stopwatch.Stop();
+
+                            _statisticsService.NotifyAvgTimeSql(subscription, (int)stopwatch.ElapsedMilliseconds, $"{signature} - update message.");
+                        }
                     }
-                    else
+                    finally
                     {
-                        var msgWithGroup = new Message { __PrimaryKey = messagesWithGroup[0].__PrimaryKey };
-                        View msgWithGroupView = Message.Views.MessageEditView;
-
-                        stopwatch = new Stopwatch();
-                        stopwatch.Start();
-
-                        _dataService.LoadObject(msgWithGroupView, msgWithGroup);
-
-                        stopwatch.Stop();
-                        time = stopwatch.ElapsedMilliseconds;
-                        _statisticsService.NotifyAvgTimeSql(subscription, (int)time, "DefaultReceivingManager.AcceptMessage(MessageForESB message, string groupName) load group messages.");
-
-                        ServiceHelper.SetMessageWithGroupValues(message, subscription, msgWithGroup, groupName, _dataService, _logger, _statisticsService);
-                        msgWithGroup.SendingTime = DateTime.Now;
-
-                        stopwatch = new Stopwatch();
-                        stopwatch.Start();
-
-                        _dataService.UpdateObject(msgWithGroup);
-
-                        stopwatch.Stop();
-                        time = stopwatch.ElapsedMilliseconds;
-                        _statisticsService.NotifyAvgTimeSql(subscription, (int)time, "DefaultReceivingManager.AcceptMessage(MessageForESB message, string groupName) update group messages.");
-
+                        locker.FreeLock(lockKey);
                     }
 
                     _statisticsService.NotifyMessageReceived(subscription);

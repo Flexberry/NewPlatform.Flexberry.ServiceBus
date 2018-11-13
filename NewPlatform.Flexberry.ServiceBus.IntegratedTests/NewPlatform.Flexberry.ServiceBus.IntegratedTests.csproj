@@ -205,6 +205,7 @@
     <Compile Include="Components\ReceivingManager\DefaultReceivingManagerTest.cs" />
     <Compile Include="Components\SendingManager\BaseSendingManagerTest.cs" />
     <Compile Include="Components\SendingManager\DefaultSendingManagerTest.cs" />
+    <Compile Include="Components\SendingManager\OptimizedSendingManagerTest.cs" />
     <Compile Include="Components\StatisticsService\DefaultStatisticsCompressorServiceTest.cs" />
     <Compile Include="Components\SubscriptionsManager\CachedSubscriptionsManagerTest.cs" />
     <Compile Include="Components\SubscriptionsManager\DefaultSubscriptionsManagerTest.cs" />

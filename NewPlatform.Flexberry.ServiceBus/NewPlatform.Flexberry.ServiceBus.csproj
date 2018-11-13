@@ -415,6 +415,7 @@
     <Compile Include="Components\WcfService\SBService.IServiceBusService.cs" />
     <Compile Include="Components\WcfService\WcfService.cs" />
     <Compile Include="Components\WebApiService\WebApiService.cs" />
+    <Compile Include="Utils\KeyLocker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
