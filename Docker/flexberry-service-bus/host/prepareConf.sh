@@ -1,4 +1,12 @@
 set -x
+
+if [[ $RABBITMQ_CONFIG == true ]]
+then
+  mv /opt/flexberry-service-bus/App.RMQ.config /opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
+else
+  mv /opt/flexberry-service-bus/App.Docker.config /opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
+fi
+
 export confFile=/opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
 export newConfFile=/tmp/conf.$$
 export tmpFile=/tmp/tmp_$$

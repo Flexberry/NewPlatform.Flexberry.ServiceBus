@@ -18,8 +18,7 @@ COPY host/start-flexberry-service-bus.sh /opt/
 
 RUN 	mkdir /opt/flexberry-service-bus ; adduser flexberry ; \
 	rm /opt/flexberry-service-bus/Mono.Security.dll ; \
-	rm /opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config ; \
-	cp /opt/flexberry-service-bus/App.Docker.config /opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
+	rm /opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
 
 MAINTAINER mail@flexberry.net
 
