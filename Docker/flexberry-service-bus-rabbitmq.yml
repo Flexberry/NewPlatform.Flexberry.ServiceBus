@@ -9,6 +9,7 @@ services:
   FlexberryServiceBus:
     environment:
      - DOCKER_HOSTNAME=${COMPUTERNAME}.${USERDNSDOMAIN}
+     - RABBITMQ_CONFIG=true
     image: "flexberry/flexberry-service-bus:latest"
     ports:
      - "7075:7075"
@@ -17,6 +18,17 @@ services:
     image: "flexberry/flexberry-service-bus-editor:latest"
     ports:
      - "1818:80"
+  RabbitMQ:
+    environment:
+      - RABBITMQ_DEFAULT_VHOST=_
+    image: "flexberry/rabbitmq:latest"
+    ports:
+     - "5671:5671"
+     - "5672:5672"
+     - "15671:15671"
+     - "15672:15672"
+     - "25672:25672"
+     - "4369:4369"
 
 volumes:
   FlexberryServiceBusDB: 
