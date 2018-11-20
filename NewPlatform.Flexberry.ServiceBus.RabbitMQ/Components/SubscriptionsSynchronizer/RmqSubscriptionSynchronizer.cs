@@ -23,7 +23,22 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         private readonly IManagementClient _managementClient;
         private readonly AmqpNamingManager _namingManager;
 
-        private readonly Vhost _vhost;
+        private readonly string _vhostStr;
+        private Vhost _vhost;
+        /// <summary>
+        /// Получение Vhost RabbitMq. 
+        /// </summary>
+        public Vhost Vhost
+        {
+            get
+            {
+                if (_vhost == null)
+                {
+                    _vhost = this._managementClient.CreateVirtualHostAsync(_vhostStr).Result;
+                }
+                return _vhost;
+            }
+        }
 
         /// <summary>
         /// Частота запуска синхронизации подписок.
@@ -45,7 +60,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             this._managementClient = managementClient;
 
             this._namingManager = new AmqpNamingManager();
-            this._vhost = this._managementClient.CreateVirtualHostAsync(vhost).Result;
+            this._vhostStr = vhost;
         }
 
         private Timer _syncTimer;
@@ -189,7 +204,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 currentEsbPermissions = esbPermissions.Where(p => p.Client.ID == clientId).ToList();
             }
 
-            Permission mqPermission = _managementClient.GetPermissionsAsync().Result.Where(p => p.User == clientId && p.Vhost == _vhost.Name).FirstOrDefault();
+            Permission mqPermission = _managementClient.GetPermissionsAsync().Result.FirstOrDefault(p => p.User == clientId && p.Vhost == Vhost.Name);
             if (currentEsbPermissions.Count > 0)
             {
                 List<string> rmqPermissionRegex = new List<string>();
@@ -232,7 +247,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Информацию о разрешении.</returns>
         private PermissionInfo CreatePermissionInfo(User user, string write = "^$", string read = "^$", string configure = "^$")
         {
-            PermissionInfo permissionInfo = new PermissionInfo(user, _vhost);
+            PermissionInfo permissionInfo = new PermissionInfo(user, Vhost);
             permissionInfo.SetWrite(write);
             permissionInfo.SetRead(read);
             permissionInfo.SetConfigure(configure);

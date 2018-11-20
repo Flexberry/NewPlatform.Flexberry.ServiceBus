@@ -133,7 +133,23 @@
         private readonly IManagementClient _managementClient;
         private readonly IMessageConverter _converter;
         private readonly AmqpNamingManager _namingManager;
-        private readonly Vhost _vhost;
+
+        private readonly string _vhostStr;
+        private Vhost _vhost;
+        /// <summary>
+        /// Получение Vhost RabbitMq. 
+        /// </summary>
+        public Vhost Vhost
+        {
+            get
+            {
+                if (_vhost == null)
+                {
+                    _vhost = this._managementClient.CreateVirtualHostAsync(_vhostStr).Result;
+                }
+                return _vhost;
+            }
+        }
 
         private List<RmqConsumer> _consumers;
         private Timer _actualizationTimer;
@@ -163,7 +179,7 @@
             this._converter = converter;
             this._namingManager = namingManager;
             this.MessageSenderCreator = new MessageSenderCreator(_logger);
-            this._vhost = this._managementClient.CreateVirtualHostAsync(vhost).Result;
+            this._vhostStr = vhost;
 
             this._consumers = new List<RmqConsumer>();
         }
@@ -283,7 +299,7 @@
             }
 
             var queueName = this._namingManager.GetClientQueueName(clientId, messageTypeId);
-            return this._managementClient.GetQueueAsync(queueName, this._vhost).Result.Messages;
+            return this._managementClient.GetQueueAsync(queueName, this.Vhost).Result.Messages;
         }
 
         /// <summary>

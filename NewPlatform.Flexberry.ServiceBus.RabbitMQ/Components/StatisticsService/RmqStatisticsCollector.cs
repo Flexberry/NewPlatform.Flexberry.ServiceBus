@@ -19,7 +19,24 @@
         private readonly IStatisticsSettings _statisticsSettings;
         IStatisticsSaveService _statisticsSaveService;
         private StatisticsInterval _interval = StatisticsInterval.OneMinute;
-        private readonly Vhost _vhost;
+
+        private readonly string _vhostStr;
+        private Vhost _vhost;
+        /// <summary>
+        /// Получение Vhost RabbitMq. 
+        /// </summary>
+        public Vhost Vhost
+        {
+            get
+            {
+                if (_vhost == null)
+                {
+                    _vhost = this._managementClient.CreateVirtualHostAsync(_vhostStr).Result;
+                }
+                return _vhost;
+            }
+        }
+
         private Dictionary<Subscription, StatisticsRecord> _previousRecordСache = new Dictionary<Subscription, StatisticsRecord>();
         Timer _timer;
 
@@ -67,7 +84,7 @@
             this._namingManager = namingManager;
             this._statisticsSettings = statisticsSettings;
             this._statisticsSaveService = statisticsSaveService;
-            this._vhost = this._managementClient.CreateVirtualHostAsync(vhost).Result;
+            this._vhostStr = vhost;
 
             _timer = new Timer(TimerCallBack);
         }
@@ -95,7 +112,7 @@
             foreach (Subscription s in _esbSubscriptionsManager.GetSubscriptions())
             {
                 var name = _namingManager.GetClientQueueName(s.Client.ID, s.MessageType.ID);
-                result.Add(new SubscriptionQueueEntry(s, _managementClient.GetQueueAsync(name, _vhost).Result));
+                result.Add(new SubscriptionQueueEntry(s, _managementClient.GetQueueAsync(name, Vhost).Result));
             }
 
             return result;

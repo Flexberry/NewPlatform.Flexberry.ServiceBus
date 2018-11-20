@@ -17,7 +17,22 @@
         private readonly IManagementClient _managementClient;
         private readonly AmqpNamingManager _namingManager;
 
-        private readonly Vhost _vhost;
+        private readonly string _vhostStr;
+        private Vhost _vhost;
+        /// <summary>
+        /// Получение Vhost RabbitMq. 
+        /// </summary>
+        public Vhost Vhost
+        {
+            get
+            {
+                if (_vhost == null)
+                {
+                    _vhost = this._managementClient.CreateVirtualHostAsync(_vhostStr).Result;
+                }
+                return _vhost;
+            }
+        }
 
         /// <summary>
         /// Создаёт новый экземпляр класса <see cref="RmqSubscriptionManager"/> class.
@@ -29,8 +44,7 @@
         {
             this._logger = logger;
             this._managementClient = managementClient;
-            this._vhost = this._managementClient.CreateVirtualHostAsync(vhost).Result;
-
+            this._vhostStr = vhost;
             // TODO: следует ли выносить это в зависимости?
             this._namingManager = new AmqpNamingManager();
         }
@@ -88,7 +102,7 @@
             var exchangeName = this._namingManager.GetExchangeName(msgTypeInfo.ID);
             var exchangeInfo = new ExchangeInfo(exchangeName, ExchangeType.Topic, autoDelete: false, durable: true, @internal: false, arguments: null);
 
-            this._managementClient.CreateExchangeAsync(exchangeInfo, _vhost).Wait();
+            this._managementClient.CreateExchangeAsync(exchangeInfo, Vhost).Wait();
         }
 
         /// <summary>
@@ -150,7 +164,7 @@
             var result = new List<Subscription>();
 
             var exchangeName = this._namingManager.GetExchangeName(messageTypeId);
-            var exchange = this._managementClient.GetExchangeAsync(exchangeName, _vhost).Result;
+            var exchange = this._managementClient.GetExchangeAsync(exchangeName, Vhost).Result;
             var bindings = this._managementClient.GetBindingsWithSourceAsync(exchange).Result;
 
             foreach (var binding in bindings)
@@ -183,8 +197,8 @@
             var exchangeName = this._namingManager.GetExchangeName(messageTypeId);
             var routingKey = this._namingManager.GetRoutingKey(messageTypeId);
 
-            var queue = this._managementClient.CreateQueueAsync(new QueueInfo(queueName, false, true, new InputArguments()), this._vhost).Result;
-            var exchange = this._managementClient.CreateExchangeAsync(new ExchangeInfo(exchangeName, ExchangeType.Topic, false, true, false, new Arguments()), _vhost).Result;
+            var queue = this._managementClient.CreateQueueAsync(new QueueInfo(queueName, false, true, new InputArguments()), this.Vhost).Result;
+            var exchange = this._managementClient.CreateExchangeAsync(new ExchangeInfo(exchangeName, ExchangeType.Topic, false, true, false, new Arguments()), Vhost).Result;
             this._managementClient.CreateBinding(exchange, queue, new BindingInfo(routingKey)).Wait();
         }
 
