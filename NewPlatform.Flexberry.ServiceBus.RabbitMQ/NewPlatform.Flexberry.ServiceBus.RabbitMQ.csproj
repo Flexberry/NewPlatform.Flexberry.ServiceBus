@@ -163,6 +163,7 @@
     <Compile Include="Components\MessageManager\IMessageManager.cs" />
     <Compile Include="Components\MessageManager\RmqMessageManager.cs" />
     <Compile Include="MessageWithNotTypedPk.cs" />
+    <Compile Include="MonoManagementClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queue.cs" />
   </ItemGroup>
