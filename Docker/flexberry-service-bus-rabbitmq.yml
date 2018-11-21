@@ -18,7 +18,7 @@ services:
     image: "flexberry/flexberry-service-bus-editor:latest"
     ports:
      - "1818:80"
-  RabbitMQ:
+  rabbitmq:
     environment:
       - RABBITMQ_DEFAULT_VHOST=_
     image: "flexberry/rabbitmq:latest"
