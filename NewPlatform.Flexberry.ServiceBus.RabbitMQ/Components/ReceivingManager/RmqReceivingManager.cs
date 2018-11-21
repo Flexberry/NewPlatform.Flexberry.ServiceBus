@@ -42,9 +42,16 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             }
 
             var headerProps = _messageConverter.GetProperties(message);
-            foreach (var headerProp in headerProps)
+            if (messageBuilder.Properties.Headers == null)
             {
-                messageBuilder.Properties.Headers.Add(headerProp.Key, headerProp.Value);
+                messageBuilder.Properties.Headers = headerProps;
+            }
+            else
+            {
+                foreach (var headerProp in headerProps)
+                {
+                    messageBuilder.Properties.Headers.Add(headerProp.Key, headerProp.Value);
+                }
             }
 
             return messageBuilder;

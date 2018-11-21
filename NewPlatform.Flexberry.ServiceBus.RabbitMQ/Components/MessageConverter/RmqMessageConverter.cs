@@ -1,6 +1,7 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
+    using System.Text;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -108,7 +109,9 @@
                 {
                     if (property.Key.StartsWith(this._tagPropertiesPrefix))
                     {
-                        messageTags.Add(property.Key.Substring(this._tagPropertiesPrefix.Length), property.Value.ToString());
+                        var tagKey = property.Key.Substring(this._tagPropertiesPrefix.Length);
+                        var value = Encoding.UTF8.GetString((byte[])property.Value);
+                        messageTags.Add(tagKey, value);
                     }
                 }
 
