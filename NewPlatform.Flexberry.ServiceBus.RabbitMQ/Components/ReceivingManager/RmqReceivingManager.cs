@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ICSSoft.Services;
+using Microsoft.Practices.Unity.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Content;
+using Unity;
+using Unity.Resolution;
+
 namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     /// <summary>
@@ -12,15 +18,32 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     /// </summary>
     internal class RmqReceivingManager : BaseServiceBusComponent, IReceivingManager
     {
-        private IConnectionFactory _connectionFactory;
-
         private IMessageConverter _messageConverter;
 
         private AmqpNamingManager _namingManager;
 
-        public RmqReceivingManager(IConnectionFactory connectionFactory, IMessageConverter converter)
+        public readonly string ConnectionFactoryRegistrationName = "RmqReceivingManagerConnFactory";
+
+        /// <summary>
+        /// Получение фабрики подключений для указанного пользователя.
+        /// </summary>
+        /// <param name="username">Логин пользователя.</param>
+        /// <param name="password">Пароль пользователя.</param>
+        /// <returns>Фабрика подключений с проставленным username и password</returns>
+        protected IConnectionFactory GetConnectionFactoryForUser(string username, string password)
         {
-            _connectionFactory = connectionFactory;
+            // вот здесь важно создавать новый контейнер, а не брать существующий
+            var container = new UnityContainer().LoadConfiguration();
+            //иначе здесь мы можем изменить IConnectionFactory, который используется в других классах
+            var connectionFactory = container.Resolve<IConnectionFactory>();
+            connectionFactory.UserName = username;
+            connectionFactory.Password = password;
+
+            return connectionFactory;
+        }
+
+        public RmqReceivingManager(IMessageConverter converter)
+        {
             _messageConverter = converter;
             _namingManager = new AmqpNamingManager();
         }
@@ -56,7 +79,15 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <param name="message">Входящее сообщение.</param>
         public void AcceptMessage(ServiceBusMessage message)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            if (string.IsNullOrEmpty(message.ClientID))
+            {
+                throw new ArgumentNullException(nameof(message.ClientID));
+            }
+            var password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
+
+            var connectionFactory = GetConnectionFactoryForUser(message.ClientID, password);
+            // TODO: здесь нужно ловить исключение ошибки авторизации
+            using (var connection = connectionFactory.CreateConnection())
             {
                 var model = connection.CreateModel();
 
@@ -65,7 +96,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
                 var messageBuilder = BuildMessage(message, model);
 
+                // чтобы быть уверенным, что сообщение попало в брокер, включаем режим подтверждений
+                model.ConfirmSelect();
                 model.BasicPublish(exchange, routingKey, messageBuilder.Properties, messageBuilder.GetContentBody());
+                // TODO: здесь нужно ловить исключение ошибки publish
+                model.WaitForConfirmsOrDie();
             }
         }
 
@@ -87,14 +122,25 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <param name="eventTypeId">Идентификатор уведомления (события).</param>
         public void RaiseEvent(string clientId, string eventTypeId)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            if (string.IsNullOrEmpty(clientId))
+            {
+                throw new ArgumentNullException(nameof(clientId));
+            }
+            var password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
+
+            var connectionFactory = GetConnectionFactoryForUser(clientId, password);
+            // TODO: здесь нужно ловить исключение ошибки авторизации
+            using (var connection = connectionFactory.CreateConnection())
             {
                 var model = connection.CreateModel();
 
                 var exchange = _namingManager.GetExchangeName(eventTypeId);
                 var routingKey = _namingManager.GetRoutingKey(eventTypeId);
 
+                model.ConfirmSelect();
                 model.BasicPublish(exchange, routingKey);
+                // TODO: здесь нужно ловить исключение ошибки publish
+                model.WaitForConfirmsOrDie();
             }
         }
     }
