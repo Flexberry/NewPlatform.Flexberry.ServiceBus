@@ -31,7 +31,7 @@
         private volatile bool _requestStopScanning;
 
         public DefaultSendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statistics, IDataService dataService, ILogger logger)
-            : base(subscriptionsManager, statistics, dataService, logger)
+            : base(subscriptionsManager, statistics, dataService, logger, true)
         {
             if (subscriptionsManager == null)
                 throw new ArgumentNullException(nameof(subscriptionsManager));

@@ -288,35 +288,6 @@
         }
 
         /// <summary>
-        /// Метод для получения экземпляра одного из классов для отправки сообщений в зависимости от подписки.
-        /// </summary>
-        /// <param name="subscription">Подписка, тип которой определяет класс для отправки. Кроме этого, из подписки берется клиент.</param>
-        /// <returns>Экземпляр класса для отправки сообщений.</returns>
-        private static IMessageSender GetMessageSender(Subscription subscription, ILogger logger)
-        {
-            IMessageSender result;
-            switch (subscription.TransportType)
-            {
-                case TransportType.HTTP:
-                    result = new HttpMessageSender(subscription.Client, logger);
-                    break;
-                case TransportType.MAIL:
-                    result = new MailMessageSender(subscription.Client, logger);
-                    break;
-                case TransportType.WCF:
-                    result = new WcfMessageSender(subscription.Client, logger);
-                    break;
-                case TransportType.WEB:
-                    result = new WebMessageSender(subscription.Client, logger);
-                    break;
-                default:
-                    throw new ArgumentException("Неизвестный способ отправки сообщения.");
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Метод для выполнения отправки сообщения в отдельном потоке. Свойство <see cref="Сообщение.Отправляется"/> должно быть
         /// установлено в <c>true</c> заранее.
         /// </summary>
@@ -347,7 +318,7 @@
             if (!ServiceHelper.TryWithExceptionLogging(loadMessageDelegate, null, "Ошибка при отправке сообщения по callback", parameters.Subscription.Client, null, logger))
                 return false;
 
-            IMessageSender messageSender = GetMessageSender(parameters.Subscription, logger);
+            IMessageSender messageSender = new MessageSenderCreator(logger, true).GetMessageSender(parameters.Subscription);
 
             statisticsService.NotifyIncConnectionCount(parameters.Subscription);
             stopwatch = new Stopwatch();

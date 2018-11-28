@@ -308,7 +308,7 @@
     internal class TestBaseSendingManager : BaseSendingManager
     {
         public TestBaseSendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statistics, IDataService dataService, ILogger logger)
-            : base(subscriptionsManager, statistics, dataService, logger)
+            : base(subscriptionsManager, statistics, dataService, logger, true)
         {
         }
 
