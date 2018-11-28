@@ -2,81 +2,77 @@
 {
     using System;
     using System.ServiceModel;
-    using ClientTools;
-    using Components;
+
+    using NewPlatform.Flexberry.ServiceBus.Components;
 
     /// <summary>
-    /// Sender of callback messages through WCF.
-    /// <para>
-    /// Configuration file must contain endpoint “HighwaySbWcf.ICallbackSubscriber” at client section.
-    /// </para>
+    /// A class that implements sending messages to clients through the WCF client service.
+    /// <para>Sends an <see cref="ServiceBusMessage"/> using the <see cref="IServiceBusCallbackClient"/> interface.</para>
+    /// <para>Uses an endpoint named "CallbackClient" and a contract "FlexberryServiceBus.IServiceBusCallbackClient" from the configuration file.</para>
     /// </summary>
-    public class WcfMessageSender : IMessageSender
+    public class WcfMessageSender : BaseMessageSender
     {
         /// <summary>
-        /// Current logger.
+        /// Initializes a new instance of the <see cref="WcfMessageSender"/> class.
         /// </summary>
-        private readonly ILogger _logger;
-
-        /// <summary>
-        /// Конструктор, инициализирующий свойства объекта для отправки сообщений.
-        /// </summary>
-        /// <param name="client">Получатель сообщений.</param>
+        /// <param name="client">Client, recipient of messages.</param>
+        /// <param name="logger">Logger for logging.</param>
         public WcfMessageSender(Client client, ILogger logger)
+            : base(client, logger)
         {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-
-            _logger = logger;
-            Client = client;
         }
 
-        /// <summary>
-        /// Клиент, которому будут отправляться сообщения с помощью текущего экземпляра.
-        /// </summary>
-        public Client Client { get; private set; }
-
-        /// <summary>
-        /// Отправить сообщение.
-        /// </summary>
-        /// <param name="message">Сообщение, которое нужно отправить.</param>
-        /// <returns>Успешно ли было отправлено сообщение.</returns>
-        public bool SendMessage(Message message)
+        /// <inheritdoc/>
+        public override bool SendMessage(Message message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             if (string.IsNullOrEmpty(Client.Address))
             {
-                _logger.LogError("Ошибка отправки сообщения клиенту через WCF", $"У клиента '{Client.Name ?? Client.ID}' не указан адрес для отправки сообщений.", message);
+                Logger.LogError("Error sending message to client via WCF.", $"The client '{Client.Name ?? Client.ID}' not specified address to send messages.", message);
                 return false;
             }
 
-            var channelFactory = new ChannelFactory<IServiceBusCallbackClient>(
-                "CallbackClient",
-                Client.DnsIdentity != null ? new EndpointAddress(new Uri(Client.Address), EndpointIdentity.CreateDnsIdentity(Client.DnsIdentity)) : new EndpointAddress(Client.Address));
-            IServiceBusCallbackClient channel = channelFactory.CreateChannel();
-            ((IClientChannel)channel).Open();
+            ChannelFactory<IServiceBusCallbackClient> channelFactory;
+            IServiceBusCallbackClient channel;
+            try
+            {
+                var endpointAddress = Client.DnsIdentity == null ? new EndpointAddress(Client.Address) : new EndpointAddress(new Uri(Client.Address), EndpointIdentity.CreateDnsIdentity(Client.DnsIdentity));
+                channelFactory = new ChannelFactory<IServiceBusCallbackClient>("CallbackClient", endpointAddress);
+                channel = channelFactory.CreateChannel();
+                ((IClientChannel)channel).Open();
+            }
+            catch (Exception exception)
+            {
+                Logger.LogUnhandledException(exception, message);
+                throw exception;
+            }
 
-            ServiceBusMessage messageFromEsb = ServiceHelper.CreateWcfMessageFromEsb(
-                message.ReceivingTime,
-                message.MessageType.ID,
-                message.Body,
-                message.Sender,
-                message.Group,
-                ServiceHelper.GetTagDictionary(message),
-                message.BinaryAttachment);
+            var sbMessage = new ServiceBusMessage()
+            {
+                MessageFormingTime = message.ReceivingTime,
+                MessageTypeID = message.MessageType.ID,
+                Body = message.Body,
+                Attachment = message.BinaryAttachment,
+                SenderName = message.Sender,
+                Group = message.Group,
+                Tags = ServiceHelper.GetTagDictionary(message),
+            };
 
             return ServiceHelper.TryWithExceptionLogging(
-                () => channel.AcceptMessage(messageFromEsb),
-                () => {
+                () => channel.AcceptMessage(sbMessage),
+                () =>
+                {
                     ((IClientChannel)channel).Close();
                     channelFactory.Close();
                 },
-                string.Format("Ошибка отправки сообщения клиенту через WCF по адресу {0}", Client.Address),
+                $"Error sending message to the client '{Client.Name ?? Client.ID}' via WCF at address '{Client.Address}'.",
                 Client,
                 message,
-                _logger);
+                Logger);
         }
     }
 }

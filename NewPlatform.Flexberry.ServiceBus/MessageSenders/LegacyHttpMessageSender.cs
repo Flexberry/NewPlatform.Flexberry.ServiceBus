@@ -10,16 +10,16 @@
 
     /// <summary>
     /// A class that implements sending messages to clients via HTTP.
-    /// <para>The request body is formed using the class <see cref="ServiceBusMessage"/>.</para>
+    /// <para>The request body is formed using the class <see cref="HttpMessageFromEsb"/>.</para>
     /// </summary>
-    public class HttpMessageSender : BaseMessageSender
+    public class LegacyHttpMessageSender : BaseMessageSender
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HttpMessageSender"/> class.
+        /// Initializes a new instance of the <see cref="LegacyHttpMessageSender"/> class.
         /// </summary>
         /// <param name="client">Client, recipient of messages.</param>
         /// <param name="logger">Logger for logging.</param>
-        public HttpMessageSender(Client client, ILogger logger)
+        public LegacyHttpMessageSender(Client client, ILogger logger)
             : base(client, logger)
         {
         }
@@ -39,15 +39,15 @@
             }
 
             string url = string.Format("{0}/Message", Client.Address.TrimEnd('/'));
-            string json = JsonConvert.SerializeObject(new ServiceBusMessage()
+            string json = JsonConvert.SerializeObject(new HttpMessageFromEsb()
             {
-                ID = message.__PrimaryKey.ToString(),
+                Id = message.__PrimaryKey.ToString(),
                 MessageFormingTime = message.ReceivingTime,
                 MessageTypeID = message.MessageType.ID,
                 Body = message.Body,
                 Attachment = message.BinaryAttachment,
                 SenderName = message.Sender,
-                Group = message.Group,
+                GroupID = message.Group,
                 Tags = ServiceHelper.GetTagDictionary(message),
             });
 
