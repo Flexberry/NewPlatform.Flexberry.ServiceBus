@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ICSSoft.Services;
-using Microsoft.Practices.Unity.Configuration;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Content;
-using Unity;
-using Unity.Resolution;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using RabbitMQ.Client;
+    using RabbitMQ.Client.Content;
+    using RabbitMQ.Client.Framing;
+    using System;
+    using System.Configuration;
+
     /// <summary>
-    /// Модуль приёма сообщений в формате шины в брокер
+    /// Component for receiving ESB-model messages from clients to RabbitMQ.
     /// </summary>
     internal class RmqReceivingManager : BaseServiceBusComponent, IReceivingManager
     {
@@ -22,28 +15,44 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         private AmqpNamingManager _namingManager;
 
-        public readonly string ConnectionFactoryRegistrationName = "RmqReceivingManagerConnFactory";
-
         /// <summary>
-        /// Получение фабрики подключений для указанного пользователя.
+        /// Getting connection factory for specified user.
         /// </summary>
-        /// <param name="username">Логин пользователя.</param>
-        /// <param name="password">Пароль пользователя.</param>
-        /// <returns>Фабрика подключений с проставленным username и password</returns>
+        /// <param name="username">Username.</param>
+        /// <param name="password">Password.</param>
+        /// <returns>New connection factory with setted username and password.</returns>
         protected IConnectionFactory GetConnectionFactoryForUser(string username, string password)
         {
-            // вот здесь важно создавать новый контейнер, а не брать существующий
-            var container = new UnityContainer().LoadConfiguration();
-            //иначе здесь мы можем изменить IConnectionFactory, который используется в других классах
-            var connectionFactory = container.Resolve<IConnectionFactory>();
-            connectionFactory.UserName = username;
-            connectionFactory.Password = password;
+            var connectionFactory = new ConnectionFactory
+            {
+                UserName = username,
+                Password = password,
+                Uri = this.RmqUri,
+                VirtualHost = this.RmqVirtualHost,
+                Protocol = this.RmqProtocol,
+            };
 
             return connectionFactory;
         }
 
-        public RmqReceivingManager(IMessageConverter converter)
+        /// <summary>
+        /// RabbitMQ communication protocol. By default is's AMQP_0_9_1.
+        /// </summary>
+        public IProtocol RmqProtocol { get; set; } = new Protocol();
+
+        /// <summary>
+        /// RabbitMQ VirtualHost.
+        /// </summary>
+        public string RmqVirtualHost { get; set; } = "/";
+
+        /// <summary>
+        /// RabbitMQ endpoint.
+        /// </summary>
+        public Uri RmqUri { get; set; }
+
+        public RmqReceivingManager(IMessageConverter converter, Uri rmqUri)
         {
+            this.RmqUri = rmqUri;
             _messageConverter = converter;
             _namingManager = new AmqpNamingManager();
         }
@@ -83,6 +92,12 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             {
                 throw new ArgumentNullException(nameof(message.ClientID));
             }
+
+            if (string.IsNullOrEmpty(message.MessageTypeID))
+            {
+                throw new ArgumentNullException(nameof(message.ClientID));
+            }
+
             var password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
 
             var connectionFactory = GetConnectionFactoryForUser(message.ClientID, password);
@@ -126,6 +141,12 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             {
                 throw new ArgumentNullException(nameof(clientId));
             }
+
+            if (string.IsNullOrEmpty(eventTypeId))
+            {
+                throw new ArgumentNullException(nameof(eventTypeId));
+            }
+
             var password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
 
             var connectionFactory = GetConnectionFactoryForUser(clientId, password);
