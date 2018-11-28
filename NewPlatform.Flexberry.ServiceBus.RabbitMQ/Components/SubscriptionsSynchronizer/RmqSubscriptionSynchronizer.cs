@@ -22,11 +22,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         private readonly IDataService _dataService;
         private readonly IManagementClient _managementClient;
         private readonly AmqpNamingManager _namingManager;
-
         private readonly string _vhostStr;
         private Vhost _vhost;
+
         /// <summary>
-        /// Получение Vhost RabbitMq. 
+        /// Gets Vhost RabbitMq.
         /// </summary>
         public Vhost Vhost
         {

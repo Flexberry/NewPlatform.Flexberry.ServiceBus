@@ -16,11 +16,11 @@
         private readonly ILogger _logger;
         private readonly IManagementClient _managementClient;
         private readonly AmqpNamingManager _namingManager;
-
         private readonly string _vhostStr;
         private Vhost _vhost;
+
         /// <summary>
-        /// Получение Vhost RabbitMq. 
+        /// Gets Vhost RabbitMq.
         /// </summary>
         public Vhost Vhost
         {

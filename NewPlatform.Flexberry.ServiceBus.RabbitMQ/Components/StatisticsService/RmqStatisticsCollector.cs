@@ -17,28 +17,12 @@
         private readonly IManagementClient _managementClient;
         private readonly AmqpNamingManager _namingManager;
         private readonly IStatisticsSettings _statisticsSettings;
-        IStatisticsSaveService _statisticsSaveService;
+        private IStatisticsSaveService _statisticsSaveService;
         private StatisticsInterval _interval = StatisticsInterval.OneMinute;
-
         private readonly string _vhostStr;
         private Vhost _vhost;
-        /// <summary>
-        /// Получение Vhost RabbitMq. 
-        /// </summary>
-        public Vhost Vhost
-        {
-            get
-            {
-                if (_vhost == null)
-                {
-                    _vhost = this._managementClient.CreateVirtualHostAsync(_vhostStr).Result;
-                }
-                return _vhost;
-            }
-        }
-
         private Dictionary<Subscription, StatisticsRecord> _previousRecordСache = new Dictionary<Subscription, StatisticsRecord>();
-        Timer _timer;
+        private Timer _timer;
 
         private class SubscriptionQueueEntry
         {
@@ -58,51 +42,6 @@
             {
                 get;
             }
-        }
-
-        public StatisticsInterval Interval
-        {
-            get => _interval;
-            set
-            {
-                _interval = value;
-                ResetTimer(_interval);
-            }
-        }
-
-        /// <param name="logger"></param>
-        /// <param name="esbSubscriptionsManager"></param>
-        /// <param name="rmqSubscriptionsManager"></param>
-        /// <param name="statisticsSettings"></param>
-        /// <param name="managementClient"></param>
-        /// <param name="namingManager"></param>
-        public RmqStatisticsCollector(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, ISubscriptionsManager rmqSubscriptionsManager, IStatisticsSettings statisticsSettings, IManagementClient managementClient, AmqpNamingManager namingManager, IStatisticsSaveService statisticsSaveService, string vhost = "/")
-        {
-            this._logger = logger;
-            this._esbSubscriptionsManager = esbSubscriptionsManager;
-            this._managementClient = managementClient;
-            this._namingManager = namingManager;
-            this._statisticsSettings = statisticsSettings;
-            this._statisticsSaveService = statisticsSaveService;
-            this._vhostStr = vhost;
-
-            _timer = new Timer(TimerCallBack);
-        }
-
-        public override void Prepare()
-        {
-            base.Prepare();
-        }
-
-        public override void Start()
-        {
-            base.Start();
-            ResetTimer(_interval);
-        }
-
-        public override void Stop()
-        {
-            base.Stop();
         }
 
         private List<SubscriptionQueueEntry> GetWatchedQueues()
@@ -155,14 +94,14 @@
             }
 
             try
-            { 
+            {
                 _statisticsSaveService.Save(stats);
             }
             catch (Exception e)
             {
                 _logger.LogError("A error was raised while writing statistics from Rabbit MQ to a Database.", e.Message);
             }
-}
+        }
 
         private bool IsZerroStatistics(StatisticsRecord r)
         {
@@ -242,6 +181,66 @@
             }
 
             return 60 * 1000L;
+        }
+
+        /// <summary>
+        /// Gets Vhost RabbitMq.
+        /// </summary>
+        public Vhost Vhost
+        {
+            get
+            {
+                if (_vhost == null)
+                {
+                    _vhost = this._managementClient.CreateVirtualHostAsync(_vhostStr).Result;
+                }
+                return _vhost;
+            }
+        }
+
+        public StatisticsInterval Interval
+        {
+            get => _interval;
+            set
+            {
+                _interval = value;
+                ResetTimer(_interval);
+            }
+        }
+
+        /// <param name="logger"></param>
+        /// <param name="esbSubscriptionsManager"></param>
+        /// <param name="rmqSubscriptionsManager"></param>
+        /// <param name="statisticsSettings"></param>
+        /// <param name="managementClient"></param>
+        /// <param name="namingManager"></param>
+        public RmqStatisticsCollector(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, ISubscriptionsManager rmqSubscriptionsManager, IStatisticsSettings statisticsSettings, IManagementClient managementClient, AmqpNamingManager namingManager, IStatisticsSaveService statisticsSaveService, string vhost = "/")
+        {
+            this._logger = logger;
+            this._esbSubscriptionsManager = esbSubscriptionsManager;
+            this._managementClient = managementClient;
+            this._namingManager = namingManager;
+            this._statisticsSettings = statisticsSettings;
+            this._statisticsSaveService = statisticsSaveService;
+            this._vhostStr = vhost;
+
+            _timer = new Timer(TimerCallBack);
+        }
+
+        public override void Prepare()
+        {
+            base.Prepare();
+        }
+
+        public override void Start()
+        {
+            base.Start();
+            ResetTimer(_interval);
+        }
+
+        public override void Stop()
+        {
+            base.Stop();
         }
     }
 }
