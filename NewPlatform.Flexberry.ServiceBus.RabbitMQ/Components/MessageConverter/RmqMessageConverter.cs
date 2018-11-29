@@ -1,11 +1,11 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using RabbitMQ.Client.Content;
+    using RabbitMQ.Client.Impl;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using RabbitMQ.Client.Content;
-    using RabbitMQ.Client.Impl;
+    using System.Text;
 
     internal class RmqMessageConverter : IMessageConverter
     {
@@ -108,7 +108,9 @@
                 {
                     if (property.Key.StartsWith(this._tagPropertiesPrefix))
                     {
-                        messageTags.Add(property.Key.Substring(this._tagPropertiesPrefix.Length), property.Value.ToString());
+                        var tagKey = property.Key.Substring(this._tagPropertiesPrefix.Length);
+                        var value = Encoding.UTF8.GetString((byte[])property.Value);
+                        messageTags.Add(tagKey, value);
                     }
                 }
 

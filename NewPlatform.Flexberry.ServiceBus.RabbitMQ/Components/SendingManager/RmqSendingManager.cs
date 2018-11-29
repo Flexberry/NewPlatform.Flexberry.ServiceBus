@@ -123,25 +123,19 @@
             }
         }
 
-        /// <summary>
-        /// Частота запуска синхронизации подписок.
-        /// </summary>
-        public int UpdatePeriodMilliseconds { get; set; } = 30 * 1000;
-
-        protected MessageSenderCreator MessageSenderCreator;
         private readonly ILogger _logger;
         private readonly ISubscriptionsManager _esbSubscriptionsManager;
         private readonly IConnectionFactory _connectionFactory;
         private readonly IManagementClient _managementClient;
         private readonly IMessageConverter _converter;
         private readonly AmqpNamingManager _namingManager;
-        private readonly Vhost _vhost;
+        private readonly string _vhostName;
         private readonly bool useLegacySenders;
-
+        private Vhost _vhost;
         private List<RmqConsumer> _consumers;
         private Timer _actualizationTimer;
-
         private IModel _sharedModel;
+
         private IModel SharedModel
         {
             get
@@ -154,33 +148,6 @@
 
                 return _sharedModel;
             }
-        }
-
-
-        public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/", bool useLegacySenders = true)
-        {
-            this._logger = logger;
-            this._esbSubscriptionsManager = esbSubscriptionsManager;
-            this._connectionFactory = connectionFactory;
-            this._managementClient = managementClient;
-            this._converter = converter;
-            this._namingManager = namingManager;
-            this.MessageSenderCreator = new MessageSenderCreator(_logger, useLegacySenders);
-            this._vhost = this._managementClient.CreateVirtualHostAsync(vhost).Result;
-            this.useLegacySenders = useLegacySenders;
-
-            this._consumers = new List<RmqConsumer>();
-        }
-
-        public void Prepare()
-        {
-            var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
-            foreach (var subscription in subscriptions)
-            {
-                this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription, useLegacySenders));
-            }
-
-            this._actualizationTimer = new Timer(x => this.Actualize(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);
         }
 
         /// <summary>
@@ -217,6 +184,54 @@
                 var actualConsumer = allConsumers.First(x => x.Equals(_consumer));
                 _consumer.UpdateSubscription(actualConsumer.Subscription);
             }
+        }
+
+        protected MessageSenderCreator MessageSenderCreator;
+
+        /// <summary>
+        /// Частота запуска синхронизации подписок.
+        /// </summary>
+        public int UpdatePeriodMilliseconds { get; set; } = 30 * 1000;
+
+        /// <summary>
+        /// Gets Vhost RabbitMq.
+        /// </summary>
+        public Vhost Vhost
+        {
+            get
+            {
+                if (_vhost == null)
+                {
+                    _vhost = this._managementClient.CreateVirtualHostAsync(_vhostName).Result;
+                }
+                return _vhost;
+            }
+        }
+
+        public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/", bool useLegacySenders = true)
+        {
+            this._logger = logger;
+            this._esbSubscriptionsManager = esbSubscriptionsManager;
+            this._connectionFactory = connectionFactory;
+            this._managementClient = managementClient;
+            this._converter = converter;
+            this._namingManager = namingManager;
+            this.MessageSenderCreator = new MessageSenderCreator(_logger, useLegacySenders);
+            this._vhostName = vhost;
+            this.useLegacySenders = useLegacySenders;
+
+            this._consumers = new List<RmqConsumer>();
+        }
+
+        public void Prepare()
+        {
+            var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
+            foreach (var subscription in subscriptions)
+            {
+                this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription, useLegacySenders));
+            }
+
+            this._actualizationTimer = new Timer(x => this.Actualize(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);
         }
 
         public void Start()
@@ -287,7 +302,7 @@
             }
 
             var queueName = this._namingManager.GetClientQueueName(clientId, messageTypeId);
-            return this._managementClient.GetQueueAsync(queueName, this._vhost).Result.Messages;
+            return this._managementClient.GetQueueAsync(queueName, this.Vhost).Result.Messages;
         }
 
         /// <summary>
