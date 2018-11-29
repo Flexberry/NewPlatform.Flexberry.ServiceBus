@@ -95,7 +95,7 @@
 
             if (string.IsNullOrEmpty(message.MessageTypeID))
             {
-                throw new ArgumentNullException(nameof(message.ClientID));
+                throw new ArgumentNullException(nameof(message.MessageTypeID));
             }
 
             var password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
