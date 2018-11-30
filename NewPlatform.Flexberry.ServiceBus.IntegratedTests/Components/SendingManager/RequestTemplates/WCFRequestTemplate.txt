@@ -1,7 +1,7 @@
 @("\\s*")@*
 *@<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing">@("\\s*")@*
   *@<s:Header>@("\\s*")@*
-    *@<a:Action s:mustUnderstand="1">http://tempuri.org/IServiceBusCallbackClient/AcceptMessage</a:Action>@("\\s*")@*
+    *@<a:Action s:mustUnderstand="1">http://tempuri.org/ICallbackSubscriber/AcceptMessage</a:Action>@("\\s*")@*
     *@<a:MessageID>urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}</a:MessageID>@("\\s*")@*
     *@<a:ReplyTo>@("\\s*")@*
       *@<a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address>@("\\s*")@*
@@ -10,23 +10,20 @@
   *@</s:Header>@("\\s*")@*
   *@<s:Body>@("\\s*")@*
     *@<AcceptMessage xmlns="http://tempuri.org/">@("\\s*")@*
-      *@<message xmlns:b="http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">@("\\s*")@*
+      *@<msg xmlns:b="http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">@("\\s*")@*
         *@@if (Model.Attachment == null) {@*
           *@<b:Attachment/>@("\\s*")@*
         *@} else {@*
           *@<b:Attachment>@Model.Attachment</b:Attachment>@("\\s*")@*
         *@}@*
         *@<b:Body>@Model.Body</b:Body>@("\\s*")@*
-        *@<b:ClientID i:nil="true"/>@("\\s*")@*
         *@@if (Model.Group == null) {@*
-          *@<b:Group i:nil="true"/>@("\\s*")@*
+          *@<b:GroupID i:nil="true"/>@("\\s*")@*
         *@} else {@*
-          *@<b:Group>@Model.Group</b:Group>@("\\s*")@*
+          *@<b:GroupID>@Model.Group</b:GroupID>@("\\s*")@*
         *@}@*
-		*@<b:ID i:nil="true"/>@("\\s*")@*
         *@<b:MessageFormingTime>@Model.ReceivingTime.ToString("yyyy-MM-ddTHH:mm:ss.ff")@("[\\d]?")</b:MessageFormingTime>@("\\s*")@*
         *@<b:MessageTypeID>@Model.MessageType.ID</b:MessageTypeID>@("\\s*")@*
-		*@<b:Priority>@Model.Priority</b:Priority>@("\\s*")@*
         *@@if (Model.Sender == null) {@*
           *@<b:SenderName i:nil="true"/>@("\\s*")@*
         *@} else {@*
@@ -42,7 +39,7 @@
           *@}@*
           *@</b:Tags>@("\\s*")@*
         *@}@*
-      *@</message>@("\\s*")@*
+      *@</msg>@("\\s*")@*
     *@</AcceptMessage>@("\\s*")@*
   *@</s:Body>@("\\s*")@*
 *@</s:Envelope>@("\\s*")
