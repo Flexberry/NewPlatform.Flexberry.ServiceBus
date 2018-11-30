@@ -69,6 +69,12 @@
         private MapMessageBuilder BuildMessage(ServiceBusMessage message, IModel model)
         {
             var messageBuilder = new MapMessageBuilder(model);
+            messageBuilder.Properties.DeliveryMode = 2;
+
+            int normalizedPriority = (message.Priority < 0 ? 0 : 
+                                      message.Priority > 9 ? 9 : 
+                                      message.Priority);
+            messageBuilder.Properties.Priority = Convert.ToByte(normalizedPriority);
 
             var bodyProps = _messageConverter.GetBodyProperties(message);
             foreach (var bodyProp in bodyProps)
