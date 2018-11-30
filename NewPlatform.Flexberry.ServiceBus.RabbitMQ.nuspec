@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ServiceBus.RabbitMQ</id>
-    <version>1.2.0-beta03</version>
+    <version>1.2.0-beta04</version>
     <title>Flexberry Service Bus RabbitMQ</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
