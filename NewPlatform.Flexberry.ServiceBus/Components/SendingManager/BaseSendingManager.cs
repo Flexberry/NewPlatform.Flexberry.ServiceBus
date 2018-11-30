@@ -48,7 +48,7 @@
         /// </summary>
         public int ScanningPeriodMilliseconds { get; set; } = 10000;
 
-        public BaseSendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statistics, IDataService dataService, ILogger logger)
+        public BaseSendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statistics, IDataService dataService, ILogger logger, bool useLegacySenders)
         {
             if (subscriptionsManager == null)
                 throw new ArgumentNullException(nameof(subscriptionsManager));
@@ -66,7 +66,7 @@
             _statistics = statistics;
             _dataService = dataService;
             _logger = logger;
-            MessageSenderCreator = new MessageSenderCreator(_logger);
+            MessageSenderCreator = new MessageSenderCreator(_logger, useLegacySenders);
         }
 
         public abstract void QueueForSending(Message msg);

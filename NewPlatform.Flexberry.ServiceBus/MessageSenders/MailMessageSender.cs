@@ -2,71 +2,56 @@
 {
     using System;
     using System.Configuration;
-    using Components;
-    using Mail;
+
+    using NewPlatform.Flexberry.ServiceBus.Components;
+    using NewPlatform.Flexberry.ServiceBus.Mail;
 
     /// <summary>
-    /// Класс, реализующий отправку сообщений клиентам по электронной почте.
+    /// A class that implements sending messages to clients via email.
     /// </summary>
-    public class MailMessageSender : IMessageSender
+    public class MailMessageSender : BaseMessageSender
     {
-        private readonly ILogger _logger;
-
         /// <summary>
-        /// Клиент, которому будут отправляться сообщения с помощью текущего экземпляра.
+        /// Initializes a new instance of the <see cref="MailMessageSender"/> class.
         /// </summary>
-        public Client Client { get; }
-
-        /// <summary>
-        /// Конструктор, инициализирующий свойства объекта для отправки сообщений.
-        /// </summary>
-        /// <param name="client">Получатель сообщений.</param>
+        /// <param name="client">Client, recipient of messages.</param>
+        /// <param name="logger">Logger for logging.</param>
         public MailMessageSender(Client client, ILogger logger)
+            : base(client, logger)
         {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
-            if (logger == null)
-                throw new ArgumentNullException(nameof(logger));
-
-
-            _logger = logger;
-            Client = client;
         }
 
-        /// <summary>
-        /// Отправить сообщение.
-        /// </summary>
-        /// <param name="message">Сообщение, которое нужно отправить.</param>
-        /// <returns>Успешно ли было отправлено сообщение.</returns>
-        public bool SendMessage(Message message)
+        /// <inheritdoc/>
+        public override bool SendMessage(Message message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             if (string.IsNullOrEmpty(Client.Address))
             {
-                _logger.LogError(
-                    "Ошибка отправки сообщения клиенту по электронной почте",
-                    $"У клиента '{Client.Name ?? Client.ID}' не указан адрес для отправки сообщений.",
-                    message);
+                Logger.LogError("Error sending email to client.", $"The client '{Client.Name ?? Client.ID}' not specified address to send messages.", message);
                 return false;
             }
 
             var mailMessage = new ForMailMessage()
             {
-                Attachment = message.BinaryAttachment,
+                MsgTypeID = message.MessageType.ID,
                 Body = message.Body,
+                Attachment = message.BinaryAttachment,
                 ClientID = message.Sender,
                 Group = message.Group,
-                MsgTypeID = message.MessageType.ID,
-                Tags = ServiceHelper.GetTagDictionary(message)
+                Tags = ServiceHelper.GetTagDictionary(message),
             };
 
             return ServiceHelper.TryWithExceptionLogging(
                 () => mailMessage.Send(Client.Address, ConfigurationManager.AppSettings["MailLogin"], ConfigurationManager.AppSettings["MailServer"]),
                 null,
-                "Ошибка отправки сообщения клиенту по электронной почте",
+                $"Error sending a message to the client '{Client.Name ?? Client.ID}' by e-mail to the address '{Client.Address}'.",
                 Client,
                 message,
-                _logger);
+                Logger);
         }
     }
 }

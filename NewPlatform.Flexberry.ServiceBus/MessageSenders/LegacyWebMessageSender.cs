@@ -5,22 +5,23 @@
     using System.ServiceModel.Channels;
     using System.Text.RegularExpressions;
 
+    using NewPlatform.Flexberry.ServiceBus.ClientTools;
     using NewPlatform.Flexberry.ServiceBus.Components;
 
     using Message = NewPlatform.Flexberry.ServiceBus.Message;
 
     /// <summary>
     /// A class that implements sending messages to clients through the ASMX client service.
-    /// <para>Sends an <see cref="ServiceBusMessage"/> using the <see cref="IServiceBusCallbackClient"/> interface.</para>
+    /// <para>Sends an <see cref="MessageFromESB"/> using the <see cref="ICallbackSubscriber"/> interface.</para>
     /// </summary>
-    public class WebMessageSender : BaseMessageSender
+    public class LegacyWebMessageSender : BaseMessageSender
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebMessageSender"/> class.
+        /// Initializes a new instance of the <see cref="LegacyWebMessageSender"/> class.
         /// </summary>
         /// <param name="client">Client, recipient of messages.</param>
         /// <param name="logger">Logger for logging.</param>
-        public WebMessageSender(Client client, ILogger logger)
+        public LegacyWebMessageSender(Client client, ILogger logger)
             : base(client, logger)
         {
         }
@@ -39,12 +40,12 @@
                 return false;
             }
 
-            ChannelFactory<IServiceBusCallbackClient> channelFactory;
-            IServiceBusCallbackClient channel;
+            ChannelFactory<ICallbackSubscriber> channelFactory;
+            ICallbackSubscriber channel;
             try
             {
                 var endpointAddress = new EndpointAddress(new Uri(Client.Address), AddressHeader.CreateAddressHeader("headerName", Regex.Replace(Client.Address, ".asmx$", string.Empty), "headerValue"));
-                channelFactory = new ChannelFactory<IServiceBusCallbackClient>(new BasicHttpBinding(), endpointAddress);
+                channelFactory = new ChannelFactory<ICallbackSubscriber>(new BasicHttpBinding(), endpointAddress);
                 channel = channelFactory.CreateChannel();
                 ((IClientChannel)channel).Open();
             }
@@ -54,14 +55,14 @@
                 throw exception;
             }
 
-            var sbMessage = new ServiceBusMessage()
+            var sbMessage = new MessageFromESB()
             {
                 MessageFormingTime = message.ReceivingTime,
                 MessageTypeID = message.MessageType.ID,
                 Body = message.Body,
                 Attachment = message.BinaryAttachment,
                 SenderName = message.Sender,
-                Group = message.Group,
+                GroupID = message.Group,
                 Tags = ServiceHelper.GetTagDictionary(message),
             };
 

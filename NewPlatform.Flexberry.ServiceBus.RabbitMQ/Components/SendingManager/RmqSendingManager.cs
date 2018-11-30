@@ -34,19 +34,21 @@
             private readonly IConnectionFactory _connectionFactory;
             private IModel _model;
             private readonly AmqpNamingManager _namingManager = new AmqpNamingManager();
+            private readonly bool useLegacySenders;
 
             /// <summary>
             /// Number of minutes to be added to delay before the next attempt to send message.
             /// </summary>
             public int AdditionalMinutesBetweenRetries { get; set; } = 3;
 
-            public RmqConsumer(ILogger logger, IMessageConverter converter, IConnectionFactory connectionFactory, Subscription subscription)
+            public RmqConsumer(ILogger logger, IMessageConverter converter, IConnectionFactory connectionFactory, Subscription subscription, bool useLegacySenders)
             {
                 _logger = logger;
                 Subscription = subscription;
                 _converter = converter;
                 _connectionFactory = connectionFactory;
-                _sender = new MessageSenderCreator(logger).GetMessageSender(subscription);
+                this.useLegacySenders = useLegacySenders;
+                _sender = new MessageSenderCreator(logger, useLegacySenders).GetMessageSender(subscription);
             }
 
             /// <summary>
@@ -57,7 +59,7 @@
             {
                 if (subscription.TransportType != this.Subscription.TransportType || subscription.Client.Address != this.Subscription.Client.Address)
                 {
-                    this._sender = new MessageSenderCreator(this._logger).GetMessageSender(subscription);
+                    this._sender = new MessageSenderCreator(this._logger, useLegacySenders).GetMessageSender(subscription);
                     this.Subscription = subscription;
                 }
             }
@@ -128,6 +130,7 @@
         private readonly IMessageConverter _converter;
         private readonly AmqpNamingManager _namingManager;
         private readonly string _vhostName;
+        private readonly bool useLegacySenders;
         private Vhost _vhost;
         private List<RmqConsumer> _consumers;
         private Timer _actualizationTimer;
@@ -157,7 +160,7 @@
             this._consumers.RemoveAll(x => stoppedConsumers.Contains(x));
 
             var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
-            var allConsumers = subscriptions.Select(x => new RmqConsumer(_logger, _converter, _connectionFactory, x)).ToList();
+            var allConsumers = subscriptions.Select(x => new RmqConsumer(_logger, _converter, _connectionFactory, x, useLegacySenders)).ToList();
 
             // Множество новых слушатей = Текущие подписки - запущенные подписки
             var newConsumers = allConsumers.Except(this._consumers);
@@ -205,7 +208,7 @@
             }
         }
 
-        public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/")
+        public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/", bool useLegacySenders = true)
         {
             this._logger = logger;
             this._esbSubscriptionsManager = esbSubscriptionsManager;
@@ -213,8 +216,9 @@
             this._managementClient = managementClient;
             this._converter = converter;
             this._namingManager = namingManager;
-            this.MessageSenderCreator = new MessageSenderCreator(_logger);
+            this.MessageSenderCreator = new MessageSenderCreator(_logger, useLegacySenders);
             this._vhostName = vhost;
+            this.useLegacySenders = useLegacySenders;
 
             this._consumers = new List<RmqConsumer>();
         }
@@ -224,7 +228,7 @@
             var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
             foreach (var subscription in subscriptions)
             {
-                this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription));
+                this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription, useLegacySenders));
             }
 
             this._actualizationTimer = new Timer(x => this.Actualize(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);

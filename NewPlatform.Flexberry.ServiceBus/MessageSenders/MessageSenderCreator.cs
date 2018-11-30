@@ -4,46 +4,71 @@
 
     using NewPlatform.Flexberry.ServiceBus.Components;
 
+    /// <summary>
+    /// Class for creating message senders.
+    /// </summary>
     public class MessageSenderCreator
     {
-        private readonly ILogger _logger;
+        /// <summary>
+        /// Logger for logging.
+        /// </summary>
+        private readonly ILogger logger;
 
         /// <summary>
-        /// Создание экземпляра класса <see cref="MessageSenderCreator"/>
+        /// If <c>true</c>, legacy types of message senders will be created.
         /// </summary>
-        /// <param name="logger">Компонент для логирования.</param>
-        public MessageSenderCreator(ILogger logger)
+        private readonly bool useLegacySenders;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageSenderCreator"/> class.
+        /// </summary>
+        /// <param name="logger">Logger for logging.</param>
+        /// <param name="useLegacySenders">If <c>true</c>, legacy types of message senders will be created.</param>
+        public MessageSenderCreator(ILogger logger, bool useLegacySenders)
         {
-            this._logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.useLegacySenders = useLegacySenders;
         }
 
         /// <summary>
-        /// Получить объект для отправки сообщений, тип которого зависит от метода отправки.
+        /// Creates a message sender for the specified <paramref name="subscription"/>.
         /// </summary>
-        /// <param name="subscription">Подписка, для которой нужно получить объект для отправки.</param>
-        /// <returns>Объект для отправки сообщений.</returns>
+        /// <param name="subscription">Subscription on which the message will be sent.</param>
+        /// <returns>Message sender.</returns>
         public IMessageSender GetMessageSender(Subscription subscription)
         {
-            IMessageSender result;
             switch (subscription.TransportType)
             {
-                case TransportType.HTTP:
-                    result = new HttpMessageSender(subscription.Client, _logger);
-                    break;
                 case TransportType.MAIL:
-                    result = new MailMessageSender(subscription.Client, _logger);
-                    break;
-                case TransportType.WCF:
-                    result = new WcfMessageSender(subscription.Client, _logger);
-                    break;
-                case TransportType.WEB:
-                    result = new WebMessageSender(subscription.Client, _logger);
-                    break;
-                default:
-                    throw new ArgumentException("Неизвестный способ отправки сообщения.");
-            }
+                    return new MailMessageSender(subscription.Client, logger);
 
-            return result;
+                case TransportType.HTTP:
+                    if (useLegacySenders)
+                    {
+                        return new LegacyHttpMessageSender(subscription.Client, logger);
+                    }
+
+                    return new HttpMessageSender(subscription.Client, logger);
+
+                case TransportType.WEB:
+                    if (useLegacySenders)
+                    {
+                        return new LegacyWebMessageSender(subscription.Client, logger);
+                    }
+
+                    return new WebMessageSender(subscription.Client, logger);
+
+                case TransportType.WCF:
+                    if (useLegacySenders)
+                    {
+                        return new LegacyWcfMessageSender(subscription.Client, logger);
+                    }
+
+                    return new WcfMessageSender(subscription.Client, logger);
+
+                default:
+                    throw new ArgumentException($"Unknown transport type: {subscription.TransportType}.");
+            }
         }
     }
 }

@@ -58,8 +58,8 @@
         /// </summary>
         public int AdditionalMinutesBetweenRetries { get; set; } = 3;
 
-        public OptimizedSendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statisticsService, IDataService dataService, ILogger logger)
-            : base(subscriptionsManager, statisticsService, dataService, logger)
+        public OptimizedSendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statisticsService, IDataService dataService, ILogger logger, bool useLegacySenders = true)
+            : base(subscriptionsManager, statisticsService, dataService, logger, useLegacySenders)
         {
             if (statisticsService == null)
                 throw new ArgumentNullException(nameof(statisticsService));

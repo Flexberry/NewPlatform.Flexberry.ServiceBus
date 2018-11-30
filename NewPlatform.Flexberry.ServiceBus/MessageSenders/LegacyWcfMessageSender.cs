@@ -2,25 +2,23 @@
 {
     using System;
     using System.ServiceModel;
-    using System.ServiceModel.Channels;
-    using System.Text.RegularExpressions;
 
+    using NewPlatform.Flexberry.ServiceBus.ClientTools;
     using NewPlatform.Flexberry.ServiceBus.Components;
 
-    using Message = NewPlatform.Flexberry.ServiceBus.Message;
-
     /// <summary>
-    /// A class that implements sending messages to clients through the ASMX client service.
-    /// <para>Sends an <see cref="ServiceBusMessage"/> using the <see cref="IServiceBusCallbackClient"/> interface.</para>
+    /// A class that implements sending messages to clients through the WCF client service.
+    /// <para>Sends an <see cref="MessageFromESB"/> using the <see cref="ICallbackSubscriber"/> interface.</para>
+    /// <para>Uses an endpoint named "CallbackClient" and a contract "HighwaySbWcf.ICallbackSubscriber" from the configuration file.</para>
     /// </summary>
-    public class WebMessageSender : BaseMessageSender
+    public class LegacyWcfMessageSender : BaseMessageSender
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebMessageSender"/> class.
+        /// Initializes a new instance of the <see cref="LegacyWcfMessageSender"/> class.
         /// </summary>
         /// <param name="client">Client, recipient of messages.</param>
         /// <param name="logger">Logger for logging.</param>
-        public WebMessageSender(Client client, ILogger logger)
+        public LegacyWcfMessageSender(Client client, ILogger logger)
             : base(client, logger)
         {
         }
@@ -35,16 +33,16 @@
 
             if (string.IsNullOrEmpty(Client.Address))
             {
-                Logger.LogError("Error sending message to client via WEB.", $"The client '{Client.Name ?? Client.ID}' not specified address to send messages.", message);
+                Logger.LogError("Error sending message to client via WCF.", $"The client '{Client.Name ?? Client.ID}' not specified address to send messages.", message);
                 return false;
             }
 
-            ChannelFactory<IServiceBusCallbackClient> channelFactory;
-            IServiceBusCallbackClient channel;
+            ChannelFactory<ICallbackSubscriber> channelFactory;
+            ICallbackSubscriber channel;
             try
             {
-                var endpointAddress = new EndpointAddress(new Uri(Client.Address), AddressHeader.CreateAddressHeader("headerName", Regex.Replace(Client.Address, ".asmx$", string.Empty), "headerValue"));
-                channelFactory = new ChannelFactory<IServiceBusCallbackClient>(new BasicHttpBinding(), endpointAddress);
+                var endpointAddress = Client.DnsIdentity == null ? new EndpointAddress(Client.Address) : new EndpointAddress(new Uri(Client.Address), EndpointIdentity.CreateDnsIdentity(Client.DnsIdentity));
+                channelFactory = new ChannelFactory<ICallbackSubscriber>("CallbackClient", endpointAddress);
                 channel = channelFactory.CreateChannel();
                 ((IClientChannel)channel).Open();
             }
@@ -54,14 +52,14 @@
                 throw exception;
             }
 
-            var sbMessage = new ServiceBusMessage()
+            var sbMessage = new MessageFromESB()
             {
                 MessageFormingTime = message.ReceivingTime,
                 MessageTypeID = message.MessageType.ID,
                 Body = message.Body,
                 Attachment = message.BinaryAttachment,
                 SenderName = message.Sender,
-                Group = message.Group,
+                GroupID = message.Group,
                 Tags = ServiceHelper.GetTagDictionary(message),
             };
 
@@ -72,7 +70,7 @@
                     ((IClientChannel)channel).Close();
                     channelFactory.Close();
                 },
-                $"Error sending message to the client '{Client.Name ?? Client.ID}' via WEB at address '{Client.Address}'.",
+                $"Error sending message to the client '{Client.Name ?? Client.ID}' via WCF at address '{Client.Address}'.",
                 Client,
                 message,
                 Logger);
