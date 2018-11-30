@@ -26,6 +26,7 @@
 
         private class SubscriptionQueueEntry
         {
+
             public SubscriptionQueueEntry(Subscription subscription, Queue queue)
             {
                 Subscription = subscription;

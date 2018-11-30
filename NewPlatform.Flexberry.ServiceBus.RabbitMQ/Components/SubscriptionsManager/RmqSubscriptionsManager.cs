@@ -45,7 +45,6 @@
             this._logger = logger;
             this._managementClient = managementClient;
             this._vhostStr = vhost;
-
             // TODO: следует ли выносить это в зависимости?
             this._namingManager = new AmqpNamingManager();
         }
@@ -65,16 +64,15 @@
             }
             catch(AggregateException ex)
             {
-                var unexpectedHttpStatusCodeException = ex.InnerException as UnexpectedHttpStatusCodeException;
-
-                if (unexpectedHttpStatusCodeException != null && unexpectedHttpStatusCodeException.StatusCode == System.Net.HttpStatusCode.NotFound)
+                if (ex.InnerException.GetType() == typeof(UnexpectedHttpStatusCodeException) && ((UnexpectedHttpStatusCodeException)ex.InnerException).StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     this._managementClient.CreateUserAsync(new UserInfo(clientId, ConfigurationManager.AppSettings["DefaultRmqUserPassword"])).Wait();
                 }
                 else
                 {
-                    throw;
+                    throw ex;
                 }
+                
             }
         }
 
@@ -104,7 +102,7 @@
             var exchangeName = this._namingManager.GetExchangeName(msgTypeInfo.ID);
             var exchangeInfo = new ExchangeInfo(exchangeName, ExchangeType.Topic, autoDelete: false, durable: true, @internal: false, arguments: null);
 
-            this._managementClient.CreateExchangeAsync(exchangeInfo, _vhost).Wait();
+            this._managementClient.CreateExchangeAsync(exchangeInfo, Vhost).Wait();
         }
 
         /// <summary>

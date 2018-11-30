@@ -66,24 +66,13 @@
 
             public void Start()
             {
-                var queueName =
-                    this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID);
+                var connection = _connectionFactory.CreateConnection();
+                _model = connection.CreateModel();
 
-                try
-                {
-                    var connection = _connectionFactory.CreateConnection();
-                    _model = connection.CreateModel();
+                var queueName = this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID);
+                this._logger.LogDebugMessage("", $"Создан слушатель очереди {queueName}");
 
-                    this._model.BasicConsume(queueName, false, this);
-                }
-                catch(Exception ex)
-                {
-                    this._logger.LogInformation($"Can't create listener of queue {queueName}", ex.ToString());
-                    this.IsRunning = false;
-                    return;
-                }
-
-                this._logger.LogDebugMessage("", $"Created listener of queue {queueName}");
+                this._model.BasicConsume(queueName, false, this);
             }
 
             public void Stop()
@@ -96,7 +85,6 @@
                 var message = this._converter.ConvertFromMqFormat(body, properties.Headers);
                 message.SendingTime = DateTime.Now;
                 message.MessageType = Subscription.MessageType;
-                message.Recipient = this.Subscription.Client;
 
                 try
                 {
@@ -191,10 +179,10 @@
             }
 
             // Обновляем данные подписки (на случай если изменился тип callback'а или адрес)
-            foreach (var consumer in this._consumers)
+            foreach (var _consumer in this._consumers)
             {
-                var actualConsumer = allConsumers.First(x => x.Equals(consumer));
-                consumer.UpdateSubscription(actualConsumer.Subscription);
+                var actualConsumer = allConsumers.First(x => x.Equals(_consumer));
+                _consumer.UpdateSubscription(actualConsumer.Subscription);
             }
         }
 

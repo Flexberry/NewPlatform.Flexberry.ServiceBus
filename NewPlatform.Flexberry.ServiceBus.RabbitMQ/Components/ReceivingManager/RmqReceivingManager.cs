@@ -2,7 +2,6 @@
 {
     using RabbitMQ.Client;
     using RabbitMQ.Client.Content;
-    using RabbitMQ.Client.Exceptions;
     using RabbitMQ.Client.Framing;
     using System;
     using System.Configuration;
@@ -12,7 +11,6 @@
     /// </summary>
     internal class RmqReceivingManager : BaseServiceBusComponent, IReceivingManager
     {
-        private readonly ILogger _logger;
         private IMessageConverter _messageConverter;
 
         private AmqpNamingManager _namingManager;
@@ -52,20 +50,19 @@
         /// </summary>
         public Uri RmqUri { get; set; }
 
-        public RmqReceivingManager(ILogger logger, IMessageConverter converter, Uri rmqUri)
+        public RmqReceivingManager(IMessageConverter converter, Uri rmqUri)
         {
             this.RmqUri = rmqUri;
-            _logger = logger;
             _messageConverter = converter;
             _namingManager = new AmqpNamingManager();
         }
 
         /// <summary>
-        /// Creates and fills MapMessageBuilder for publish message into broker.
+        /// Собирает map-message для публикации в брокере.
         /// </summary>
-        /// <param name="message">Incoming message.</param>
-        /// <param name="model">AMQP-model.</param>
-        /// <returns>MapMessageBuilder with filled body header properties.</returns>
+        /// <param name="message">Сообщение в формате шины.</param>
+        /// <param name="model">AMQP-модель.</param>
+        /// <returns>Сообщение со всеми заполненными полями.</returns>
         private MapMessageBuilder BuildMessage(ServiceBusMessage message, IModel model)
         {
             var messageBuilder = new MapMessageBuilder(model);
@@ -93,9 +90,9 @@
         }
 
         /// <summary>
-        /// Publishes message from clients into RabbitMQ.
+        /// Приём сообщения в брокер.
         /// </summary>
-        /// <param name="message">Incoming message.</param>
+        /// <param name="message">Входящее сообщение.</param>
         public void AcceptMessage(ServiceBusMessage message)
         {
             if (string.IsNullOrEmpty(message.ClientID))
@@ -109,48 +106,31 @@
             }
 
             var password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
+
             var connectionFactory = GetConnectionFactoryForUser(message.ClientID, password);
-
-            try
+            // TODO: здесь нужно ловить исключение ошибки авторизации
+            using (var connection = connectionFactory.CreateConnection())
             {
-                using (var connection = connectionFactory.CreateConnection())
-                {
-                    var model = connection.CreateModel();
+                var model = connection.CreateModel();
 
-                    var exchange = _namingManager.GetExchangeName(message.MessageTypeID);
-                    var routingKey = _namingManager.GetRoutingKey(message.MessageTypeID);
+                var exchange = _namingManager.GetExchangeName(message.MessageTypeID);
+                var routingKey = _namingManager.GetRoutingKey(message.MessageTypeID);
 
-                    var messageBuilder = BuildMessage(message, model);
+                var messageBuilder = BuildMessage(message, model);
 
-                    model.ConfirmSelect();
-                    model.BasicPublish(exchange, routingKey, messageBuilder.Properties,
-                        messageBuilder.GetContentBody());
-                    //we should wait confirm from broker before accept message
-                    model.WaitForConfirmsOrDie();
-                }
-            }
-            catch (BrokerUnreachableException e)
-            {
-                _logger.LogUnhandledException(e,
-                    title: $"Unavailable broker on publish message {message.MessageTypeID} from client {message.ClientID} to broker");
-                throw;
-            }
-            catch (AlreadyClosedException e)
-            {
-                _logger.LogUnhandledException(e,
-                    title: $"Broker rejected incoming message {message.MessageTypeID} from {message.ClientID}. Reason: {e.ShutdownReason}.");
-            }
-            catch (Exception e)
-            {
-                _logger.LogUnhandledException(e, title: $"Error on receive message {message.MessageTypeID} from {message.ClientID}.");
+                // чтобы быть уверенным, что сообщение попало в брокер, включаем режим подтверждений
+                model.ConfirmSelect();
+                model.BasicPublish(exchange, routingKey, messageBuilder.Properties, messageBuilder.GetContentBody());
+                // TODO: здесь нужно ловить исключение ошибки publish
+                model.WaitForConfirmsOrDie();
             }
         }
 
         /// <summary>
-        /// Publishes message with group into broker.
+        /// Принять сообщение с указанной группой. Не реализовано.
         /// </summary>
-        /// <param name="message">Incoming message.</param>
-        /// <param name="groupName">Group identifier.</param>
+        /// <param name="message">Входящее сообщение.</param>
+        /// <param name="groupName">Имя группы.</param>
         public void AcceptMessage(ServiceBusMessage message, string groupName)
         {
             // TODO: реализовать
@@ -158,10 +138,10 @@
         }
 
         /// <summary>
-        /// Publishes message with empty payload into broker.
+        /// Принять уведомление.
         /// </summary>
-        /// <param name="clientId">Cliend Id.</param>
-        /// <param name="eventTypeId">Event type Id.</param>
+        /// <param name="clientId">Идентификатор клиента.</param>
+        /// <param name="eventTypeId">Идентификатор уведомления (события).</param>
         public void RaiseEvent(string clientId, string eventTypeId)
         {
             if (string.IsNullOrEmpty(clientId))
@@ -177,37 +157,19 @@
             var password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
 
             var connectionFactory = GetConnectionFactoryForUser(clientId, password);
-            try
+            // TODO: здесь нужно ловить исключение ошибки авторизации
+            using (var connection = connectionFactory.CreateConnection())
             {
-                using (var connection = connectionFactory.CreateConnection())
-                {
-                    var model = connection.CreateModel();
+                var model = connection.CreateModel();
 
-                    var exchange = _namingManager.GetExchangeName(eventTypeId);
-                    var routingKey = _namingManager.GetRoutingKey(eventTypeId);
+                var exchange = _namingManager.GetExchangeName(eventTypeId);
+                var routingKey = _namingManager.GetRoutingKey(eventTypeId);
 
-                    model.ConfirmSelect();
-                    model.BasicPublish(exchange, routingKey);
-                    // TODO: здесь нужно ловить исключение ошибки publish
-                    model.WaitForConfirmsOrDie();
-                }
+                model.ConfirmSelect();
+                model.BasicPublish(exchange, routingKey);
+                // TODO: здесь нужно ловить исключение ошибки publish
+                model.WaitForConfirmsOrDie();
             }
-            catch (BrokerUnreachableException e)
-            {
-                _logger.LogUnhandledException(e,
-                    title: $"Unavailable broker on publish event {eventTypeId} from client {clientId} to broker");
-                throw;
-            }
-            catch (AlreadyClosedException e)
-            {
-                _logger.LogUnhandledException(e,
-                    title: $"Broker rejected incoming event {eventTypeId} from {clientId}. Reason: {e.ShutdownReason}.");
-            }
-            catch (Exception e)
-            {
-                _logger.LogUnhandledException(e, title: $"Error on receive event {eventTypeId} from {clientId}.");
-            }
-
         }
     }
 }
