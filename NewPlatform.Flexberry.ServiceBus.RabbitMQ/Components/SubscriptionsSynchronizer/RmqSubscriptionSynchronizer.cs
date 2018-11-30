@@ -112,6 +112,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 if (!mqSubscriptions.Any(x => this.IsSubscriptionEquals(esbSubscription, x)))
                 {
                     this._mqSubscriptionsManager.SubscribeOrUpdate(esbSubscription.Client.ID, esbSubscription.MessageType.ID, false, null);
+                    _logger.LogDebugMessage("Subscription synchronizatrion",
+                        $"Created subscription in broker for {esbSubscription.Client.ID} {esbSubscription.MessageType.ID}");
                 }
 
                 // TODO: подумать об изменении и удалении подписок
@@ -139,6 +141,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                     this._esbSubscriptionsManager.CreateClient(mqSubscription.Client.ID, mqSubscription.Client.Name);
 
                     this._esbSubscriptionsManager.SubscribeOrUpdate(mqSubscription.Client.ID, mqSubscription.MessageType.ID, false, null, DateTime.MaxValue);
+                    _logger.LogDebugMessage("Subscription synchronizatrion",
+                        $"Created subscription in esb storage for {mqSubscription.Client.ID} {mqSubscription.MessageType.ID}");
                 }
 
                 // TODO: подумать об изменении и удалении подписок
@@ -204,7 +208,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 currentEsbPermissions = esbPermissions.Where(p => p.Client.ID == clientId).ToList();
             }
 
-            Permission mqPermission = _managementClient.GetPermissionsAsync().Result.FirstOrDefault(p => p.User == clientId && p.Vhost == Vhost.Name);
+            Permission mqPermission = _managementClient.GetPermissionsAsync().Result.Where(p => p.User == clientId && p.Vhost == Vhost.Name).FirstOrDefault();
             if (currentEsbPermissions.Count > 0)
             {
                 List<string> rmqPermissionRegex = new List<string>();
