@@ -1,26 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Content;
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using RabbitMQ.Client;
+    using RabbitMQ.Client.Content;
+    using RabbitMQ.Client.Framing;
+    using System;
+    using System.Configuration;
+
     /// <summary>
-    /// Модуль приёма сообщений в формате шины в брокер
+    /// Component for receiving ESB-model messages from clients to RabbitMQ.
     /// </summary>
     internal class RmqReceivingManager : BaseServiceBusComponent, IReceivingManager
     {
-        private IConnectionFactory _connectionFactory;
-
         private IMessageConverter _messageConverter;
 
         private AmqpNamingManager _namingManager;
 
-        public RmqReceivingManager(IConnectionFactory connectionFactory, IMessageConverter converter)
+        /// <summary>
+        /// Getting connection factory for specified user.
+        /// </summary>
+        /// <param name="username">Username.</param>
+        /// <param name="password">Password.</param>
+        /// <returns>New connection factory with setted username and password.</returns>
+        protected IConnectionFactory GetConnectionFactoryForUser(string username, string password)
         {
-            _connectionFactory = connectionFactory;
+            var connectionFactory = new ConnectionFactory
+            {
+                UserName = username,
+                Password = password,
+                Uri = this.RmqUri,
+                VirtualHost = this.RmqVirtualHost,
+                Protocol = this.RmqProtocol,
+            };
+
+            return connectionFactory;
+        }
+
+        /// <summary>
+        /// RabbitMQ communication protocol. By default is's AMQP_0_9_1.
+        /// </summary>
+        public IProtocol RmqProtocol { get; set; } = new Protocol();
+
+        /// <summary>
+        /// RabbitMQ VirtualHost.
+        /// </summary>
+        public string RmqVirtualHost { get; set; } = "/";
+
+        /// <summary>
+        /// RabbitMQ endpoint.
+        /// </summary>
+        public Uri RmqUri { get; set; }
+
+        public RmqReceivingManager(IMessageConverter converter, Uri rmqUri)
+        {
+            this.RmqUri = rmqUri;
             _messageConverter = converter;
             _namingManager = new AmqpNamingManager();
         }
@@ -63,7 +95,21 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <param name="message">Входящее сообщение.</param>
         public void AcceptMessage(ServiceBusMessage message)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            if (string.IsNullOrEmpty(message.ClientID))
+            {
+                throw new ArgumentNullException(nameof(message.ClientID));
+            }
+
+            if (string.IsNullOrEmpty(message.MessageTypeID))
+            {
+                throw new ArgumentNullException(nameof(message.MessageTypeID));
+            }
+
+            var password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
+
+            var connectionFactory = GetConnectionFactoryForUser(message.ClientID, password);
+            // TODO: здесь нужно ловить исключение ошибки авторизации
+            using (var connection = connectionFactory.CreateConnection())
             {
                 var model = connection.CreateModel();
 
@@ -72,7 +118,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
                 var messageBuilder = BuildMessage(message, model);
 
+                // чтобы быть уверенным, что сообщение попало в брокер, включаем режим подтверждений
+                model.ConfirmSelect();
                 model.BasicPublish(exchange, routingKey, messageBuilder.Properties, messageBuilder.GetContentBody());
+                // TODO: здесь нужно ловить исключение ошибки publish
+                model.WaitForConfirmsOrDie();
             }
         }
 
@@ -94,14 +144,31 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <param name="eventTypeId">Идентификатор уведомления (события).</param>
         public void RaiseEvent(string clientId, string eventTypeId)
         {
-            using (var connection = _connectionFactory.CreateConnection())
+            if (string.IsNullOrEmpty(clientId))
+            {
+                throw new ArgumentNullException(nameof(clientId));
+            }
+
+            if (string.IsNullOrEmpty(eventTypeId))
+            {
+                throw new ArgumentNullException(nameof(eventTypeId));
+            }
+
+            var password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
+
+            var connectionFactory = GetConnectionFactoryForUser(clientId, password);
+            // TODO: здесь нужно ловить исключение ошибки авторизации
+            using (var connection = connectionFactory.CreateConnection())
             {
                 var model = connection.CreateModel();
 
                 var exchange = _namingManager.GetExchangeName(eventTypeId);
                 var routingKey = _namingManager.GetRoutingKey(eventTypeId);
 
+                model.ConfirmSelect();
                 model.BasicPublish(exchange, routingKey);
+                // TODO: здесь нужно ловить исключение ошибки publish
+                model.WaitForConfirmsOrDie();
             }
         }
     }
