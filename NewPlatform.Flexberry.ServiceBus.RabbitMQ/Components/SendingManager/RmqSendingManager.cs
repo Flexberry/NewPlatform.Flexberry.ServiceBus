@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
@@ -20,28 +21,28 @@
     /// </summary>
     internal class RmqSendingManager : ISendingManager
     {
-        private class RmqConsumer : DefaultBasicConsumer
+        private class RmqConsumer : AsyncDefaultBasicConsumer
         {
             private readonly ILogger _logger;
+
+            private IMessageSender _sender;
+            private readonly IMessageConverter _converter;
+            private readonly IConnectionFactory _connectionFactory;
+            private readonly AmqpNamingManager _namingManager = new AmqpNamingManager();
+            private readonly bool useLegacySenders;
+            private readonly ushort _prefetchCount;
 
             /// <summary>
             /// Получание подписки слушателя.
             /// </summary>
             public Subscription Subscription { get; private set; }
 
-            private IMessageSender _sender;
-            private readonly IMessageConverter _converter;
-            private readonly IConnectionFactory _connectionFactory;
-            private IModel _model;
-            private readonly AmqpNamingManager _namingManager = new AmqpNamingManager();
-            private readonly bool useLegacySenders;
-
             /// <summary>
             /// Number of minutes to be added to delay before the next attempt to send message.
             /// </summary>
             public int AdditionalMinutesBetweenRetries { get; set; } = 3;
 
-            public RmqConsumer(ILogger logger, IMessageConverter converter, IConnectionFactory connectionFactory, Subscription subscription, bool useLegacySenders)
+            public RmqConsumer(ILogger logger, IMessageConverter converter, IConnectionFactory connectionFactory, Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders)
             {
                 _logger = logger;
                 Subscription = subscription;
@@ -49,6 +50,15 @@
                 _connectionFactory = connectionFactory;
                 this.useLegacySenders = useLegacySenders;
                 _sender = new MessageSenderCreator(logger, useLegacySenders).GetMessageSender(subscription);
+
+                if (Subscription.Client.ConnectionsLimit.HasValue && Subscription.Client.ConnectionsLimit > 0)
+                {
+                    this._prefetchCount = (ushort)Math.Min(Subscription.Client.ConnectionsLimit.Value, ushort.MaxValue);
+                }
+                else
+                {
+                    this._prefetchCount = defaultPrefetchCount;
+                }
             }
 
             /// <summary>
@@ -72,9 +82,10 @@
                 try
                 {
                     var connection = _connectionFactory.CreateConnection();
-                    _model = connection.CreateModel();
+                    this.Model = connection.CreateModel();
 
-                    this._model.BasicConsume(queueName, false, this);
+                    this.Model.BasicQos(0, this._prefetchCount, false);
+                    this.Model.BasicConsume(queueName, false, this);
                 }
                 catch(Exception ex)
                 {
@@ -88,28 +99,32 @@
 
             public void Stop()
             {
-                this._model.Dispose();
+                this.Model.Dispose();
             }
 
-            public override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, byte[] body)
+            public override async Task HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, byte[] body)
             {
+                _logger.LogDebugMessage($"Callback sender event", $"Received message from queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
+
                 var message = this._converter.ConvertFromMqFormat(body, properties.Headers);
                 message.SendingTime = DateTime.Now;
                 message.MessageType = Subscription.MessageType;
                 message.Recipient = this.Subscription.Client;
 
-                try
+                // TODO: вынести логику в отдельный компонент?
+                // TODO: Подумать о равномерной нагрузке клиентов
+                var sended = this._sender.SendMessage(message);
+                if(sended)
                 {
-                    // TODO: вынести логику в отдельный компонент?
-                    // TODO: Подумать о равномерной нагрузке клиентов
-                    this._sender.SendMessage(message);
+
+                    this.Model.BasicAck(deliveryTag, false);
+                    _logger.LogDebugMessage($"Callback sender event", $"Acked message from queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
                 }
-                catch (Exception e)
+                else
                 {
-                    this._logger.LogError("Ошибка отправки сообщения", e.ToString());
                     if (redelivered)
                     {
-                        Thread.Sleep(AdditionalMinutesBetweenRetries * 60 * 1000);
+                        await Task.Delay(AdditionalMinutesBetweenRetries * 60 * 1000);
                     }
 
                     this.Model.BasicNack(deliveryTag, false, true);
@@ -172,7 +187,7 @@
             this._consumers.RemoveAll(x => stoppedConsumers.Contains(x));
 
             var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
-            var allConsumers = subscriptions.Select(x => new RmqConsumer(_logger, _converter, _connectionFactory, x, useLegacySenders)).ToList();
+            var allConsumers = subscriptions.Select(x => new RmqConsumer(_logger, _converter, _connectionFactory, x, DefaultPrefetchCount, useLegacySenders)).ToList();
 
             // Множество новых слушатей = Текущие подписки - запущенные подписки
             var newConsumers = allConsumers.Except(this._consumers);
@@ -182,6 +197,7 @@
 
             foreach (var newConsumer in newConsumers)
             {
+                this._consumers.Add(newConsumer);
                 newConsumer.Start();
             }
 
@@ -204,6 +220,11 @@
         /// Частота запуска синхронизации подписок.
         /// </summary>
         public int UpdatePeriodMilliseconds { get; set; } = 30 * 1000;
+
+        /// <summary>
+        /// Max count of unacknowledged messages for per consumer.
+        /// </summary>
+        public ushort DefaultPrefetchCount { get; set; } = 10;
 
         /// <summary>
         /// Gets Vhost RabbitMq.
@@ -240,7 +261,7 @@
             var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
             foreach (var subscription in subscriptions)
             {
-                this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription, useLegacySenders));
+                this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders));
             }
 
             this._actualizationTimer = new Timer(x => this.Actualize(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);
@@ -248,7 +269,9 @@
 
         public void Start()
         {
-            foreach (var consumer in this._consumers)
+            var consumers = this._consumers.ToArray();
+
+            foreach (var consumer in consumers)
             {
                 try
                 {
