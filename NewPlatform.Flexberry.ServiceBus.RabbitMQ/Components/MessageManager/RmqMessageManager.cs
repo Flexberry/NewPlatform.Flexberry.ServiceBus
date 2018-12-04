@@ -98,7 +98,7 @@
                     IEnumerable<RabbitMQMessage> rmqMessages = _managementClient.GetMessagesFromQueueAsync(queue, getMessagesCriteria).Result.Skip(skipInQueue);
                     foreach (var rmqMessage in rmqMessages)
                     {
-                        ServiceBusMessage sbMessage = _messageConverter.ConvertFromMqFormat(System.Text.Encoding.UTF8.GetBytes(rmqMessage.Payload), null);
+                        ServiceBusMessage sbMessage = _messageConverter.ConvertFromMqFormat(Convert.FromBase64String(rmqMessage.Payload), null);
                         sbMessage.Recipient = client;
                         sbMessage.MessageType = messageType;
                         sbMessages.Add(sbMessage);
