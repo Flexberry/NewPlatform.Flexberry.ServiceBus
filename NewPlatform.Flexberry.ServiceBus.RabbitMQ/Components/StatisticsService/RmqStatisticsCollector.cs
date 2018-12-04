@@ -2,8 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
-
+    using System.Threading.Tasks;
+    using ICSSoft.STORMNET;
+    using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.FunctionalLanguage;
+    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+    using ICSSoft.STORMNET.KeyGen;
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
 
@@ -21,7 +27,7 @@
         private StatisticsInterval _interval = StatisticsInterval.OneMinute;
         private readonly string _vhostStr;
         private Vhost _vhost;
-        private Dictionary<Subscription, StatisticsRecord> _previousRecordСache = new Dictionary<Subscription, StatisticsRecord>();
+        private Dictionary<Guid, MessageStats> _previousMessageStats = new Dictionary<Guid, MessageStats>();
         private Timer _timer;
 
         private class SubscriptionQueueEntry
@@ -45,14 +51,15 @@
 
         private List<SubscriptionQueueEntry> GetWatchedQueues()
         {
-            var result = new List<SubscriptionQueueEntry>();
+            var queueGetTasks = new List<Task<SubscriptionQueueEntry>>();
 
             foreach (Subscription s in _esbSubscriptionsManager.GetSubscriptions())
             {
                 var name = _namingManager.GetClientQueueName(s.Client.ID, s.MessageType.ID);
-                result.Add(new SubscriptionQueueEntry(s, _managementClient.GetQueueAsync(name, Vhost).Result));
+                queueGetTasks.Add(_managementClient.GetQueueAsync(name, Vhost).ContinueWith(x => new SubscriptionQueueEntry(s, x.Result)));
             }
 
+            var result = queueGetTasks.Select(x => x.Result).ToList();
             return result;
         }
 
@@ -72,24 +79,22 @@
 
                 foreach (var q in subscriptionsQueueEntries)
                 {
-                    StatisticsRecord previousRecord = null;
+                    var subPk = ((KeyGuid) (q.Subscription.__PrimaryKey)).Guid;
+                    _previousMessageStats.TryGetValue(subPk, out var previousMessageStats);
 
-                    _previousRecordСache.TryGetValue(q.Subscription, out previousRecord);
-
-                    var statisticsRecord = GetStatisticsByQueue(q, previousRecord);
-
-                    if (_previousRecordСache.ContainsKey(q.Subscription))
-                        _previousRecordСache[q.Subscription] = statisticsRecord;
-                    else
-                        _previousRecordСache.Add(q.Subscription, statisticsRecord);
+                    var statisticsRecord = GetStatisticsByQueue(q, previousMessageStats);
 
                     if (!IsZerroStatistics(statisticsRecord))
+                    {
                         stats.Add(statisticsRecord);
+                    }
+
+                    _previousMessageStats[subPk] = q.Queue.MessageStats;
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError("Error was raised while getting statistics from Rabbit MQ.", e.Message);
+                _logger.LogError("Error was raised while getting statistics from Rabbit MQ.", e.ToString());
             }
 
             try
@@ -98,16 +103,16 @@
             }
             catch (Exception e)
             {
-                _logger.LogError("A error was raised while writing statistics from Rabbit MQ to a Database.", e.Message);
+                _logger.LogError("A error was raised while writing statistics from Rabbit MQ to a Database.", e.ToString());
             }
         }
 
         private bool IsZerroStatistics(StatisticsRecord r)
         {
-            return r.SentCount == 0 && r.ReceivedCount == 0 && r.UniqueErrorsCount == 0 && r.QueueLength == 0;
+            return r.SentCount == 0 && r.ReceivedCount == 0 && r.UniqueErrorsCount == 0;
         }
 
-        private StatisticsRecord GetStatisticsByQueue(SubscriptionQueueEntry e, StatisticsRecord prev)
+        private StatisticsRecord GetStatisticsByQueue(SubscriptionQueueEntry e, MessageStats prevStats)
         {
             var record = new StatisticsRecord();
 
@@ -125,14 +130,16 @@
 
             var stats = e.Queue.MessageStats;
 
+            var sumSentFunc = new Func<MessageStats, long> (x => x != null ? x.DeliverGet : 0);
+            var sumPublishFunc = new Func<MessageStats, long> (x => x != null ? x.Publish : 0);
+
             if (stats != null)
             {
-                record.SentCount = GetStatisticValue((int)(stats.DeliverGet + stats.DeliverNoAck + stats.GetNoAck), prev?.SentCount);
-                record.ReceivedCount = GetStatisticValue((int)stats.Publish, prev?.ReceivedCount);
-                record.UniqueErrorsCount = GetStatisticValue((int)stats.Redeliver, prev?.UniqueErrorsCount);
-                record.QueueLength = GetStatisticValue(e.Queue.Messages, prev?.QueueLength);
-
+                record.SentCount = GetStatisticValue((int)sumSentFunc(stats), (int)sumSentFunc(prevStats));
+                record.ReceivedCount = GetStatisticValue((int)sumPublishFunc(stats), (int)sumPublishFunc(prevStats));
+                record.QueueLength = e.Queue.Messages;
             }
+
             return record;
         }
 
@@ -207,13 +214,13 @@
             }
         }
 
+        /// <param name="dataService"></param>
         /// <param name="logger"></param>
         /// <param name="esbSubscriptionsManager"></param>
-        /// <param name="rmqSubscriptionsManager"></param>
         /// <param name="statisticsSettings"></param>
         /// <param name="managementClient"></param>
         /// <param name="namingManager"></param>
-        public RmqStatisticsCollector(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, ISubscriptionsManager rmqSubscriptionsManager, IStatisticsSettings statisticsSettings, IManagementClient managementClient, AmqpNamingManager namingManager, IStatisticsSaveService statisticsSaveService, string vhost = "/")
+        public RmqStatisticsCollector(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IStatisticsSettings statisticsSettings, IManagementClient managementClient, AmqpNamingManager namingManager, IStatisticsSaveService statisticsSaveService, string vhost = "/")
         {
             this._logger = logger;
             this._esbSubscriptionsManager = esbSubscriptionsManager;
