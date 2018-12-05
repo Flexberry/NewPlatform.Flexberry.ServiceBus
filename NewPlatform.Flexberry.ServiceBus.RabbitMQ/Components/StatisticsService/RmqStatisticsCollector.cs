@@ -129,8 +129,7 @@
             record.StatisticsInterval = Interval;
 
             var stats = e.Queue.MessageStats;
-
-            var sumSentFunc = new Func<MessageStats, long> (x => x != null ? x.DeliverGet : 0);
+            var sumSentFunc = new Func<MessageStats, long> (x => x != null ? x.Ack : 0);
             var sumPublishFunc = new Func<MessageStats, long> (x => x != null ? x.Publish : 0);
 
             if (stats != null)
