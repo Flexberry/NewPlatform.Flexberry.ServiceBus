@@ -23,7 +23,6 @@ namespace NewPlatform.Flexberry.ServiceBus
     /// HttpSubscription.
     /// </summary>
     // *** Start programmer edit section *** (HttpSubscription CustomAttributes)
-    [Obsolete("This type is not used instead of it use ServiceBusSubscription")]
     // *** End programmer edit section *** (HttpSubscription CustomAttributes)
     public class HttpSubscription
     {

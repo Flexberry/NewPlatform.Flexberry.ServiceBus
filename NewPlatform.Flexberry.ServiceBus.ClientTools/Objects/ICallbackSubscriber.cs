@@ -24,7 +24,6 @@ namespace NewPlatform.Flexberry.ServiceBus.ClientTools
     /// </summary>
     // *** Start programmer edit section *** (ICallbackSubscriber CustomAttributes)
     [ServiceContract(Namespace = "http://tempuri.org/", ConfigurationName = "HighwaySbWcf.ICallbackSubscriber")]
-    [Obsolete("This interface is not used instead of it use IServiceBusCallbackSubscriber")]
     // *** End programmer edit section *** (ICallbackSubscriber CustomAttributes)
     public interface ICallbackSubscriber
     {

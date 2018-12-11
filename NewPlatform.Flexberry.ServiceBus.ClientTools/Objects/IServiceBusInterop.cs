@@ -24,7 +24,6 @@ namespace NewPlatform.Flexberry.ServiceBus
     /// </summary>
     // *** Start programmer edit section *** (IServiceBusInterop CustomAttributes)
     [ServiceContract(Namespace = "http://tempuri.org/", ConfigurationName = "HighwaySbWcf.IServiceBusInterop")]
-    [Obsolete("This interface is not used instead of it use IServiceBusClient and IServiceBusManager")]
     // *** End programmer edit section *** (IServiceBusInterop CustomAttributes)
     public interface IServiceBusInterop
     {
