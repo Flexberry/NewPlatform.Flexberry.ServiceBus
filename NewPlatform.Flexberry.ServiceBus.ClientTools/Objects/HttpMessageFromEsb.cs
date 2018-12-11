@@ -23,7 +23,6 @@ namespace NewPlatform.Flexberry.ServiceBus
     /// HttpMessageFromEsb.
     /// </summary>
     // *** Start programmer edit section *** (HttpMessageFromEsb CustomAttributes)
-    [Obsolete("This type is not used instead of it use ServiceBusMessage")]
     // *** End programmer edit section *** (HttpMessageFromEsb CustomAttributes)
     public class HttpMessageFromEsb
     {

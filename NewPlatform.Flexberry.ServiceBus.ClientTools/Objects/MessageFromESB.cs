@@ -24,7 +24,6 @@ namespace NewPlatform.Flexberry.ServiceBus
     /// </summary>
     // *** Start programmer edit section *** (MessageFromESB CustomAttributes)
     [DataContract(Namespace = "http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects")]
-    [Obsolete("This type is not used instead of it use ServiceBusMessage")]
     // *** End programmer edit section *** (MessageFromESB CustomAttributes)
     public class MessageFromESB
     {
