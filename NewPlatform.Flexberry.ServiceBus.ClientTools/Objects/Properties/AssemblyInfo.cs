@@ -19,3 +19,4 @@
 [assembly: System.Reflection.AssemblyVersion("1.0.0.1")]
 [assembly: System.Reflection.AssemblyFileVersion("1.0.0.1")]
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("NewPlatform.Flexberry.ServiceBus, PublicKey=002400000480000094000000060200000024000052534131000400000100010051190a2b935f63afdba0b92854682d6608a98cb85691a3c154e38966a2a172c339b3b5030451d68ddb6f1eb66b6ba8031690a6bf3a64ef4d2888370bc015ee4e1cca160e885862c31283796a2c45ad32ab1520b92ae752b3c7140ffbc6456ed99fbcfff259c867f0c080b3fa41ded248e385ff91d4bd0ce897710bef102530b1")]

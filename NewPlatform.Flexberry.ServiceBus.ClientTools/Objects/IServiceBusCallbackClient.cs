@@ -25,7 +25,7 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** Start programmer edit section *** (IServiceBusCallbackSubscriber CustomAttributes)
     [ServiceContract(Namespace = "http://tempuri.org/", ConfigurationName = "FlexberryServiceBus.IServiceBusCallbackClient")]
     // *** End programmer edit section *** (IServiceBusCallbackSubscriber CustomAttributes)
-    public interface IServiceBusCallbackClient
+    internal interface IServiceBusCallbackClient
     {
 
         // *** Start programmer edit section *** (IServiceBusCallbackSubscriber CustomMembers)
