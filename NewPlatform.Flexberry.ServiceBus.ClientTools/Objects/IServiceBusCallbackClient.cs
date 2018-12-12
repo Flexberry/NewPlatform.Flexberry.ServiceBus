@@ -12,35 +12,35 @@ namespace NewPlatform.Flexberry.ServiceBus
 {
     using System;
     using System.Xml;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
     using System.ServiceModel;
     // *** End programmer edit section *** (Using statements)
 
 
     /// <summary>
-    /// IServiceBusCallbackSubscriber.
+    /// IServiceBusCallbackClient.
     /// </summary>
-    // *** Start programmer edit section *** (IServiceBusCallbackSubscriber CustomAttributes)
+    // *** Start programmer edit section *** (IServiceBusCallbackClient CustomAttributes)
     [ServiceContract(Namespace = "http://tempuri.org/", ConfigurationName = "FlexberryServiceBus.IServiceBusCallbackClient")]
-    // *** End programmer edit section *** (IServiceBusCallbackSubscriber CustomAttributes)
+    // *** End programmer edit section *** (IServiceBusCallbackClient CustomAttributes)
     internal interface IServiceBusCallbackClient
     {
+        
+        // *** Start programmer edit section *** (IServiceBusCallbackClient CustomMembers)
 
-        // *** Start programmer edit section *** (IServiceBusCallbackSubscriber CustomMembers)
+        // *** End programmer edit section *** (IServiceBusCallbackClient CustomMembers)
 
-        // *** End programmer edit section *** (IServiceBusCallbackSubscriber CustomMembers)
-
-
-        // *** Start programmer edit section *** (IServiceBusCallbackSubscriber.AcceptMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
+        
+        // *** Start programmer edit section *** (IServiceBusCallbackClient.AcceptMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
         [OperationContract]
-        // *** End programmer edit section *** (IServiceBusCallbackSubscriber.AcceptMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
+        // *** End programmer edit section *** (IServiceBusCallbackClient.AcceptMessage NewPlatform.Flexberry.ServiceBus.ServiceBusMessage CustomAttributes)
         void AcceptMessage(NewPlatform.Flexberry.ServiceBus.ServiceBusMessage message);
-
-        // *** Start programmer edit section *** (IServiceBusCallbackSubscriber.GetSourceId CustomAttributes)
+        
+        // *** Start programmer edit section *** (IServiceBusCallbackClient.GetSourceId CustomAttributes)
         [OperationContract]
-        // *** End programmer edit section *** (IServiceBusCallbackSubscriber.GetSourceId CustomAttributes)
+        // *** End programmer edit section *** (IServiceBusCallbackClient.GetSourceId CustomAttributes)
         string GetSourceId();
     }
 }

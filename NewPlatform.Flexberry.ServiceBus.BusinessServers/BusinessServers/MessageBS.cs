@@ -12,8 +12,8 @@ namespace NewPlatform.Flexberry.ServiceBus
 {
     using System;
     using System.Xml;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
@@ -32,9 +32,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     [ICSSoft.STORMNET.AccessType(ICSSoft.STORMNET.AccessType.@this)]
     public class MessageBS : ICSSoft.STORMNET.Business.BusinessServer
     {
-
+        
         // *** Start programmer edit section *** (MessageBS CustomMembers)
-
         /// <summary>
         /// Returns LCS for loading messages with a specific <paramref name="group"/>, received by subscriptions for the specified <paramref name="client"/> and <paramref name="messageType"/>.
         /// </summary>
@@ -71,7 +70,7 @@ namespace NewPlatform.Flexberry.ServiceBus
         }
         // *** End programmer edit section *** (MessageBS CustomMembers)
 
-
+        
         // *** Start programmer edit section *** (OnUpdateMessage CustomAttributes)
 
         // *** End programmer edit section *** (OnUpdateMessage CustomAttributes)
