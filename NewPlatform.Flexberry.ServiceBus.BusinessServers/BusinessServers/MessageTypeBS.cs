@@ -12,8 +12,8 @@ namespace NewPlatform.Flexberry.ServiceBus
 {
     using System;
     using System.Xml;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
     using System.Linq;
     using ICSSoft.STORMNET.Business.LINQProvider;
@@ -29,12 +29,12 @@ namespace NewPlatform.Flexberry.ServiceBus
     [ICSSoft.STORMNET.AccessType(ICSSoft.STORMNET.AccessType.@this)]
     public class MessageTypeBS : ICSSoft.STORMNET.Business.BusinessServer
     {
-
+        
         // *** Start programmer edit section *** (MessageTypeBS CustomMembers)
 
         // *** End programmer edit section *** (MessageTypeBS CustomMembers)
 
-
+        
         // *** Start programmer edit section *** (OnUpdateMessageType CustomAttributes)
 
         // *** End programmer edit section *** (OnUpdateMessageType CustomAttributes)

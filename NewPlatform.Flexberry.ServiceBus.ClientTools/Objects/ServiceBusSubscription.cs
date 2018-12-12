@@ -12,8 +12,8 @@ namespace NewPlatform.Flexberry.ServiceBus
 {
     using System;
     using System.Xml;
-
-
+    
+    
     // *** Start programmer edit section *** (Using statements)
     using System.Runtime.Serialization;
     // *** End programmer edit section *** (Using statements)
@@ -27,8 +27,9 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (ServiceBusSubscription CustomAttributes)
     public class ServiceBusSubscription
     {
+        
         private string fID;
-
+        
         private string fClientID;
         
         private string fMessageTypeID;
@@ -40,42 +41,43 @@ namespace NewPlatform.Flexberry.ServiceBus
         private string fSendBy;
         
         private string fDescription;
-
+        
         // *** Start programmer edit section *** (ServiceBusSubscription CustomMembers)
 
         // *** End programmer edit section *** (ServiceBusSubscription CustomMembers)
 
+        
         /// <summary>
         /// ID.
         /// </summary>
-        // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID CustomAttributes)
+        // *** Start programmer edit section *** (ServiceBusSubscription.ID CustomAttributes)
         [DataMember]
-        // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID CustomAttributes)
+        // *** End programmer edit section *** (ServiceBusSubscription.ID CustomAttributes)
         public virtual string ID
         {
             get
             {
-                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Get start)
+                // *** Start programmer edit section *** (ServiceBusSubscription.ID Get start)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Get start)
+                // *** End programmer edit section *** (ServiceBusSubscription.ID Get start)
                 string result = this.fID;
-                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Get end)
+                // *** Start programmer edit section *** (ServiceBusSubscription.ID Get end)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Get end)
+                // *** End programmer edit section *** (ServiceBusSubscription.ID Get end)
                 return result;
             }
             set
             {
-                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Set start)
+                // *** Start programmer edit section *** (ServiceBusSubscription.ID Set start)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Set start)
+                // *** End programmer edit section *** (ServiceBusSubscription.ID Set start)
                 this.fID = value;
-                // *** Start programmer edit section *** (ServiceBusSubscription.MessageTypeID Set end)
+                // *** Start programmer edit section *** (ServiceBusSubscription.ID Set end)
 
-                // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Set end)
+                // *** End programmer edit section *** (ServiceBusSubscription.ID Set end)
             }
         }
-
+        
         /// <summary>
         /// ClientID.
         /// </summary>
@@ -106,7 +108,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.ClientID Set end)
             }
         }
-
+        
         /// <summary>
         /// MessageTypeID.
         /// </summary>
@@ -137,7 +139,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.MessageTypeID Set end)
             }
         }
-
+        
         /// <summary>
         /// ExpiryDate.
         /// </summary>
@@ -168,7 +170,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.ExpiryDate Set end)
             }
         }
-
+        
         /// <summary>
         /// Callback.
         /// </summary>
@@ -199,7 +201,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.Callback Set end)
             }
         }
-
+        
         /// <summary>
         /// SendBy.
         /// </summary>
@@ -230,7 +232,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (ServiceBusSubscription.SendBy Set end)
             }
         }
-
+        
         /// <summary>
         /// Description.
         /// </summary>
