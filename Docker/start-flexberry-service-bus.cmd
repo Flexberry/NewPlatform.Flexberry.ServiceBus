@@ -2,9 +2,9 @@ docker pull flexberry/flexberry-service-bus-editor:latest
 docker pull flexberry/flexberry-service-bus-postgres-db:latest
 docker pull flexberry/flexberry-service-bus:latest
 
-SET RABBITMQ=%1
+SET NO_RABBIT=%1
 
-IF "%RABBITMQ%" NEQ "rabbitmq" (
+IF "%NO_RABBIT%" NEQ "no-rabbit" (
 	docker pull flexberry/rabbitmq:latest
 )
 
@@ -18,7 +18,7 @@ IF %ERRORLEVEL% EQU 0 (
 	echo Flexberry Service Bus is already started.
 	echo To stop the Flexberry Service Bus, you need to run the command 'stop-flexberry-service-bus.cmd'
 ) ELSE (
-	IF "%RABBITMQ%" NEQ "rabbitmq" (
+	IF "%NO_RABBIT%" NEQ "no-rabbit" (
 		docker stack deploy -c flexberry-service-bus-rabbitmq.yml FlexberryServiceBus
 	) ELSE (
 		docker stack deploy -c flexberry-service-bus-swarm-configuration.yml FlexberryServiceBus
