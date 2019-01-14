@@ -1,6 +1,7 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -102,6 +103,58 @@
                 this.Model.Dispose();
             }
 
+            private string DeclareDelayRoutes(IModel model)
+            {
+                var sub = this.Subscription;
+
+                var delayExchangeName = _namingManager.GetClientDelayExchangeName(sub.Client.ID);
+                var delayQueueName = _namingManager.GetClientDelayQueueName(sub.Client.ID, sub.MessageType.ID);
+                var delayRoutingKey = _namingManager.GetDelayRoutingKey(sub.Client.ID, sub.MessageType.ID);
+                var originalQueueName = _namingManager.GetClientQueueName(sub.Client.ID, sub.MessageType.ID);
+                var originalRoutingKey = _namingManager.GetRoutingKey(sub.MessageType.ID);
+
+                var queueArguments = new Dictionary<string, object>();
+                queueArguments["x-dead-letter-exchange"] = delayExchangeName;
+                queueArguments["x-dead-letter-routing-key"] = originalRoutingKey;
+                queueArguments[RabbitMqConstants.FlexberryArgumentsKeys.NotSyncFlag] = "";
+                model.QueueDeclare(delayQueueName, true, false, false, queueArguments);
+                model.ExchangeDeclare(delayExchangeName, RabbitMQ.Client.ExchangeType.Direct, true);
+                model.QueueBind(delayQueueName, delayExchangeName, delayRoutingKey);
+                model.QueueBind(originalQueueName, delayExchangeName, originalRoutingKey);
+
+                return delayRoutingKey;
+            }
+
+            private void DelayMessage(ulong deliveryTag, IBasicProperties properties, byte[] body)
+            {
+                var connection = _connectionFactory.CreateConnection();
+                var model = connection.CreateModel();
+                model.ConfirmSelect();
+
+                if (properties.Headers == null)
+                    properties.Headers = new Dictionary<string, object>();
+
+                long redeliveryCount = _converter.GetErrorsCount(properties.Headers);
+                long delay = redeliveryCount * AdditionalMinutesBetweenRetries * 60 * 1000; // delay in ms
+                properties.Expiration = delay.ToString();
+                properties.Headers[RabbitMqConstants.FlexberryHeadersKeys.OriginalMessageTimestamp] = properties.Timestamp;
+
+                var requeue = false;
+                try
+                {
+                    var delayRoutingKey = DeclareDelayRoutes(model);
+                    model.BasicPublish("", delayRoutingKey, false, properties, body);
+                    model.WaitForConfirmsOrDie();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Error on message delay", ex.ToString());
+                    requeue = true;
+                }
+
+                this.Model.BasicReject(deliveryTag, requeue);
+            }
+
             public override async Task HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, byte[] body)
             {
                 _logger.LogDebugMessage($"Callback sender event", $"Received message from queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
@@ -122,12 +175,7 @@
                 }
                 else
                 {
-                    if (redelivered)
-                    {
-                        await Task.Delay(AdditionalMinutesBetweenRetries * 60 * 1000);
-                    }
-
-                    this.Model.BasicNack(deliveryTag, false, true);
+                    DelayMessage(deliveryTag, properties, body);
                 }
             }
 

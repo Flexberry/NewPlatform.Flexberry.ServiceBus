@@ -14,5 +14,7 @@
         MessageWithNotTypedPk ConvertFromMqFormat(byte[] messagePayload, IDictionary<string, object> properties);
 
         string GetTagPropertiesPrefix(string tag);
+
+        long GetErrorsCount(IDictionary<string, object> headerProperties);
     }
 }

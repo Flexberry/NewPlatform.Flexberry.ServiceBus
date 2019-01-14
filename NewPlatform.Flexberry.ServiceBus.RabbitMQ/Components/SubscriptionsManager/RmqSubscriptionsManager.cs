@@ -221,7 +221,8 @@
                 ? this._namingManager.ClientQueuePrefix
                 : this._namingManager.GetClientQueuePrefix(clientId);
 
-            var queues = this._managementClient.GetQueuesAsync().Result.Where(x => x.Name.StartsWith(prefix));
+            var queues = this._managementClient.GetQueuesAsync().Result.Where(x =>
+                x.Name.StartsWith(prefix) && !x.Arguments.ContainsKey(RabbitMqConstants.FlexberryArgumentsKeys.NotSyncFlag));
             foreach (var queue in queues)
             {
                 var bindings = this._managementClient.GetBindingsForQueueAsync(queue).Result
