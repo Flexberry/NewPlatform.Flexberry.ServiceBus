@@ -11,7 +11,7 @@
     /// <summary>
     /// Класс работы с объектами маршрутизации RMQ.
     /// </summary>
-    internal class RmqSubscriptionsManager : BaseServiceBusComponent, ISubscriptionsManager
+    public class RmqSubscriptionsManager : BaseServiceBusComponent, ISubscriptionsManager
     {
         private readonly ILogger _logger;
         private readonly IManagementClient _managementClient;

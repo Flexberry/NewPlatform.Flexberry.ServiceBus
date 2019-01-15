@@ -13,7 +13,7 @@
     /// <summary>
     /// Класс по умолчанию для управления подписками.
     /// </summary>
-    internal class DefaultSubscriptionsManager : BaseServiceBusComponent, ISubscriptionsManager
+    public class DefaultSubscriptionsManager : BaseServiceBusComponent, ISubscriptionsManager
     {
         private readonly IDataService _dataService;
 

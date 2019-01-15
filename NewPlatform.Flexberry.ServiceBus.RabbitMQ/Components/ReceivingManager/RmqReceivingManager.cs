@@ -10,7 +10,7 @@
     /// <summary>
     /// Component for receiving ESB-model messages from clients to RabbitMQ.
     /// </summary>
-    internal class RmqReceivingManager : BaseServiceBusComponent, IReceivingManager
+    public class RmqReceivingManager : BaseServiceBusComponent, IReceivingManager
     {
         private readonly ILogger _logger;
         private IMessageConverter _messageConverter;

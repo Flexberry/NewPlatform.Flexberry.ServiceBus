@@ -16,7 +16,7 @@
     /// <summary>
     /// Component to collect statistics from Rabbit MQ
     /// </summary>
-    internal class RmqStatisticsCollector : BaseServiceBusComponent, IExternalStatisticsCollector
+    public class RmqStatisticsCollector : BaseServiceBusComponent, IExternalStatisticsCollector
     {
         private readonly ILogger _logger;
         private readonly ISubscriptionsManager _esbSubscriptionsManager;

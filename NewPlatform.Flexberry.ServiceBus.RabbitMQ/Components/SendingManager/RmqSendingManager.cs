@@ -20,7 +20,7 @@
     /// <summary>
     /// Класс для доставки сообщений из RabbitMQ.
     /// </summary>
-    internal class RmqSendingManager : ISendingManager
+    public class RmqSendingManager : ISendingManager
     {
         private class RmqConsumer : AsyncDefaultBasicConsumer
         {
@@ -255,7 +255,8 @@
             }
 
             // Обновляем данные подписки (на случай если изменился тип callback'а или адрес)
-            foreach (var consumer in this._consumers)
+            var consumers = this._consumers;
+            foreach (var consumer in consumers)
             {
                 var actualConsumer = allConsumers.First(x => x.Equals(consumer));
                 consumer.UpdateSubscription(actualConsumer.Subscription);
