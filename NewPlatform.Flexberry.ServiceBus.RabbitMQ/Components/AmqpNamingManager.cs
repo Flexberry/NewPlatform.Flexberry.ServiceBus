@@ -5,7 +5,7 @@
     /// <summary>
     /// Класс для перевода наименований объектов маршрутизации шины и наименований объектов в AMQP.
     /// </summary>
-    public class AmqpNamingManager
+    internal class AmqpNamingManager
     {
         public string ExchangePrefix => "ics-messageTypeRouting_";
 

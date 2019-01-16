@@ -16,7 +16,7 @@
     /// <summary>
     /// Interface implementation for manage messages stored in RabbitMQ.
     /// </summary>
-    public class RmqMessageManager : IMessageManager
+    internal class RmqMessageManager : IMessageManager
     {
         /// <summary>
         /// The client for manage RabbitMQ.

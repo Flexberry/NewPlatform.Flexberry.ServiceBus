@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using Newtonsoft.Json.Linq;
     using RabbitMQ.Client.Content;
     using RabbitMQ.Client.Impl;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
 
-    public class RmqMessageConverter : IMessageConverter
+    internal class RmqMessageConverter : IMessageConverter
     {
         private string _attachmentPropertyName => "attachment";
 
