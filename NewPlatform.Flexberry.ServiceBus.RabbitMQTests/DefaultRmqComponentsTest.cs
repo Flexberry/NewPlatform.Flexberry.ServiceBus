@@ -1,4 +1,4 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.RabbitMQTests
 {
     using System;
     using System.Collections.Generic;
@@ -278,11 +278,10 @@
         {
             string userName = ConfigurationManager.AppSettings["DefaultRmqUserName"];
             string password = ConfigurationManager.AppSettings["DefaultRmqUserPassword"];
-            string node = ConfigurationManager.AppSettings["TestRmqNode"];
             string host = ConfigurationManager.AppSettings["DefaultRmqHost"];
             string managementPort = ConfigurationManager.AppSettings["DefaultRmqManagementPort"];
 
-            string sURL = $"http://{host}:{managementPort}/api/reset/{node}";
+            string sURL = $"http://{host}:{managementPort}/api/reset";
             var request = WebRequest.Create(sURL);
             request.Method = "DELETE";
             request.ContentType = "application/json";

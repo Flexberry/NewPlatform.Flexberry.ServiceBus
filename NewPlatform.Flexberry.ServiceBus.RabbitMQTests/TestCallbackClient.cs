@@ -1,4 +1,4 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.RabbitMQTests
 {
     using System;
     using System.ServiceModel;

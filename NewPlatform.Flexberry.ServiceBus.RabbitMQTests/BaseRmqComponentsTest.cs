@@ -1,4 +1,4 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.RabbitMQTests
 {
     using System;
     using System.Configuration;
@@ -7,6 +7,7 @@
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using NewPlatform.Flexberry.ServiceBus.Components;
+    using NewPlatform.Flexberry.ServiceBus.IntegratedTests;
     using RabbitMQ.Client;
 
     public class BaseRmqComponentsTest : BaseServiceBusIntegratedTest
@@ -56,7 +57,6 @@
             var sender = new Client() { ID = SenderId, Name = "Sender", Description = "TestSender" };
             var senderWithoutPermissions = new Client() { ID = SenderWithoutPermissionsId, Name = "SenderWithoutPermissions", Description = "TestSenderWithoutPermissions" };
             var receiverWithCallback = new Client() { ID = CallbackReceiverId, Name = "CallbackReceiver", Description = "TestCallbackReceiver", Address = "http://localhost:12345/SbListener" };
-            //var receiverWithCallback = new Client() { ID = CallbackReceiverId, Name = "CallbackReceiver", Description = "TestCallbackReceiver", Address = "http://ICS-KK12980.ics.perm.ru:12345/SbListener" };
             var receiverWithoutCallback = new Client() { ID = WithoutCallbackReceiverId, Name = "WithoutCallbackReceiver", Description = "TestWithoutCallbackReceiver" };
 
             var callbackMessageType = new MessageType() { ID = CallbackMsgTypeId, Name = "CallbackMsgType" };
