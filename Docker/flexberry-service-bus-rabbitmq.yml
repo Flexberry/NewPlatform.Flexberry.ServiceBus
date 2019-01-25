@@ -1,0 +1,34 @@
+version: '3'
+services:
+  FlexberryServiceBusPostgres:
+    image: "flexberry/flexberry-service-bus-postgres-db:latest"
+    volumes:
+      - FlexberryServiceBusDB:/var/lib/pgsql/data/
+    ports:
+     - "5432:5432"
+  FlexberryServiceBus:
+    environment:
+     - DOCKER_HOSTNAME=${COMPUTERNAME}.${USERDNSDOMAIN}
+     - RABBITMQ_CONFIG=true
+    image: "flexberry/flexberry-service-bus:latest"
+    ports:
+     - "7075:7075"
+     - "7085:7085"
+  FlexberryServiceBusEditor:
+    image: "flexberry/flexberry-service-bus-editor:latest"
+    ports:
+     - "1818:80"
+  rabbitmq:
+    environment:
+      - RABBITMQ_DEFAULT_VHOST=_
+    image: "flexberry/rabbitmq:latest"
+    ports:
+     - "5671:5671"
+     - "5672:5672"
+     - "15671:15671"
+     - "15672:15672"
+     - "25672:25672"
+     - "4369:4369"
+
+volumes:
+  FlexberryServiceBusDB: 

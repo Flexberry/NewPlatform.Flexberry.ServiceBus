@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>NewPlatform.Flexberry.ServiceBus</id>
+    <version>1.2.0</version>
+    <title>Flexberry Service Bus</title>
+    <authors>New Platform Ltd.</authors>
+    <owners>New Platform Ltd.</owners>
+    <licenseUrl>http://flexberry.net</licenseUrl>
+    <projectUrl>http://flexberry.net</projectUrl>
+    <iconUrl>https://flexberry.net/img/logo-color.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Flexberry Service Bus.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright © New Platform Ltd. 2018</copyright>
+    <tags>Flexberry Service Bus</tags>
+    <dependencies>
+      <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="1.2.0" />
+      <dependency id="NewPlatform.Flexberry.ServiceBus.Objects" version="1.2.0" />
+      <dependency id="NewPlatform.Flexberry.ServiceBus.Components" version="1.2.0" />
+      <dependency id="NewPlatform.Flexberry.ORM" version="5.0.0" />
+
+      <dependency id="EnterpriseLibrary.Logging" version="6.0.1304.0" />
+      <dependency id="log4net" version="2.0.3" />
+
+      <!-- WebAPI -->
+      <dependency id="Microsoft.AspNet.WebApi" version="5.2.3" />
+      <dependency id="Microsoft.AspNet.WebApi.OwinSelfHost" version="5.2.3" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="NewPlatform.Flexberry.ServiceBus.dll" target="lib\net45\NewPlatform.Flexberry.ServiceBus.dll" />
+    <file src="NewPlatform.Flexberry.ServiceBus.xml" target="lib\net45\NewPlatform.Flexberry.ServiceBus.xml" />
+  </files>
+</package>
