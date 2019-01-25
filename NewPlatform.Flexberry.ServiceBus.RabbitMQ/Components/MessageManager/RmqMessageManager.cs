@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
 
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
@@ -98,7 +99,23 @@
                     IEnumerable<RabbitMQMessage> rmqMessages = _managementClient.GetMessagesFromQueueAsync(queue, getMessagesCriteria).Result.Skip(skipInQueue);
                     foreach (var rmqMessage in rmqMessages)
                     {
-                        ServiceBusMessage sbMessage = _messageConverter.ConvertFromMqFormat(Convert.FromBase64String(rmqMessage.Payload), null);
+                        var headers = rmqMessage.Properties.Headers.ToDictionary(x => x.Key, x => (object) x.Value);
+
+                        byte[] payloadBytes = null;
+                        var encoding = rmqMessage.PayloadEncoding;
+                        switch (encoding)
+                        {
+                            case "string":
+                                payloadBytes = Encoding.UTF8.GetBytes(rmqMessage.Payload);
+                                break;
+                            case "base64":
+                                payloadBytes = Convert.FromBase64String(rmqMessage.Payload);
+                                break;
+                            default:
+                                throw new Exception($"Unknown message payload encoding ${encoding} in queue ${queue.Name}");
+                        }
+
+                        ServiceBusMessage sbMessage = _messageConverter.ConvertFromMqFormat(payloadBytes, headers);
                         sbMessage.Recipient = client;
                         sbMessage.MessageType = messageType;
                         sbMessages.Add(sbMessage);

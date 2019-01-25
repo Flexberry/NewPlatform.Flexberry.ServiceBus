@@ -11,6 +11,8 @@
 
         public string ClientQueuePrefix => "ics-consumer_";
 
+        public string DelaySuffix => "_delay";
+
         private char _queueClientTypeDelimiter = '@';
 
         /// <summary>
@@ -32,6 +34,38 @@
         public string GetClientQueueName(string clientId, string messageTypeId)
         {
             return $"{this.GetClientQueuePrefix(clientId)}{this._queueClientTypeDelimiter}{messageTypeId}";
+        }
+
+        /// <summary>
+        /// Get exchange's name for publishing messages with delay.
+        /// </summary>
+        /// <param name="clientId">Client identifier.</param>
+        /// <returns></returns>
+        public string GetClientDelayExchangeName(string clientId)
+        {
+            return GetExchangeName(clientId) + DelaySuffix;
+        }
+
+        /// <summary>
+        /// Get queue's name for store message in delay.
+        /// </summary>
+        /// <param name="clientId">Client identifier.</param>
+        /// <param name="messageTypeId">Message type identifier.</param>
+        /// <returns></returns>
+        public string GetClientDelayQueueName(string clientId, string messageTypeId)
+        {
+            return GetClientQueueName(clientId, messageTypeId) + DelaySuffix;
+        }
+
+        /// <summary>
+        /// Get routing key's name for publishing messages with delay.
+        /// </summary>
+        /// <param name="clientId">Client identifier.</param>
+        /// <param name="messageTypeId">Message type identifier.</param>
+        /// <returns></returns>
+        public string GetDelayRoutingKey(string clientId, string messageTypeId)
+        {
+            return GetClientQueueName(clientId, messageTypeId) + DelaySuffix;
         }
 
         /// <summary>
@@ -109,6 +143,11 @@
             else if (!queueName.StartsWith(ClientQueuePrefix) || !queueName.Contains(_queueClientTypeDelimiter.ToString()))
             {
                 throw new ArgumentException(nameof(queueName));
+            }
+
+            if (queueName.EndsWith(DelaySuffix))
+            {
+                queueName = queueName.Remove(queueName.Length - DelaySuffix.Length);
             }
 
             string[] ids = queueName.Replace(ClientQueuePrefix, string.Empty).Split(_queueClientTypeDelimiter);

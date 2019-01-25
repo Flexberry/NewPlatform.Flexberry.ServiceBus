@@ -1,8 +1,10 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using Newtonsoft.Json.Linq;
     using RabbitMQ.Client.Content;
     using RabbitMQ.Client.Impl;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -19,6 +21,11 @@
         /// Свойство сообщения RabbitMQ, в котором хранится Timestamp сообщения
         /// </summary>
         protected string TimestampPropertyName => "timestamp_in_ms";
+
+        /// <summary>
+        /// Header's key for message timestamp before redeliver.
+        /// </summary>
+        protected string OriginalTimestampPropertyName => RabbitMqConstants.FlexberryHeadersKeys.OriginalMessageTimestamp;
 
         private string _tagPropertiesPrefix = "__tag";
 
@@ -69,6 +76,33 @@
             return properties;
         }
 
+        public long GetErrorsCount(IDictionary<string, object> headerProperties)
+        {
+            long redeliveryCount = 0;
+            string deadLetterHeaderKey = "x-death";
+
+            if (headerProperties.ContainsKey(deadLetterHeaderKey))
+            {
+                var recsObj = headerProperties[deadLetterHeaderKey];
+                IList deadLetteringRecs = null;
+
+                if (recsObj is string json)
+                {
+                    JArray array = JArray.Parse(json);
+                    deadLetteringRecs = array.Select(x => x.ToObject<Dictionary<string, object>>()).ToList();
+                }
+                else
+                {
+                    deadLetteringRecs = (IList)recsObj;
+                }
+                
+                var lastRecord = (Dictionary<string, object>)deadLetteringRecs[deadLetteringRecs.Count - 1];
+                redeliveryCount = (long)lastRecord["count"];
+            }
+
+            return redeliveryCount;
+        }
+
         /// <summary>
         /// Получение из свойств тела сообщения и свойств сообщения сообщения в формате шины.
         /// </summary>
@@ -114,13 +148,17 @@
                     }
                 }
 
-                if (headers.ContainsKey(this.TimestampPropertyName))
+                string timestampKey = headers.ContainsKey(this.OriginalTimestampPropertyName) ? OriginalTimestampPropertyName :
+                                      headers.ContainsKey(this.TimestampPropertyName) ? TimestampPropertyName : null;
+
+                if (timestampKey != null)
                 {
-                    var unixtimestamp = (long)headers[this.TimestampPropertyName];
+                    var unixtimestamp = long.Parse(headers[this.TimestampPropertyName].ToString());
                     result.ReceivingTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddMilliseconds(unixtimestamp);
                 }
 
                 result.Tags = messageTags.Any() ? messageTags.Select(x => $"{x.Key}:{x.Value}").Aggregate((x, y) => $"{x}, {y}") : "";
+                result.ErrorCount = (int)GetErrorsCount(headers);
             }
 
             return result;
@@ -129,7 +167,7 @@
         /// <summary>
         /// Получить префикс для тэгов.
         /// </summary>
-        /// <param name="tag">Имя тэга.</tag>
+        /// <param name="tag">Имя тэга.</param>
         /// <returns>Префикс для тэгов.</returns>
         public string GetTagPropertiesPrefix(string tag)
         {

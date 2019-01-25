@@ -162,6 +162,7 @@
     <Compile Include="Components\SubscriptionsSynchronizer\RmqSubscriptionSynchronizer.cs" />
     <Compile Include="Components\MessageManager\IMessageManager.cs" />
     <Compile Include="Components\MessageManager\RmqMessageManager.cs" />
+    <Compile Include="RabbitMqConstants.cs" />
     <Compile Include="MessageWithNotTypedPk.cs" />
     <Compile Include="MonoManagementClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
