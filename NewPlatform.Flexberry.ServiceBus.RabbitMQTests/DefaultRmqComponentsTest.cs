@@ -5,6 +5,7 @@
     using System.Configuration;
     using System.Linq;
     using System.Net;
+    using System.Reflection;
     using System.ServiceModel;
     using System.Text;
     using System.Threading;
@@ -142,11 +143,15 @@
             rmqReceivingManager.AcceptMessage(sbMessage1);
             rmqReceivingManager.AcceptMessage(sbMessage2);
 
-            using (var host = new ServiceHost(typeof(TestCallbackClient)))
+            var resetEvent = new ManualResetEvent(false);
+            var client = new TestCallbackClient();
+            client.ExpectedMessageCount = 2;
+            client.ResetEvent = resetEvent;
+            using (var host = new ServiceHost(client))
             {
                 host.Open();
                 rmqSendingManager.Start();
-                Thread.Sleep(10000);
+                resetEvent.WaitOne();
 
                 var message = rmqSendingManager.ReadMessage(CallbackReceiverId, CallbackMsgTypeId);
                 Assert.NotNull(message);
@@ -209,16 +214,20 @@
             rmqReceivingManager.AcceptMessage(withoutCallbackSbMessage1);
             rmqReceivingManager.AcceptMessage(withoutCallbackSbMessage2);
 
-            using (var host = new ServiceHost(typeof(TestCallbackClient)))
+            var resetEvent = new ManualResetEvent(false);
+            var client = new TestCallbackClient();
+            client.ExpectedMessageCount = 2;
+            client.ResetEvent = resetEvent;
+            using (var host = new ServiceHost(client))
             {
                 host.Open();
                 rmqSendingManager.Start();
-                Thread.Sleep(10000);
+                resetEvent.WaitOne();
 
                 var message = rmqSendingManager.ReadMessage(WithoutCallbackReceiverId, WithoutCallbackMsgTypeId);
                 rmqSendingManager.DeleteMessage(message.__PrimaryKey.ToString());
 
-                List<StatisticsRecord> info = null;
+                var info = new List<StatisticsRecord>();
                 var mockStatisticsSetting = new Mock<IStatisticsSettings>();
                 var mockStatisticsSaveService = new Mock<IStatisticsSaveService>();
                 mockStatisticsSaveService.Setup(x => x.Save(It.IsAny<IEnumerable<StatisticsRecord>>())).Callback(
@@ -233,11 +242,10 @@
                     amqpNamingManager,
                     mockStatisticsSaveService.Object,
                     testVhost);
-                collector.Interval = StatisticsInterval.TenSeconds;
 
                 collector.Prepare();
-                collector.Start();
-                Thread.Sleep(11000);
+                MethodInfo collectMethod = collector.GetType().GetMethod("TimerCallBack", BindingFlags.NonPublic | BindingFlags.Instance);
+                collectMethod.Invoke(collector, new[] { new object() });
 
                 Assert.Contains(info, x => x.SentCount == 2
                     && x.ReceivedCount == 2
@@ -251,14 +259,16 @@
                     && x.StatisticsSetting.Subscription.Client.ID == CallbackReceiverId
                     && x.StatisticsSetting.Subscription.MessageType.ID == CallbackMsgTypeId);
 
+                client.ResetMessageCount();
+                client.ResetEvent.Reset();
                 rmqReceivingManager.AcceptMessage(callbackSbMessage1);
                 rmqReceivingManager.AcceptMessage(callbackSbMessage2);
                 rmqReceivingManager.AcceptMessage(withoutCallbackSbMessage1);
                 rmqReceivingManager.AcceptMessage(withoutCallbackSbMessage2);
+                resetEvent.WaitOne();
 
                 var message2 = rmqSendingManager.ReadMessage(WithoutCallbackReceiverId, WithoutCallbackMsgTypeId);
                 rmqSendingManager.DeleteMessage(message.__PrimaryKey.ToString());
-                Thread.Sleep(11000);
 
                 Assert.Contains(info, x => x.SentCount == 2
                     && x.ReceivedCount == 2

@@ -24,7 +24,7 @@
         protected IDataService DataService;
         protected ManagementClient managementClient;
         protected ConnectionFactory connectionFactory;
-        protected AmqpNamingManager amqpNamingManager;
+        internal AmqpNamingManager amqpNamingManager;
         internal DefaultSubscriptionsManager esbSubscriptionsManager;
         internal RmqSubscriptionsManager rmqSubscriptionsManager;
         internal RmqSubscriptionsSynchronizer rmqSubscriptionsSynchronizer;
