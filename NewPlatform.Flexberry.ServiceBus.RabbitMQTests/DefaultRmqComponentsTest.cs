@@ -269,6 +269,7 @@
 
                 var message2 = rmqSendingManager.ReadMessage(WithoutCallbackReceiverId, WithoutCallbackMsgTypeId);
                 rmqSendingManager.DeleteMessage(message.__PrimaryKey.ToString());
+                collectMethod.Invoke(collector, new[] { new object() });
 
                 Assert.Contains(info, x => x.SentCount == 2
                     && x.ReceivedCount == 2
