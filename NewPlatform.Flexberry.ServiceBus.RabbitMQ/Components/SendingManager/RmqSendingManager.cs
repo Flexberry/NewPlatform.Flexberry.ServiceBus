@@ -20,7 +20,7 @@
     /// <summary>
     /// Класс для доставки сообщений из RabbitMQ.
     /// </summary>
-    public class RmqSendingManager : ISendingManager
+    internal class RmqSendingManager : ISendingManager
     {
         private class RmqConsumer : AsyncDefaultBasicConsumer
         {

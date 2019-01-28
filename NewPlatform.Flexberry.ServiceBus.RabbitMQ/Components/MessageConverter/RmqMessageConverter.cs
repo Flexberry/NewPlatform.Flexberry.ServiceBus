@@ -11,7 +11,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     using System.Linq;
     using System.Text;
 
-    public class RmqMessageConverter : IMessageConverter
+    internal class RmqMessageConverter : IMessageConverter
     {
         private string _attachmentPropertyName => "attachment";
 

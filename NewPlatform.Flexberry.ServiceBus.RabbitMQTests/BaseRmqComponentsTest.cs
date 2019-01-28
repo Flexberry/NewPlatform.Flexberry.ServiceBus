@@ -3,6 +3,7 @@
     using System;
     using System.Configuration;
     using System.Linq;
+    using System.Reflection;
     using EasyNetQ.Management.Client;
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
@@ -24,12 +25,12 @@
         protected ManagementClient managementClient;
         protected ConnectionFactory connectionFactory;
         protected AmqpNamingManager amqpNamingManager;
-        protected DefaultSubscriptionsManager esbSubscriptionsManager;
-        protected RmqSubscriptionsManager rmqSubscriptionsManager;
-        protected RmqSubscriptionsSynchronizer rmqSubscriptionsSynchronizer;
-        protected RmqMessageConverter rmqMessageConverter;
-        protected RmqReceivingManager rmqReceivingManager;
-        protected RmqSendingManager rmqSendingManager;
+        internal DefaultSubscriptionsManager esbSubscriptionsManager;
+        internal RmqSubscriptionsManager rmqSubscriptionsManager;
+        internal RmqSubscriptionsSynchronizer rmqSubscriptionsSynchronizer;
+        internal RmqMessageConverter rmqMessageConverter;
+        internal RmqReceivingManager rmqReceivingManager;
+        internal RmqSendingManager rmqSendingManager;
 
         public BaseRmqComponentsTest(string tmpDbNamePrefix)
             : base(tmpDbNamePrefix)
@@ -43,7 +44,8 @@
 
         private void InitializeRabbitMQ()
         {
-            rmqSubscriptionsSynchronizer.Sync();
+            MethodInfo syncMethod = rmqSubscriptionsSynchronizer.GetType().GetMethod("Sync", BindingFlags.NonPublic | BindingFlags.Instance);
+            syncMethod.Invoke(rmqSubscriptionsSynchronizer, new object[] { });
 
             var vHost = managementClient.GetVhostAsync(ConfigurationManager.AppSettings["TestVhost"]).Result;
             var callbackQueue = managementClient.GetQueueAsync(amqpNamingManager.GetClientQueueName(CallbackReceiverId, CallbackMsgTypeId), vHost).Result;

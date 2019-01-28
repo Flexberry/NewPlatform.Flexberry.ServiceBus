@@ -14,7 +14,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     /// <summary>
     /// Класс для синхронизации подписок в MQ и шине.
     /// </summary>
-    public class RmqSubscriptionsSynchronizer : BaseServiceBusComponent, ISubscriptionSynchronizer
+    internal class RmqSubscriptionsSynchronizer : BaseServiceBusComponent, ISubscriptionSynchronizer
     {
         private readonly ILogger _logger;
         private readonly ISubscriptionsManager _esbSubscriptionsManager;
@@ -78,7 +78,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <summary>
         /// Цикл синхронизации подписок.
         /// </summary>
-        public void Sync()
+        private void Sync()
         {
             try
             {
