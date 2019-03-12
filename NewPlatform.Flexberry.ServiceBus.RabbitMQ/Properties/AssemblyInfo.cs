@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Runtime.CompilerServices;
+
 [assembly: System.Reflection.AssemblyTitle("NewPlatform.Flexberry.ServiceBus.RabbitMQ")]
 [assembly: System.Reflection.AssemblyDescription("Flexberry Service Bus RabbitMQ")]
 [assembly: System.Reflection.AssemblyConfiguration("")]
@@ -19,3 +21,4 @@
 [assembly: System.Reflection.AssemblyVersion("1.0.0.1")]
 [assembly: System.Reflection.AssemblyFileVersion("1.0.0.1")]
 
+[assembly: InternalsVisibleTo("NewPlatform.Flexberry.ServiceBus.RabbitMQTests, PublicKey=00240000048000009400000006020000002400005253413100040000010001005574d7cd52b86a1ec8f47bc0127ca37cafb1c65032e9e95559f497a78ead7478ca4961c85bc6ebc5dbdd3f2b94c262c6c1ce677fcdb70e285b9a59c3fed533bf7313a0e501f94fa19cc3a12caf6c6c651942a9c9d3d2337b086cce6a3125f03097ba86e8b482c14fd5c8b82f3fa8e9e7ab2aab59b3874c1a19b389af603a5bc3")]
