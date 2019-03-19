@@ -82,11 +82,12 @@
 
                 try
                 {
-                    var connection = _connectionFactory.CreateConnection();
-                    this.Model = connection.CreateModel();
-
-                    this.Model.BasicQos(0, this._prefetchCount, false);
-                    this.Model.BasicConsume(queueName, false, this);
+                    using (var connection = _connectionFactory.CreateConnection())
+                    {
+                        this.Model = connection.CreateModel();
+                        this.Model.BasicQos(0, this._prefetchCount, false);
+                        this.Model.BasicConsume(queueName, false, this);
+                    }
                 }
                 catch(Exception ex)
                 {
