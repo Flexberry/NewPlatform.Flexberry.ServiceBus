@@ -82,11 +82,12 @@
 
                 try
                 {
-                    var connection = _connectionFactory.CreateConnection();
-                    this.Model = connection.CreateModel();
-
-                    this.Model.BasicQos(0, this._prefetchCount, false);
-                    this.Model.BasicConsume(queueName, false, this);
+                    using (var connection = _connectionFactory.CreateConnection())
+                    {
+                        this.Model = connection.CreateModel();
+                        this.Model.BasicQos(0, this._prefetchCount, false);
+                        this.Model.BasicConsume(queueName, false, this);
+                    }
                 }
                 catch(Exception ex)
                 {
@@ -207,7 +208,7 @@
         private readonly string _vhostName;
         private readonly bool useLegacySenders;
         private Vhost _vhost;
-        private List<RmqConsumer> _consumers;
+        private SynchronizedCollection<RmqConsumer> _consumers;
         private Timer _actualizationTimer;
         private IModel _sharedModel;
 
@@ -231,8 +232,11 @@
         private void Actualize()
         {
             // Убираем из текущих слушателей остановленные
-            var stoppedConsumers = this._consumers.Where(x => !x.IsRunning);
-            this._consumers.RemoveAll(x => stoppedConsumers.Contains(x));
+            var stoppedConsumers = this._consumers.Where(x => !x.IsRunning).ToList();
+            foreach (var stoppedConsumer in stoppedConsumers)
+            {
+                this._consumers.Remove(stoppedConsumer);
+            }
 
             var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
             var allConsumers = subscriptions.Select(x => new RmqConsumer(_logger, _converter, _connectionFactory, x, DefaultPrefetchCount, useLegacySenders)).ToList();
@@ -241,7 +245,7 @@
             var newConsumers = allConsumers.Except(this._consumers);
 
             // Множество слушателей на удаление = Запущенные подписки - текущие подписки
-            var consumersToDelete = this._consumers.Except(allConsumers);
+            var consumersToDelete = this._consumers.Except(allConsumers).ToList();
 
             foreach (var newConsumer in newConsumers)
             {
@@ -301,7 +305,7 @@
             this._vhostName = vhost;
             this.useLegacySenders = useLegacySenders;
 
-            this._consumers = new List<RmqConsumer>();
+            this._consumers = new SynchronizedCollection<RmqConsumer>();
         }
 
         public void Prepare()
@@ -334,7 +338,10 @@
 
         public void Stop()
         {
-            this._consumers.ForEach(x => x.Stop());
+            foreach (var consumer in _consumers)
+            {
+                consumer.Stop();
+            }
         }
 
         public void AfterStop()
