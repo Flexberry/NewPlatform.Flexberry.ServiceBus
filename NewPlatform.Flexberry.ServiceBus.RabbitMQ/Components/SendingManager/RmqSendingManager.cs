@@ -1,4 +1,6 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿using ICSSoft.STORMNET.KeyGen;
+
+namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Collections;
@@ -99,6 +101,7 @@
 
             public void Stop()
             {
+                this._logger.LogDebugMessage("", $"Stopped listener of queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
                 this.Model.Dispose();
             }
 
@@ -206,8 +209,9 @@
         private readonly string _vhostName;
         private readonly bool useLegacySenders;
         private Vhost _vhost;
-        private SynchronizedCollection<RmqConsumer> _consumers;
+        private List<RmqConsumer> _consumers;
         private Timer _actualizationTimer;
+        private static readonly object ActualizeLock = new object();
         private IModel _sharedModel;
 
         private IModel SharedModel
@@ -229,38 +233,39 @@
         /// </summary>
         private void Actualize()
         {
-            // Убираем из текущих слушателей остановленные
-            var stoppedConsumers = this._consumers.Where(x => !x.IsRunning).ToList();
-            foreach (var stoppedConsumer in stoppedConsumers)
+            // on Mono 5.18 SynchronizedCollection did not work, will lock manually
+            lock (ActualizeLock)
             {
-                this._consumers.Remove(stoppedConsumer);
-            }
+                var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions().ToArray();
+                var aliveSubs = new List<RmqConsumer>();
 
-            var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
-            var allConsumers = subscriptions.Select(x => new RmqConsumer(_logger, _converter, _connectionFactory, x, DefaultPrefetchCount, useLegacySenders)).ToList();
+                foreach (var subscription in subscriptions)
+                {
+                    var subscriptionPk = ((KeyGuid)subscription.__PrimaryKey).Guid;
+                    var rmqConsumer = this._consumers.FirstOrDefault(x => x.Subscription.__PrimaryKey.Equals(subscriptionPk));
 
-            // Множество новых слушатей = Текущие подписки - запущенные подписки
-            var newConsumers = allConsumers.Except(this._consumers);
+                    if (rmqConsumer == null) // create if not exists
+                    {
+                        rmqConsumer = new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders);
+                        rmqConsumer.Start();
+                    }
+                    else // actualize subscription data(transfer type and address)
+                    {
+                        rmqConsumer.UpdateSubscription(subscription);
+                    }
 
-            // Множество слушателей на удаление = Запущенные подписки - текущие подписки
-            var consumersToDelete = this._consumers.Except(allConsumers).ToList();
+                    aliveSubs.Add(rmqConsumer);
+                }
 
-            foreach (var newConsumer in newConsumers)
-            {
-                this._consumers.Add(newConsumer);
-                newConsumer.Start();
-            }
+                foreach (var rmqConsumer in this._consumers) // stop consumers of non-existings subscriptions
+                {
+                    if (!aliveSubs.Contains(rmqConsumer))
+                    {
+                        rmqConsumer.Stop();
+                    }
+                }
 
-            foreach (var consumerToDelete in consumersToDelete)
-            {
-                consumerToDelete.Stop();
-            }
-
-            // Обновляем данные подписки (на случай если изменился тип callback'а или адрес)
-            foreach (var consumer in this._consumers)
-            {
-                var actualConsumer = allConsumers.First(x => x.Equals(consumer));
-                consumer.UpdateSubscription(actualConsumer.Subscription);
+                this._consumers = aliveSubs;
             }
         }
 
@@ -303,7 +308,7 @@
             this._vhostName = vhost;
             this.useLegacySenders = useLegacySenders;
 
-            this._consumers = new SynchronizedCollection<RmqConsumer>();
+            this._consumers = new List<RmqConsumer>();
         }
 
         public void Prepare()
@@ -313,8 +318,6 @@
             {
                 this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders));
             }
-
-            this._actualizationTimer = new Timer(x => this.Actualize(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);
         }
 
         public void Start()
@@ -332,6 +335,8 @@
                     _logger.LogError("Ошибка запуска слушателя брокера", e.ToString());
                 }
             }
+
+            this._actualizationTimer = new Timer(x => this.Actualize(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);
         }
 
         public void Stop()
