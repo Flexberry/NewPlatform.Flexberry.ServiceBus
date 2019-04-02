@@ -64,7 +64,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
                 foreach (var subscription in subscriptions)
                 {
-                    var subscriptionPk = ((KeyGuid)subscription.__PrimaryKey).Guid;
+                    var subscriptionPk = subscription.__PrimaryKey;
                     var rmqConsumer = this._consumers.FirstOrDefault(x => x.Subscription.__PrimaryKey.Equals(subscriptionPk));
 
                     if (rmqConsumer == null) // create if not exists
