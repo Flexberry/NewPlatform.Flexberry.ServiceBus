@@ -157,6 +157,7 @@
     <Compile Include="Components\MessageConverter\IMessageConverter.cs" />
     <Compile Include="Components\MessageConverter\RmqMessageConverter.cs" />
     <Compile Include="Components\ReceivingManager\RmqReceivingManager.cs" />
+    <Compile Include="Components\SendingManager\RmqConsumer.cs" />
     <Compile Include="Components\SendingManager\RmqSendingManager.cs" />
     <Compile Include="Components\StatisticsService\RmqStatisticsCollector.cs" />
     <Compile Include="Components\SubscriptionsManager\RmqSubscriptionsManager.cs" />

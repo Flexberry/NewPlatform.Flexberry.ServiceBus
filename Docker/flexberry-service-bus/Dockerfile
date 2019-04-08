@@ -1,6 +1,6 @@
 FROM mono:latest as mono
 
-ARG TAG=1.2.0-beta03-service
+ARG TAG=1.2.1-beta01-service
 RUN mono --version && \
     apt update && \
 	apt install -y git && \
@@ -10,13 +10,13 @@ RUN mono --version && \
 	nuget restore NewPlatform.Flexberry.ServiceBus.sln && \
 	msbuild /p:Configuration=Release NewPlatform.Flexberry.ServiceBus.sln
 
-FROM flexberry/alt.p8-apache2-mono:latest
+FROM flexberry/alt.p8-apache2-mono:4.6.2.7-1.2
 
 COPY --from=mono /Flexberry/NewPlatform.Flexberry.ServiceBus/NewPlatform.Flexberry.ServiceBus.WinServiceHost/bin/Release /opt/flexberry-service-bus
 COPY host/prepareConf.sh /opt/
 COPY host/start-flexberry-service-bus.sh /opt/
 
-RUN 	mkdir /opt/flexberry-service-bus ; adduser flexberry ; \
+RUN mkdir /opt/flexberry-service-bus ; adduser flexberry ; \
 	rm /opt/flexberry-service-bus/Mono.Security.dll ; \
 	rm /opt/flexberry-service-bus/NewPlatform.Flexberry.ServiceBus.WinServiceHost.exe.config
 
