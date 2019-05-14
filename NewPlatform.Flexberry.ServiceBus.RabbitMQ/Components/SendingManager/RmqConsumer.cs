@@ -118,7 +118,7 @@
             public void Stop()
             {
                 this._logger.LogDebugMessage("", $"Stopped listener of queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
-                this.Model.Dispose();
+                this.Model?.Dispose();
             }
 
             private string DeclareDelayRoutes(IModel model)
