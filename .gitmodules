@@ -1,0 +1,3 @@
+[submodule "NewPlatform.Flexberry.ORM"]
+	path = NewPlatform.Flexberry.ORM
+	url = https://github.com/Flexberry/NewPlatform.Flexberry.ORM.git
