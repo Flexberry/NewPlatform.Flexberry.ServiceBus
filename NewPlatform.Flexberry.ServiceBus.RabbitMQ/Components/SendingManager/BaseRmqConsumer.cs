@@ -12,28 +12,34 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         protected readonly ILogger Logger;
         private IMessageSender _sender;
         private readonly IMessageConverter _converter;
+        private readonly ushort _defaultPrefetchCount;
         private AmqpNamingManager _namingManager = new AmqpNamingManager();
         private bool _useLegacySenders;
         private ushort _prefetchCount;
 
         protected abstract IConnection Connection { get; }
 
+        private ushort GetPrefetchCount(Subscription subscription)
+        {
+            if (subscription.Client.ConnectionsLimit.HasValue && subscription.Client.ConnectionsLimit > 0)
+            {
+                return (ushort)Math.Min(subscription.Client.ConnectionsLimit.Value, ushort.MaxValue);
+            }
+            else
+            {
+                return _defaultPrefetchCount;
+            }
+        }
+
         protected BaseRmqConsumer(ILogger logger, IMessageConverter converter, Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders)
         {
             Logger = logger;
             _converter = converter;
+            _defaultPrefetchCount = defaultPrefetchCount;
             _useLegacySenders = useLegacySenders;
-
-            if (Subscription.Client.ConnectionsLimit.HasValue && Subscription.Client.ConnectionsLimit > 0)
-            {
-                _prefetchCount = (ushort)Math.Min(Subscription.Client.ConnectionsLimit.Value, ushort.MaxValue);
-            }
-            else
-            {
-                _prefetchCount = defaultPrefetchCount;
-            }
-
+            Subscription = subscription;
             _sender = new MessageSenderCreator(logger, useLegacySenders).GetMessageSender(subscription);
+            _prefetchCount = GetPrefetchCount(subscription);
         }
 
         /// <summary>
@@ -57,6 +63,14 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             {
                 this._sender = new MessageSenderCreator(this.Logger, _useLegacySenders).GetMessageSender(subscription);
                 this.Subscription = subscription;
+            }
+
+            var subPrefetchCount = GetPrefetchCount(subscription);
+
+            if (_prefetchCount != subPrefetchCount)
+            {
+                this.Model.BasicQos(0, subPrefetchCount, false);
+                _prefetchCount = subPrefetchCount;
             }
         }
 

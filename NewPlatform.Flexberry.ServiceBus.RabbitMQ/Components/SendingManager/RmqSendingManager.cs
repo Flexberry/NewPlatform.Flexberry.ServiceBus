@@ -193,7 +193,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
             foreach (var subscription in subscriptions)
             {
-                this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders));
+                this._consumers.Add(CreateConsumer(subscription));
             }
         }
 
