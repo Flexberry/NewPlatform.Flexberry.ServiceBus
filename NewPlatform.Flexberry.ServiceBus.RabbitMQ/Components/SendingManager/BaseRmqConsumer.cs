@@ -70,8 +70,9 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
             if (_prefetchCount != subPrefetchCount)
             {
-                this.Model.BasicQos(0, subPrefetchCount, false);
                 _prefetchCount = subPrefetchCount;
+                this.Stop();
+                this.Start();
             }
         }
 
