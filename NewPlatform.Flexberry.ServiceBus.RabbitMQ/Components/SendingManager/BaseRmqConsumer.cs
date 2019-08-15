@@ -166,12 +166,12 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         public override bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != typeof(RmqConsumer))
+            var otherConsumer = obj as BaseRmqConsumer;
+
+            if (otherConsumer == null)
             {
                 return false;
             }
-
-            var otherConsumer = (RmqConsumer)obj;
 
             return this.Subscription.Client.ID == otherConsumer.Subscription.Client.ID &&
                    this.Subscription.MessageType.ID == otherConsumer.Subscription.MessageType.ID;
