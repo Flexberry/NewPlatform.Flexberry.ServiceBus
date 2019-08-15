@@ -108,7 +108,15 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                     if (rmqConsumer == null) // create if not exists
                     {
                         rmqConsumer = CreateConsumer(subscription);
-                        rmqConsumer.Start();
+
+                        try
+                        {
+                            rmqConsumer.Start();
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError("Rmq consumer events", $"Error on starting consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
+                        }
                     }
                     else // actualize subscription data(transfer type and address)
                     {
@@ -125,8 +133,17 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                                 _logger.LogError("Rmq consumer events", $"Error on starting consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
                             }
                         }
-
-                        rmqConsumer.UpdateSubscription(subscription);
+                        else
+                        {
+                            try
+                            {
+                                rmqConsumer.UpdateSubscription(subscription);
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError("Rmq consumer events", $"Error on updating consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
+                            }
+                        }
                     }
 
                     aliveSubs.Add(rmqConsumer);
