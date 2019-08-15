@@ -81,6 +81,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             try
             {
                 this.Model = Connection.CreateModel();
+                this.Model.ConfirmSelect();
                 this.Model.BasicQos(0, this._prefetchCount, false);
                 this.Model.BasicConsume(queueName, false, this);
             }
@@ -125,9 +126,6 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         private void DelayMessage(ulong deliveryTag, IBasicProperties properties, byte[] body)
         {
-            var model = Connection.CreateModel();
-            model.ConfirmSelect();
-
             if (properties.Headers == null)
                 properties.Headers = new Dictionary<string, object>();
 
@@ -139,9 +137,9 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             var requeue = false;
             try
             {
-                var delayRoutingKey = DeclareDelayRoutes(model);
-                model.BasicPublish("", delayRoutingKey, false, properties, body);
-                model.WaitForConfirmsOrDie();
+                var delayRoutingKey = DeclareDelayRoutes(Model);
+                Model.BasicPublish("", delayRoutingKey, false, properties, body);
+                Model.WaitForConfirms();
             }
             catch (Exception ex)
             {
