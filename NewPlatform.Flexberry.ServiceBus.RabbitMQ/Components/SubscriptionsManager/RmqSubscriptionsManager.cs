@@ -20,6 +20,67 @@
         private Vhost _vhost;
 
         /// <summary>
+        /// Create routing for controlling delayed messages (messages have rejected).
+        /// </summary>
+        /// <param name="clientId">Client ID</param>
+        /// <param name="messageTypeId">Message type ID</param>
+        /// <param name="subQueue">RabbitMQ esb subscription queue</param>
+        private void DeclareDelayRoutes(string clientId, string messageTypeId, Queue subQueue)
+        {
+            var delayExchangeName = _namingManager.GetClientDelayExchangeName(clientId);
+            var delayQueueName = _namingManager.GetClientDelayQueueName(clientId, messageTypeId);
+            var delayRoutingKey = _namingManager.GetDelayRoutingKey(clientId, messageTypeId);
+            var originalQueueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
+            var originalRoutingKey = _namingManager.GetRoutingKey(messageTypeId);
+
+            // declare dead letter exhange and key for returning message to original queue
+            var queueArguments = new InputArguments();
+            queueArguments["x-dead-letter-exchange"] = delayExchangeName;
+            queueArguments["x-dead-letter-routing-key"] = originalRoutingKey;
+            queueArguments[RabbitMqConstants.FlexberryArgumentsKeys.NotSyncFlag] = "";
+
+            var delayQueue = _managementClient.CreateQueueAsync(new QueueInfo(delayQueueName, false, true, queueArguments), _vhost);
+            var delayExchange = _managementClient.CreateExchangeAsync(new ExchangeInfo(delayExchangeName, ExchangeType.Direct), _vhost);
+
+            _managementClient.CreateBinding(delayExchange.Result, delayQueue.Result, new BindingInfo(delayRoutingKey));
+            _managementClient.CreateBinding(delayExchange.Result, subQueue, new BindingInfo(originalRoutingKey));
+
+            // on message reject, requeue false message will move to delay queue via dead letter exchange and routing key
+            var deadLetterPolicy = new Policy()
+            {
+                Definition = new PolicyDefinition()
+                {
+                    DeadLetterRoutingKey = delayRoutingKey,
+                    DeadLetterExchange = delayExchange.Result.Name
+                },
+                Vhost = _vhostStr,
+                Name = $"dlk_{originalQueueName}",
+                ApplyTo = ApplyMode.Queues,
+                Pattern = originalQueueName
+            };
+            _managementClient.CreatePolicy(deadLetterPolicy).Wait();
+
+            // set ttl per queue for returning from delay queue to original
+            var returnFromDelayPolicy = new Policy()
+            {
+                Vhost = _vhostStr,
+                Name = $"delay_{originalQueueName}",
+                ApplyTo = ApplyMode.Queues,
+                Definition = new PolicyDefinition()
+                {
+                    MessageTtl = DelayMessageTtl * 1000,
+                },
+                Pattern = delayQueueName
+            };
+            _managementClient.CreatePolicy(returnFromDelayPolicy).Wait();
+        }
+
+        /// <summary>
+        ///  Number of seconds to hold message in delay queue
+        /// </summary>
+        public uint DelayMessageTtl { get; set; } = 60 * 15;
+
+        /// <summary>
         /// Gets Vhost RabbitMq.
         /// </summary>
         public Vhost Vhost
@@ -202,6 +263,8 @@
             var queue = this._managementClient.CreateQueueAsync(new QueueInfo(queueName, false, true, new InputArguments()), this.Vhost).Result;
             var exchange = this._managementClient.CreateExchangeAsync(new ExchangeInfo(exchangeName, ExchangeType.Topic, false, true, false, new Arguments()), Vhost).Result;
             this._managementClient.CreateBinding(exchange, queue, new BindingInfo(routingKey)).Wait();
+
+            DeclareDelayRoutes(clientId, messageTypeId, queue);
         }
 
         /// <summary>

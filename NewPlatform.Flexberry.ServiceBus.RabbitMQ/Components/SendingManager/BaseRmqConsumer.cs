@@ -16,7 +16,6 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         private AmqpNamingManager _namingManager = new AmqpNamingManager();
         private bool _useLegacySenders;
         private ushort _prefetchCount;
-        private string _delayRoutingKey;
 
         protected abstract IConnection Connection { get; }
 
@@ -83,7 +82,6 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             try
             {
                 this.Model = Connection.CreateModel();
-                _delayRoutingKey = DeclareDelayRoutes(Model);
                 this.Model.ConfirmSelect();
                 this.Model.BasicQos(0, this._prefetchCount, false);
                 this.Model.BasicConsume(queueName, false, this);
@@ -103,53 +101,6 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             this.Logger.LogDebugMessage("",
                 $"Stopped listener of queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
             this.Model.Dispose();
-        }
-
-        private string DeclareDelayRoutes(IModel model)
-        {
-            var sub = this.Subscription;
-
-            var delayExchangeName = _namingManager.GetClientDelayExchangeName(sub.Client.ID);
-            var delayQueueName = _namingManager.GetClientDelayQueueName(sub.Client.ID, sub.MessageType.ID);
-            var delayRoutingKey = _namingManager.GetDelayRoutingKey(sub.Client.ID, sub.MessageType.ID);
-            var originalQueueName = _namingManager.GetClientQueueName(sub.Client.ID, sub.MessageType.ID);
-            var originalRoutingKey = _namingManager.GetRoutingKey(sub.MessageType.ID);
-
-            var queueArguments = new Dictionary<string, object>();
-            queueArguments["x-dead-letter-exchange"] = delayExchangeName;
-            queueArguments["x-dead-letter-routing-key"] = originalRoutingKey;
-            queueArguments[RabbitMqConstants.FlexberryArgumentsKeys.NotSyncFlag] = "";
-            model.QueueDeclare(delayQueueName, true, false, false, queueArguments);
-            model.ExchangeDeclare(delayExchangeName, RabbitMQ.Client.ExchangeType.Direct, true);
-            model.QueueBind(delayQueueName, delayExchangeName, delayRoutingKey);
-            model.QueueBind(originalQueueName, delayExchangeName, originalRoutingKey);
-
-            return delayRoutingKey;
-        }
-
-        private void DelayMessage(ulong deliveryTag, IBasicProperties properties, byte[] body)
-        {
-            if (properties.Headers == null)
-                properties.Headers = new Dictionary<string, object>();
-
-            long redeliveryCount = _converter.GetErrorsCount(properties.Headers);
-            long delay = redeliveryCount * AdditionalMinutesBetweenRetries * 60 * 1000; // delay in ms
-            properties.Expiration = delay.ToString();
-            properties.Headers[RabbitMqConstants.FlexberryHeadersKeys.OriginalMessageTimestamp] = properties.Timestamp;
-
-            var requeue = false;
-            try
-            {
-                Model.BasicPublish("", _delayRoutingKey, false, properties, body);
-                Model.WaitForConfirms();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError("Error on message delay", ex.ToString());
-                requeue = true;
-            }
-
-            this.Model.BasicReject(deliveryTag, requeue);
         }
 
         public override async Task HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, byte[] body)
@@ -174,7 +125,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             }
             else
             {
-                DelayMessage(deliveryTag, properties, body);
+                this.Model.BasicReject(deliveryTag, false);
             }
         }
 

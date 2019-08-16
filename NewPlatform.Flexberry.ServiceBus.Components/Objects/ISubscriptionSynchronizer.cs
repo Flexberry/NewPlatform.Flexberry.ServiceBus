@@ -10,7 +10,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     {
         int UpdatePeriodMilliseconds { get; set; }
 
-        void UpdateMqSubscriptions(List<Subscription> mqSubscriptions, List<Subscription> esbSubscriptions);
+        void UpdateMqSubscriptions(List<Subscription> esbSubscriptions);
 
         void SynchronizeSendingPermissions(string clientId = null);
     }

@@ -14,7 +14,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     /// <summary>
     /// Класс для синхронизации подписок в MQ и шине.
     /// </summary>
-    internal class RmqSubscriptionsSynchronizer : BaseServiceBusComponent, ISubscriptionSynchronizer
+    public class RmqSubscriptionsSynchronizer : BaseServiceBusComponent, ISubscriptionSynchronizer
     {
         private readonly ILogger _logger;
         private readonly ISubscriptionsManager _esbSubscriptionsManager;
@@ -78,15 +78,14 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <summary>
         /// Цикл синхронизации подписок.
         /// </summary>
-        private void Sync()
+        public void Sync()
         {
             try
             {
-                var mqSubscriptions = this._mqSubscriptionsManager.GetSubscriptions().ToList();
                 var esbSubscriptions = this._esbSubscriptionsManager.GetSubscriptions().ToList();
 
                 // Сначала актуализируем подписки в брокере, считаем его ведомым по данным
-                this.UpdateMqSubscriptions(mqSubscriptions, esbSubscriptions);
+                this.UpdateMqSubscriptions(esbSubscriptions);
 
                 this.SynchronizeSendingPermissions();
             }
@@ -103,17 +102,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// </summary>
         /// <param name="mqSubscriptions">Список текущих подписок в RabbitMQ.</param>
         /// <param name="esbSubscriptions">Список текущих подписок в шине.</param>
-        public void UpdateMqSubscriptions(List<Subscription> mqSubscriptions, List<Subscription> esbSubscriptions)
+        public void UpdateMqSubscriptions(List<Subscription> esbSubscriptions)
         {
             foreach (var esbSubscription in esbSubscriptions)
             {
-                // Если подписки нет, создаём
-                if (!mqSubscriptions.Any(x => this.IsSubscriptionEquals(esbSubscription, x)))
-                {
-                    this._mqSubscriptionsManager.SubscribeOrUpdate(esbSubscription.Client.ID, esbSubscription.MessageType.ID, false, null);
-                    _logger.LogDebugMessage("Subscription synchronizatrion",
-                        $"Created subscription in broker for {esbSubscription.Client.ID} {esbSubscription.MessageType.ID}");
-                }
+                this._mqSubscriptionsManager.SubscribeOrUpdate(esbSubscription.Client.ID, esbSubscription.MessageType.ID, false, null);
+                _logger.LogDebugMessage("Subscription synchronization",
+                    $"Created subscription in broker for {esbSubscription.Client.ID} {esbSubscription.MessageType.ID}");
 
                 // TODO: подумать об изменении и удалении подписок
             }
