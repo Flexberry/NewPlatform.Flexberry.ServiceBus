@@ -13,12 +13,29 @@
     internal class RmqConsumer : BaseRmqConsumer
     {
         private readonly IConnectionFactory _connectionFactory;
+        private IConnection _connection;
 
         public RmqConsumer(ILogger logger, IMessageConverter converter, IConnectionFactory connectionFactory, Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders) : base(logger, converter, subscription, defaultPrefetchCount, useLegacySenders)
         {
             _connectionFactory = connectionFactory;
         }
 
-        protected override IConnection Connection => _connectionFactory.CreateConnection();
+        protected override IConnection Connection
+        {
+            get
+            {
+                if (_connection == null)
+                {
+                    _connection = _connectionFactory.CreateConnection();
+                }
+                else if(!_connection.IsOpen)
+                {
+                    _connection.Dispose();
+                    _connection = _connectionFactory.CreateConnection();
+                }
+
+                return _connection;
+            }
+        }
     }
 }
