@@ -7,6 +7,7 @@
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
     using ExchangeType = RabbitMQ.Client.ExchangeType;
+    using RabbitMQ.Client;
 
     /// <summary>
     /// Класс работы с объектами маршрутизации RMQ.
@@ -15,70 +16,51 @@
     {
         private readonly ILogger _logger;
         private readonly IManagementClient _managementClient;
+        private readonly IConnectionFactory _connectionFactory;
         private readonly AmqpNamingManager _namingManager;
         private readonly string _vhostStr;
         private Vhost _vhost;
+
+        private IModel _model;
+
+        private IModel Model
+        {
+            get
+            {
+                if (_model == null || _model.IsClosed)
+                {
+                    _model = _connectionFactory.CreateConnection().CreateModel();
+                }
+
+                return _model;
+            }
+        }
 
         /// <summary>
         /// Create routing for controlling delayed messages (messages have rejected).
         /// </summary>
         /// <param name="clientId">Client ID</param>
         /// <param name="messageTypeId">Message type ID</param>
-        /// <param name="subQueue">RabbitMQ esb subscription queue</param>
-        private void DeclareDelayRoutes(string clientId, string messageTypeId, Queue subQueue)
+        /// <param name="subQueue">RabbitMQ esb subscription queue name</param>
+        private void DeclareDelayRoutes(string clientId, string messageTypeId, string subQueue)
         {
             var delayExchangeName = _namingManager.GetClientDelayExchangeName(clientId);
             var delayQueueName = _namingManager.GetClientDelayQueueName(clientId, messageTypeId);
             var delayRoutingKey = _namingManager.GetDelayRoutingKey(clientId, messageTypeId);
-            var originalQueueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
             var originalRoutingKey = _namingManager.GetRoutingKey(messageTypeId);
 
             // declare dead letter exhange and key for returning message to original queue
-            var queueArguments = new InputArguments();
+            var queueArguments = new Dictionary<string, object>();
             queueArguments["x-dead-letter-exchange"] = delayExchangeName;
             queueArguments["x-dead-letter-routing-key"] = originalRoutingKey;
             queueArguments[RabbitMqConstants.FlexberryArgumentsKeys.NotSyncFlag] = "";
 
-            var delayQueue = _managementClient.CreateQueueAsync(new QueueInfo(delayQueueName, false, true, queueArguments), _vhost);
-            var delayExchange = _managementClient.CreateExchangeAsync(new ExchangeInfo(delayExchangeName, ExchangeType.Direct), _vhost);
+            Model.ExchangeDeclareNoWait(delayExchangeName, ExchangeType.Direct, true, false);
+            Model.QueueDeclareNoWait(delayQueueName, true, false, false, queueArguments);
 
-            _managementClient.CreateBinding(delayExchange.Result, delayQueue.Result, new BindingInfo(delayRoutingKey));
-            _managementClient.CreateBinding(delayExchange.Result, subQueue, new BindingInfo(originalRoutingKey));
-
-            // on message reject, requeue false message will move to delay queue via dead letter exchange and routing key
-            var deadLetterPolicy = new Policy()
-            {
-                Definition = new PolicyDefinition()
-                {
-                    DeadLetterRoutingKey = delayRoutingKey,
-                    DeadLetterExchange = delayExchange.Result.Name
-                },
-                Vhost = _vhostStr,
-                Name = $"dlk_{originalQueueName}",
-                ApplyTo = ApplyMode.Queues,
-                Pattern = originalQueueName
-            };
-            _managementClient.CreatePolicy(deadLetterPolicy).Wait();
-
-            // set ttl per queue for returning from delay queue to original
-            var returnFromDelayPolicy = new Policy()
-            {
-                Vhost = _vhostStr,
-                Name = $"delay_{originalQueueName}",
-                ApplyTo = ApplyMode.Queues,
-                Definition = new PolicyDefinition()
-                {
-                    MessageTtl = DelayMessageTtl * 1000,
-                },
-                Pattern = delayQueueName
-            };
-            _managementClient.CreatePolicy(returnFromDelayPolicy).Wait();
+            Model.QueueBindNoWait(delayQueueName, delayExchangeName, delayRoutingKey, null);
+            Model.QueueBindNoWait(subQueue, delayExchangeName, originalRoutingKey, null);
         }
-
-        /// <summary>
-        ///  Number of seconds to hold message in delay queue
-        /// </summary>
-        public uint DelayMessageTtl { get; set; } = 60 * 15;
 
         /// <summary>
         /// Gets Vhost RabbitMq.
@@ -101,10 +83,11 @@
         /// <param name="logger">Используемый компонент логирования.</param>
         /// <param name="managementClient">Фабрика соединений RabbitMQ.</param>
         /// <param name="vhost">Virtual host RabbitMQ</param>
-        public RmqSubscriptionsManager(ILogger logger, IManagementClient managementClient, string vhost = "/")
+        public RmqSubscriptionsManager(ILogger logger, IManagementClient managementClient, IConnectionFactory connectionFactory, string vhost = "/")
         {
             this._logger = logger;
             this._managementClient = managementClient;
+            _connectionFactory = connectionFactory;
             this._vhostStr = vhost;
 
             // TODO: следует ли выносить это в зависимости?
@@ -260,11 +243,15 @@
             var exchangeName = this._namingManager.GetExchangeName(messageTypeId);
             var routingKey = this._namingManager.GetRoutingKey(messageTypeId);
 
-            var queue = this._managementClient.CreateQueueAsync(new QueueInfo(queueName, false, true, new InputArguments()), this.Vhost).Result;
-            var exchange = this._managementClient.CreateExchangeAsync(new ExchangeInfo(exchangeName, ExchangeType.Topic, false, true, false, new Arguments()), Vhost).Result;
-            this._managementClient.CreateBinding(exchange, queue, new BindingInfo(routingKey)).Wait();
+            var queueArguments = new Dictionary<string, object>();
+            queueArguments["x-dead-letter-exchange"] = _namingManager.GetClientDelayExchangeName(clientId);
+            queueArguments["x-dead-letter-routing-key"] = _namingManager.GetDelayRoutingKey(clientId, messageTypeId);
 
-            DeclareDelayRoutes(clientId, messageTypeId, queue);
+            Model.QueueDeclareNoWait(queueName, true, false, false, queueArguments);
+            Model.ExchangeDeclareNoWait(exchangeName, ExchangeType.Topic, true);
+            Model.QueueBindNoWait(queueName, exchangeName, routingKey, null);
+
+            DeclareDelayRoutes(clientId, messageTypeId, queueName);
         }
 
         /// <summary>

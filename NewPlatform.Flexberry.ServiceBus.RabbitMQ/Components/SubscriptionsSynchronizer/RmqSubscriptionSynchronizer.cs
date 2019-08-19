@@ -25,6 +25,28 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         private readonly string _vhostStr;
         private Vhost _vhost;
 
+        private void CreateReturnDelayMessagePolicy()
+        {
+            var returnFromDelayPolicy = new Policy()
+            {
+                Vhost = _vhostStr,
+                Name = $"return_delayed_messages",
+                ApplyTo = ApplyMode.Queues,
+                Definition = new PolicyDefinition()
+                {
+                    MessageTtl = DelayMessageTtl * 1000,
+                },
+                Pattern = $"{_namingManager.ClientQueuePrefix}.*{_namingManager.DelaySuffix}"
+            };
+
+            _managementClient.CreatePolicy(returnFromDelayPolicy).Wait();
+        }
+
+        /// <summary>
+        ///  Number of seconds to hold message in delay queue
+        /// </summary>
+        public uint DelayMessageTtl { get; set; } = 60 * 15;
+
         /// <summary>
         /// Gets Vhost RabbitMq.
         /// </summary>
@@ -86,7 +108,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
                 // Сначала актуализируем подписки в брокере, считаем его ведомым по данным
                 this.UpdateMqSubscriptions(esbSubscriptions);
-
+                CreateReturnDelayMessagePolicy();
                 this.SynchronizeSendingPermissions();
             }
             catch (Exception e)
