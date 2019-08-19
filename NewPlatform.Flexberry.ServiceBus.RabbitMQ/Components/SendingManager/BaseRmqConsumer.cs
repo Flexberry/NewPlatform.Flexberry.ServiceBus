@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Framing.Impl;
 
 namespace NewPlatform.Flexberry.ServiceBus.Components
 {
@@ -31,6 +33,50 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             }
         }
 
+        protected string GetConsumerTag()
+        {
+            var queueName = _namingManager.GetClientQueueName(this.Subscription.Client.ID, this.Subscription.MessageType.ID);
+            return $"{queueName}_{Guid.NewGuid().ToString("N")}";
+        }
+
+        protected void OnConnectionRecoveryError(object sender, ConnectionRecoveryErrorEventArgs reason)
+        {
+            Logger.LogError("Callback sender event", $"Connection's recovery of {this.ConsumerTag} failed. {Environment.NewLine} {reason.Exception}");
+        }
+
+        protected void OnRecoverySucceeded(object sender, EventArgs reason)
+        {
+            Logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} is recovered.");
+        }
+
+        protected void OnConnectionShutdown(object sender, ShutdownEventArgs reason)
+        {
+            Logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
+
+            if (reason.ReplyCode == 530) // attempt to reuse consumer tag
+            {
+                try
+                {
+                    this.Model.Dispose();
+                    this.Start();
+                }
+                catch(Exception ex)
+                {
+                    Logger.LogError("Callback sender event", ex.ToString());
+                }
+            }
+        }
+
+        protected void OnModelShutdown(object sender, ShutdownEventArgs reason)
+        {
+            Logger.LogInformation("Callback sender event", $"Model of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
+        }
+
+        protected void ModelOnBasicRecoverOk(object sender, EventArgs e)
+        {
+            Logger.LogInformation("Callback sender event", $"Model {this.ConsumerTag} is recovered.");
+        }
+
         protected BaseRmqConsumer(ILogger logger, IMessageConverter converter, Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders)
         {
             Logger = logger;
@@ -41,6 +87,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             _sender = new MessageSenderCreator(logger, useLegacySenders).GetMessageSender(subscription);
             _prefetchCount = GetPrefetchCount(subscription);
         }
+
+        /// <summary>
+        /// Is Start() method called succesfully
+        /// </summary>
+        public bool IsInitialized { get; private set; }
 
         /// <summary>
         /// Получание подписки слушателя.
@@ -84,7 +135,12 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 this.Model = Connection.CreateModel();
                 this.Model.ConfirmSelect();
                 this.Model.BasicQos(0, this._prefetchCount, false);
-                this.Model.BasicConsume(queueName, false, this);
+                this.Model.BasicConsume(this, queueName, false, GetConsumerTag());
+
+                this.Model.ModelShutdown += OnModelShutdown;
+                this.Model.BasicRecoverOk += ModelOnBasicRecoverOk;
+
+                IsInitialized = true;
             }
             catch (Exception ex)
             {

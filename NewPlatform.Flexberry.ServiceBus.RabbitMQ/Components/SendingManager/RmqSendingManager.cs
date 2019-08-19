@@ -45,7 +45,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             {
                 if (UseSingleConnection)
                 {
-                    if (_connection == null || !_connection.IsOpen)
+                    if (_connection == null)
                     {
                         _connection = _connectionFactory.CreateConnection();
                         _logger.LogDebugMessage("Consumer connection creation", "");
@@ -120,20 +120,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                     }
                     else // actualize subscription data(transfer type and address)
                     {
-                        if (!rmqConsumer.IsRunning)
-                        {
-                            try
-                            {
-                                _logger.LogInformation("Rmq consumer restart", $"Consumer for client {subscription.Client.ID}, message type {subscription.MessageType.ID} is not running.");
-                                rmqConsumer.Start();
-                                _logger.LogInformation("Rmq consumer restart", $"Consumer {subscription.Client.ID}, message type {subscription.MessageType.ID} started.");
-                            }
-                            catch (Exception e)
-                            {
-                                _logger.LogError("Rmq consumer events", $"Error on starting consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
-                            }
-                        }
-                        else
+                        if (rmqConsumer.IsRunning)
                         {
                             try
                             {

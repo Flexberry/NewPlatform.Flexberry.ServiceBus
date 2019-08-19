@@ -12,6 +12,9 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders) : base(logger, converter, subscription, defaultPrefetchCount, useLegacySenders)
         {
             _connection = connection;
+            connection.ConnectionShutdown += OnConnectionShutdown;
+            connection.RecoverySucceeded += OnRecoverySucceeded;
+            connection.ConnectionRecoveryError += OnConnectionRecoveryError;
         }
     }
 }

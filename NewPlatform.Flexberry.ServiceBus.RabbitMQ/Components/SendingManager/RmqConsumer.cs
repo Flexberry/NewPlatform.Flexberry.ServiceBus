@@ -27,11 +27,18 @@
                 if (_connection == null)
                 {
                     _connection = _connectionFactory.CreateConnection();
+                    _connection.ConnectionShutdown += OnConnectionShutdown;
+                    _connection.RecoverySucceeded += OnRecoverySucceeded;
+                    _connection.ConnectionRecoveryError += OnConnectionRecoveryError;
                 }
                 else if(!_connection.IsOpen)
                 {
                     _connection.Dispose();
                     _connection = _connectionFactory.CreateConnection();
+
+                    _connection.ConnectionShutdown += OnConnectionShutdown;
+                    _connection.RecoverySucceeded += OnRecoverySucceeded;
+                    _connection.ConnectionRecoveryError += OnConnectionRecoveryError;
                 }
 
                 return _connection;
