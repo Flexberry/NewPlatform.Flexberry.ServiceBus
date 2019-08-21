@@ -53,7 +53,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         {
             Logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
 
-            if (reason.ReplyCode == 530) // attempt to reuse consumer tag
+            if (reason.ReplyCode == 0)
+            {
+
+            }
+
+            if (reason.ReplyCode == 530 || // attempt to reuse consumer tag
+                reason.ReplyCode == 0) // internal library error
             {
                 try
                 {
@@ -63,6 +69,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 catch(Exception ex)
                 {
                     Logger.LogError("Callback sender event", ex.ToString());
+                    IsInitialized = false;
                 }
             }
         }
