@@ -131,6 +131,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                                 _logger.LogError("Rmq consumer events", $"Error on updating consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
                             }
                         }
+
+                        if (!rmqConsumer.IsInitialized)
+                        {
+                            rmqConsumer.Start();
+                        }
                     }
 
                     aliveSubs.Add(rmqConsumer);
