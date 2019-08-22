@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using RabbitMQ.Client;
+    using RabbitMQ.Client.Events;
 
     using NewPlatform.Flexberry.ServiceBus.MessageSenders;
 
@@ -48,6 +49,9 @@
                 {
                     this._prefetchCount = defaultPrefetchCount;
                 }
+
+                var queueName = this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID);
+                this.ConsumerTag = $"{queueName}.{Guid.NewGuid().ToString("N")}";
             }
 
             /// <summary>
@@ -71,9 +75,15 @@
                 try
                 {
                     var connection = _connectionFactory.CreateConnection();
+                    
                     this.Model = connection.CreateModel();
                     this.Model.BasicQos(0, this._prefetchCount, false);
                     this.Model.BasicConsume(queueName, false, this);
+
+                    this.Model.ModelShutdown += OnModelShutdown;
+                    connection.ConnectionShutdown += OnConnectionShutdown;
+                    connection.RecoverySucceeded += OnRecoverySucceeded;
+                    connection.ConnectionRecoveryError += OnConnectionRecoveryError;
                 }
                 catch(Exception ex)
                 {
@@ -85,10 +95,30 @@
                 this._logger.LogDebugMessage("", $"Created listener of queue {queueName}");
             }
 
+            private void OnConnectionRecoveryError(object sender, ConnectionRecoveryErrorEventArgs reason)
+            {
+                _logger.LogError("Callback sender event", $"Connection's recovery of {this.ConsumerTag} failed. {Environment.NewLine} {reason.Exception}");
+            }
+
+            private void OnRecoverySucceeded(object sender, EventArgs reason)
+            {
+                _logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} is recovered.");
+            }
+
+            private void OnConnectionShutdown(object sender, ShutdownEventArgs reason)
+            {
+                _logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
+            }
+
+            private void OnModelShutdown(object sender, ShutdownEventArgs reason)
+            {
+                _logger.LogInformation("Callback sender event", $"Model of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
+            }
+
             public void Stop()
             {
                 this._logger.LogDebugMessage("", $"Stopped listener of queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
-                this.Model.Dispose();
+                this.Model?.Dispose();
             }
 
             private string DeclareDelayRoutes(IModel model)

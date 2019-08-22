@@ -72,6 +72,10 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                         rmqConsumer = new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders);
                         rmqConsumer.Start();
                     }
+                    else if (!rmqConsumer.IsRunning)
+                    {
+                        rmqConsumer.Start();
+                    }
                     else // actualize subscription data(transfer type and address)
                     {
                         rmqConsumer.UpdateSubscription(subscription);
