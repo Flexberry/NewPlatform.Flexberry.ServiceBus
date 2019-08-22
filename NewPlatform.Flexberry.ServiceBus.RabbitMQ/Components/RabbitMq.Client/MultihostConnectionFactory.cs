@@ -16,6 +16,14 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <summary>
         ///  
         /// </summary>
+        /// <param name="endpoints">Сomma separated AMQP URIs</param>
+        public MultihostConnectionFactory(string endpoints) : this(endpoints.Split(',').Select(x => new Uri(x.Trim())).ToArray())
+        {
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
         /// <param name="endpoints">AMQP URIs</param>
         public MultihostConnectionFactory(Uri[] endpoints) : this(endpoints.Select(x => new AmqpTcpEndpoint(x)).ToArray())
         {
