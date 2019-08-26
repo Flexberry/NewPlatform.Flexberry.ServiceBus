@@ -36,6 +36,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             }
         }
 
+        private bool CheckShouldRecreate(ShutdownEventArgs reason)
+        {
+            return reason.ReplyCode == 530 || // attempt to reuse consumer tag
+                   reason.ReplyCode == 0 || // internal library error
+                   reason.ReplyCode == 541; // unexpected exception in library
+        }
+
         /// <summary>
         /// Get consumertag, should be unique.
         /// </summary>
@@ -59,26 +66,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         protected void OnConnectionShutdown(object sender, ShutdownEventArgs reason)
         {
             Logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
-
-            if (reason.ReplyCode == 530 || // attempt to reuse consumer tag
-                reason.ReplyCode == 0) // internal library error
-            {
-                try
-                {
-                    this.Model.Dispose();
-                    this.Start();
-                }
-                catch(Exception ex)
-                {
-                    Logger.LogError("Callback sender event", ex.ToString());
-                    IsInitialized = false;
-                }
-            }
+            ShouldRecreate = CheckShouldRecreate(reason);
         }
 
         protected void OnModelShutdown(object sender, ShutdownEventArgs reason)
         {
             Logger.LogInformation("Callback sender event", $"Model of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
+            ShouldRecreate = CheckShouldRecreate(reason);
         }
 
         protected void ModelOnBasicRecoverOk(object sender, EventArgs e)
@@ -98,19 +92,14 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         }
 
         /// <summary>
-        /// Is Start() method called succesfully
+        /// Flag about consumer should restart due to changing prefetch count or inability to recover.
         /// </summary>
-        public bool IsInitialized { get; private set; }
+        public bool ShouldRecreate { get; private set; }
 
         /// <summary>
         /// Получание подписки слушателя.
         /// </summary>
         public Subscription Subscription { get; private set; }
-
-        /// <summary>
-        /// Number of minutes to be added to delay before the next attempt to send message.
-        /// </summary>
-        public int AdditionalMinutesBetweenRetries { get; set; } = 3;
 
         /// <summary>
         /// Обновление данных подписки (необходимо в случае если 
@@ -129,9 +118,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
             if (_prefetchCount != subPrefetchCount)
             {
-                _prefetchCount = subPrefetchCount;
-                this.Stop();
-                this.Start();
+                ShouldRecreate = true;
             }
         }
 
@@ -141,6 +128,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
             try
             {
+                if (this.Model != null)
+                {
+                    this.Model.Dispose();
+                }
+
                 this.Model = Connection.CreateModel();
                 this.Model.ConfirmSelect();
                 this.Model.BasicQos(0, this._prefetchCount, false);
@@ -149,23 +141,20 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 this.Model.ModelShutdown += OnModelShutdown;
                 this.Model.BasicRecoverOk += ModelOnBasicRecoverOk;
 
-                IsInitialized = true;
+                this.Logger.LogDebugMessage("", $"Created listener of queue {queueName}");
             }
             catch (Exception ex)
             {
                 this.Logger.LogInformation($"Can't create listener of queue {queueName}", ex.ToString());
-                this.IsRunning = false;
-                return;
+                ShouldRecreate = true;
             }
-
-            this.Logger.LogDebugMessage("", $"Created listener of queue {queueName}");
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
             this.Logger.LogDebugMessage("",
                 $"Stopped listener of queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
-            this.Model.Dispose();
+            this.Model?.Dispose();
         }
 
         public override async Task HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, byte[] body)
