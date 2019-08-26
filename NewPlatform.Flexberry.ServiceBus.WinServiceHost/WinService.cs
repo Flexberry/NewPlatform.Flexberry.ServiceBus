@@ -1,35 +1,16 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.WinServiceHost
 {
-    using System.Linq;
     using System.ServiceProcess;
-
-    using Unity;
-    using Microsoft.Practices.Unity.Configuration;
-
-    using NewPlatform.Flexberry.ServiceBus.Components;
 
     public partial class WinService : ServiceBase
     {
-        private readonly ServiceBus _serviceBus;
+        private readonly IServiceBus _serviceBus;
 
         public WinService()
         {
             InitializeComponent();
 
-            var unityContainer = new UnityContainer();
-            unityContainer.LoadConfiguration();
-
-            var sbComponents =
-                from registration in unityContainer.Registrations
-                where typeof(IServiceBusComponent).IsAssignableFrom(registration.MappedToType)
-                select (IServiceBusComponent)unityContainer.Resolve(registration.RegisteredType, registration.Name);
-
-            var serviceBusSettings = new ServiceBusSettings
-            {
-                Components = sbComponents.ToList()
-            };
-
-            _serviceBus = new ServiceBus(serviceBusSettings, unityContainer.Resolve<ILogger>());
+            _serviceBus = ServiceBusCreator.CreateServiceBus();
         }
 
         protected override void OnStart(string[] args)

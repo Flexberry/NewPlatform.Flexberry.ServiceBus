@@ -528,5 +528,83 @@
                 done = true;
             }
         }
+
+        public static void PrepareAndStartComponents(this IEnumerable<IServiceBusComponent> components, ILogger logger)
+        {
+            components.PrepareComponents(logger);
+            components.StartComponents(logger);
+        }
+
+        public static void StopAndDisposeComponents(this IEnumerable<IServiceBusComponent> components, ILogger logger)
+        {
+            components.StopComponents(logger);
+            components.AfterStopComponents(logger);
+            components.DisposeComponents(logger);
+        }
+
+        public static void PrepareComponents(this IEnumerable<IServiceBusComponent> components, ILogger logger)
+        {
+            foreach (IServiceBusComponent component in components)
+            {
+                logger.LogDebugMessage(nameof(ServiceBus), $"Preparing module {component.GetType().FullName}");
+                component.Prepare();
+            }
+        }
+
+        public static void StartComponents(this IEnumerable<IServiceBusComponent> components, ILogger logger)
+        {
+            foreach (IServiceBusComponent component in components)
+            {
+                logger.LogDebugMessage(nameof(ServiceBus), $"Starting module {component.GetType().FullName}");
+                component.Start();
+            }
+        }
+
+        public static void StopComponents(this IEnumerable<IServiceBusComponent> components, ILogger logger)
+        {
+            foreach (var component in components)
+            {
+                try
+                {
+                    logger.LogDebugMessage(nameof(ServiceBus), $"Stopping module {component.GetType().FullName}");
+                    component.Stop();
+                }
+                catch (Exception ex)
+                {
+                    logger.LogUnhandledException(ex);
+                }
+            }
+        }
+
+        public static void AfterStopComponents(this IEnumerable<IServiceBusComponent> components, ILogger logger)
+        {
+            foreach (var component in components)
+            {
+                try
+                {
+                    logger.LogDebugMessage(nameof(ServiceBus), $"Executing \"after stop\" action for module {component.GetType().FullName}");
+                    component.AfterStop();
+                }
+                catch (Exception ex)
+                {
+                    logger.LogUnhandledException(ex);
+                }
+            }
+        }
+
+        public static void DisposeComponents(this IEnumerable<IServiceBusComponent> components, ILogger logger)
+        {
+            foreach (var component in components.OfType<IDisposable>())
+            {
+                try
+                {
+                    component.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    logger.LogUnhandledException(ex);
+                }
+            }
+        }
     }
 }

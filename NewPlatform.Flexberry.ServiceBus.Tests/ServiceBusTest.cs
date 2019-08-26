@@ -20,7 +20,7 @@
         [Fact]
         public void TestCreatingEmptySB()
         {
-            new ServiceBus(new ServiceBusSettings(), GetMockLogger());
+            new ServiceBus(GetMockLogger());
         }
 
         /// <summary>
@@ -29,7 +29,8 @@
         [Fact]
         public void TestStartSB()
         {
-            var sb = new ServiceBus(new ServiceBusSettings(), GetMockLogger());
+            var sb = new ServiceBus(GetMockLogger());
+            sb.Init(new ServiceBusSettings());
             StartServiceBus(sb, 5);
         }
 
@@ -55,7 +56,8 @@
                     GetCachedSubscriptionsManager()
                 }
             };
-            var sb = new ServiceBus(settings, GetMockLogger());
+            var sb = new ServiceBus(GetMockLogger());
+            sb.Init(settings);
 
             StartServiceBus(sb, 5);
         }
@@ -78,7 +80,8 @@
                     mockService2.Object,
                 }
             };
-            var sb = new ServiceBus(settings, GetMockLogger());
+            var sb = new ServiceBus(GetMockLogger());
+            sb.Init(settings);
             sb.Start();
 
             mockService1.Verify(m => m.Prepare());
@@ -111,7 +114,8 @@
                 };
 
                 Mock<ILogger> mock = new Mock<ILogger>();
-                var sb = new ServiceBus(settings, mock.Object);
+                var sb = new ServiceBus(mock.Object);
+                sb.Init(settings);
 
                 try
                 {
@@ -142,7 +146,8 @@
                 };
 
                 Mock<ILogger> mock = new Mock<ILogger>();
-                var sb = new ServiceBus(settings, mock.Object);
+                var sb = new ServiceBus(mock.Object);
+                sb.Init(settings);
 
                 try
                 {
@@ -173,7 +178,8 @@
                 };
 
                 Mock<ILogger> mock = new Mock<ILogger>();
-                var sb = new ServiceBus(settings, mock.Object);
+                var sb = new ServiceBus(mock.Object);
+                sb.Init(settings);
                 StartServiceBus(sb, 1);
                 mock.Verify(m => m.LogUnhandledException(ex, null, null, null));
             }
@@ -197,7 +203,8 @@
                     mockService2.Object,
                 }
             };
-            var sb = new ServiceBus(settings, GetMockLogger());
+            var sb = new ServiceBus(GetMockLogger());
+            sb.Init(settings);
             StartServiceBus(sb, 5);
             mockService1.Verify(m => m.Stop());
             mockService2.Verify(n => n.Stop());
@@ -225,7 +232,8 @@
                     }
                 };
 
-                var sb = new ServiceBus(settings, GetMockLogger());
+                var sb = new ServiceBus(GetMockLogger());
+                sb.Init(settings);
                 sb.Start();
                 try
                 {

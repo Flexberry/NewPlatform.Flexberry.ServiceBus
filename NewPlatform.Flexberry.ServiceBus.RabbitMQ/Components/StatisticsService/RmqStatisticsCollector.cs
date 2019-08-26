@@ -5,10 +5,8 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using ICSSoft.STORMNET;
-    using ICSSoft.STORMNET.Business;
-    using ICSSoft.STORMNET.FunctionalLanguage;
-    using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+
+    using Clustering;
     using ICSSoft.STORMNET.KeyGen;
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
@@ -16,7 +14,7 @@
     /// <summary>
     /// Component to collect statistics from Rabbit MQ
     /// </summary>
-    internal class RmqStatisticsCollector : BaseServiceBusComponent, IExternalStatisticsCollector
+    internal class RmqStatisticsCollector : BaseServiceBusComponent, IExternalStatisticsCollector, ISingletonClusterComponent
     {
         private readonly ILogger _logger;
         private readonly ISubscriptionsManager _esbSubscriptionsManager;
@@ -29,6 +27,8 @@
         private Vhost _vhost;
         private Dictionary<Guid, MessageStats> _previousMessageStats = new Dictionary<Guid, MessageStats>();
         private Timer _timer;
+
+        public bool IsSingletonEnabled { get; set; } = true;
 
         private class SubscriptionQueueEntry
         {

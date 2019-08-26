@@ -1,6 +1,4 @@
-﻿using ICSSoft.STORMNET.KeyGen;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Collections;
@@ -8,12 +6,14 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     using System.Linq;
     using System.Threading;
 
+    using Clustering;
+
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
 
     using RabbitMQ.Client;
 
-    using NewPlatform.Flexberry.ServiceBus.MessageSenders;
+    using MessageSenders;
 
     using Queue = EasyNetQ.Management.Client.Model.Queue;
     using Message = Message;
@@ -21,7 +21,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     /// <summary>
     /// Класс для доставки сообщений из RabbitMQ.
     /// </summary>
-    internal partial class RmqSendingManager : ISendingManager
+    internal partial class RmqSendingManager : ISendingManager, ISingletonClusterComponent
     {
         private readonly ILogger _logger;
         private readonly ISubscriptionsManager _esbSubscriptionsManager;
@@ -50,6 +50,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 return _sharedModel;
             }
         }
+
+        public bool IsSingletonEnabled { get; set; } = false;
 
         /// <summary>
         /// Задача по актуализации

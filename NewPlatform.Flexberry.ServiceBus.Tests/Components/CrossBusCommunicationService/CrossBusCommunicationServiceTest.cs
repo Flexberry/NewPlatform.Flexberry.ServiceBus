@@ -51,7 +51,8 @@
             };
 
             var serviceBusSettings = new ServiceBusSettings { Components = new[] { wcfService } };
-            var serviceBus = new ServiceBus(serviceBusSettings, GetMockLogger());
+            var serviceBus = new ServiceBus(GetMockLogger());
+            serviceBus.Init(serviceBusSettings);
 
             // Cross-bus communication service with connection to the bus.
             var repository = new Mock<IObjectRepository>();
@@ -100,7 +101,8 @@
             };
 
             var serviceBusSettings = new ServiceBusSettings { Components = new[] { wcfService } };
-            var serviceBus = new ServiceBus(serviceBusSettings, GetMockLogger());
+            var serviceBus = new ServiceBus(GetMockLogger());
+            serviceBus.Init(serviceBusSettings);
 
             // Cross-bus communication service with connection to the bus.
             var repository = new Mock<IObjectRepository>();

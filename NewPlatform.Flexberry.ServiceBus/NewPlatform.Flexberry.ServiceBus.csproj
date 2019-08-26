@@ -352,6 +352,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseServiceBus.cs" />
+    <Compile Include="ClusteredServiceBus.cs" />
+    <Compile Include="Components\ClusterManager\DefaultClusterManager.cs" />
+    <Compile Include="Components\ClusterManager\DefaultClusterManagerSettings.cs" />
     <Compile Include="Components\Logger\DatabaseTraceListener.cs" />
     <Compile Include="Components\Logger\Log4NetLogger.cs" />
     <Compile Include="Components\Logger\LoggerHelper.cs" />
@@ -368,6 +372,8 @@
     <Compile Include="Components\WcfService\SBService.IServiceBusCallbackClient.cs" />
     <Compile Include="Components\WcfService\SBService.IServiceBusClient.cs" />
     <Compile Include="Components\WcfService\SBService.IServiceBusManager.cs" />
+    <Compile Include="Exceptions\ServiceBusComponentsNotSetException.cs" />
+    <Compile Include="Exceptions\ServiceBusSettingsInvalidTypeException.cs" />
     <Compile Include="MessageSenders\BaseMessageSender.cs" />
     <Compile Include="MessageSenders\LegacyHttpMessageSender.cs" />
     <Compile Include="MessageSenders\LegacyWcfMessageSender.cs" />
@@ -388,6 +394,9 @@
     <Compile Include="Components\StatisticsService\DefaultStatisticsTimeService.cs" />
     <Compile Include="Components\MailScanningService\MailScanningServiceSettings.cs" />
     <Compile Include="Components\StatisticsService\DefaultStatisticsSaveService.cs" />
+    <Compile Include="MultiTasking\AsyncPeriodicalTimer.cs" />
+    <Compile Include="MultiTasking\BasePeriodicalTimer.cs" />
+    <Compile Include="MultiTasking\IPeriodicalTimer.cs" />
     <Compile Include="MultiTasking\PeriodicalTimer.cs" />
     <Compile Include="Components\WcfService\SBService.cs" />
     <Compile Include="Components\WcfService\SBService.ICallbackSubscriber.cs" />
@@ -407,8 +416,10 @@
     <Compile Include="MessageSenders\WebMessageSender.cs" />
     <Compile Include="MultiTasking\SendingTaskParams.cs" />
     <Compile Include="Components\SendingManager\OptimizedSendingManager.cs" />
+    <Compile Include="MultiTasking\PeriodicalTimerState.cs" />
     <Compile Include="ServiceBus.cs" />
     <Compile Include="Components\WcfService\SBService.IServiceBusInterop.cs" />
+    <Compile Include="ServiceBusCreator.cs" />
     <Compile Include="ServiceBusSettings.cs" />
     <Compile Include="ServiceHelper.cs" />
     <Compile Include="Mail\MailUtils.cs" />

@@ -50,7 +50,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clustering\DlmAddLockResult.cs" />
+    <Compile Include="Clustering\DlmGetLockValueResultState.cs" />
+    <Compile Include="Clustering\DlmWatchNodeState.cs" />
+    <Compile Include="Clustering\IClusterManager.cs" />
+    <Compile Include="Clustering\IDistributedLockManager.cs" />
+    <Compile Include="Clustering\DlmUpdateLockResult.cs" />
+    <Compile Include="Clustering\IDlmGetLockValueResult.cs" />
+    <Compile Include="Clustering\IDlmWatchResult.cs" />
+    <Compile Include="Clustering\SimpleDlmGetLockValueResult.cs" />
+    <Compile Include="Clustering\SimpleDlmWatchResult.cs" />
     <Compile Include="IExternalStatisticsCollector.cs" />
+    <Compile Include="IServiceBus.cs" />
+    <Compile Include="IServiceBusSettings.cs" />
+    <Compile Include="Clustering\ISingletonClusterComponent.cs" />
     <Compile Include="IStatisticsCompressorService.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -104,6 +117,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceBusState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NewPlatform.Flexberry.ServiceBus.Components.snk" />
@@ -118,5 +132,6 @@
       <Name>NewPlatform.Flexberry.ServiceBus.Objects</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
