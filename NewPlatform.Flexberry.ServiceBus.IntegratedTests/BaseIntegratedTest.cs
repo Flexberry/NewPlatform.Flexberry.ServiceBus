@@ -104,8 +104,6 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                 using (var conn = new NpgsqlConnection($"{ConnectionStringPostgres};Database={_databaseName}"))
                 {
                     conn.Open();
-                    using (var cmd = new NpgsqlCommand("CREATE EXTENSION postgis;", conn) { CommandTimeout = 60 })
-                        cmd.ExecuteNonQuery();
 
                     string[] commands = PostgresScript.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var command in commands)
