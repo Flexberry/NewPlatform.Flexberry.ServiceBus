@@ -27,12 +27,14 @@
         {
             var connectionFactory = new ConnectionFactory
             {
-                UserName = username,
-                Password = password,
                 Uri = this.RmqUri,
                 VirtualHost = this.RmqVirtualHost,
                 Protocol = this.RmqProtocol,
             };
+
+            // better setting not in initializer, cause auth data can'be writed in RmqUri, and it will rewrite the method's arguments
+            connectionFactory.UserName = username;
+            connectionFactory.Password = password;
 
             return connectionFactory;
         }
@@ -145,10 +147,12 @@
             {
                 _logger.LogUnhandledException(e,
                     title: $"Broker rejected incoming message {message.MessageTypeID} from {message.ClientID}. Reason: {e.ShutdownReason}.");
+                throw;
             }
             catch (Exception e)
             {
                 _logger.LogUnhandledException(e, title: $"Error on receive message {message.MessageTypeID} from {message.ClientID}.");
+                throw;
             }
         }
 

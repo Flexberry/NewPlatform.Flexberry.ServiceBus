@@ -156,9 +156,12 @@
     <Compile Include="Components\AmqpNamingManager.cs" />
     <Compile Include="Components\MessageConverter\IMessageConverter.cs" />
     <Compile Include="Components\MessageConverter\RmqMessageConverter.cs" />
+    <Compile Include="Components\RabbitMq.Client\MultihostConnectionFactory.cs" />
     <Compile Include="Components\ReceivingManager\RmqReceivingManager.cs" />
+    <Compile Include="Components\SendingManager\BaseRmqConsumer.cs" />
     <Compile Include="Components\SendingManager\RmqConsumer.cs" />
     <Compile Include="Components\SendingManager\RmqSendingManager.cs" />
+    <Compile Include="Components\SendingManager\RmqSingleConnectionConsumer.cs" />
     <Compile Include="Components\StatisticsService\RmqStatisticsCollector.cs" />
     <Compile Include="Components\SubscriptionsManager\RmqSubscriptionsManager.cs" />
     <Compile Include="Components\SubscriptionsSynchronizer\RmqSubscriptionSynchronizer.cs" />

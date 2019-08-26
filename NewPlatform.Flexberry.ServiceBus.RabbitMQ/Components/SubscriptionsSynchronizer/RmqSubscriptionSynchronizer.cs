@@ -91,7 +91,6 @@
 
                 // Сначала актуализируем подписки в брокере, считаем его ведомым по данным
                 this.UpdateMqSubscriptions(mqSubscriptions, esbSubscriptions);
-                this.UpdateEsbSubscriptions(mqSubscriptions, esbSubscriptions);
 
                 this.SynchronizeSendingPermissions();
             }
@@ -118,35 +117,6 @@
                     this._mqSubscriptionsManager.SubscribeOrUpdate(esbSubscription.Client.ID, esbSubscription.MessageType.ID, false, null);
                     _logger.LogDebugMessage("Subscription synchronizatrion",
                         $"Created subscription in broker for {esbSubscription.Client.ID} {esbSubscription.MessageType.ID}");
-                }
-
-                // TODO: подумать об изменении и удалении подписок
-            }
-        }
-
-        /// <summary>
-        /// Актуализация подпсок в шине.
-        /// На данный момент реализовано только копирование подписок из RabbitMQ в шину.
-        /// </summary>
-        /// <param name="mqSubscriptions">Подписки RabbitMQ.</param>
-        /// <param name="esbSubscriptions">Подписки шины.</param>
-        public void UpdateEsbSubscriptions(List<Subscription> mqSubscriptions, List<Subscription> esbSubscriptions)
-        {
-            foreach (var mqSubscription in mqSubscriptions)
-            {
-                if (!esbSubscriptions.Any(x => this.IsSubscriptionEquals(mqSubscription, x)))
-                {
-                    this._esbSubscriptionsManager.CreateMessageType(new ServiceBusMessageType()
-                    {
-                        Name = mqSubscription.Client.ID,
-                        ID = mqSubscription.Client.ID,
-                        Description = "Подписка создана автоматически при синхронизации подписок"
-                    });
-                    this._esbSubscriptionsManager.CreateClient(mqSubscription.Client.ID, mqSubscription.Client.Name);
-
-                    this._esbSubscriptionsManager.SubscribeOrUpdate(mqSubscription.Client.ID, mqSubscription.MessageType.ID, false, null, DateTime.MaxValue);
-                    _logger.LogDebugMessage("Subscription synchronizatrion",
-                        $"Created subscription in esb storage for {mqSubscription.Client.ID} {mqSubscription.MessageType.ID}");
                 }
 
                 // TODO: подумать об изменении и удалении подписок

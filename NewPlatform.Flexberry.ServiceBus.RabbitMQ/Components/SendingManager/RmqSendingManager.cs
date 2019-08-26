@@ -32,10 +32,33 @@
         private readonly string _vhostName;
         private readonly bool useLegacySenders;
         private Vhost _vhost;
-        private List<RmqConsumer> _consumers;
+        private List<BaseRmqConsumer> _consumers;
         private Timer _actualizationTimer;
         private static readonly object ActualizeLock = new object();
         private IModel _sharedModel;
+
+        private IConnection _connection;
+
+        private IConnection Connection
+        {
+            get
+            {
+                if (UseSingleConnection)
+                {
+                    if (_connection == null)
+                    {
+                        _connection = _connectionFactory.CreateConnection();
+                        _logger.LogDebugMessage("Consumer connection creation", "");
+                    }
+
+                    return _connection;
+                }
+                else
+                {
+                    return _connectionFactory.CreateConnection();
+                }
+            }
+        }
 
         private IModel SharedModel
         {
@@ -51,7 +74,23 @@
             }
         }
 
+
         public bool IsSingletonEnabled { get; set; } = false;
+
+        private BaseRmqConsumer CreateConsumer(Subscription subscription)
+        {
+            BaseRmqConsumer rmqConsumer;
+            if (UseSingleConnection)
+            {
+                rmqConsumer = new RmqSingleConnectionConsumer(_logger, _converter, Connection, subscription, DefaultPrefetchCount, useLegacySenders);
+            }
+            else
+            {
+                rmqConsumer = new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders);
+            }
+
+            return rmqConsumer;
+        }
 
         /// <summary>
         /// Задача по актуализации
@@ -62,7 +101,7 @@
             lock (ActualizeLock)
             {
                 var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions().ToArray();
-                var aliveSubs = new List<RmqConsumer>();
+                var aliveSubs = new List<BaseRmqConsumer>();
 
                 foreach (var subscription in subscriptions)
                 {
@@ -71,12 +110,35 @@
 
                     if (rmqConsumer == null) // create if not exists
                     {
-                        rmqConsumer = new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders);
-                        rmqConsumer.Start();
+                        rmqConsumer = CreateConsumer(subscription);
+
+                        try
+                        {
+                            rmqConsumer.Start();
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogError("Rmq consumer events", $"Error on starting consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
+                        }
                     }
                     else // actualize subscription data(transfer type and address)
                     {
-                        rmqConsumer.UpdateSubscription(subscription);
+                        if (rmqConsumer.IsRunning)
+                        {
+                            try
+                            {
+                                rmqConsumer.UpdateSubscription(subscription);
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError("Rmq consumer events", $"Error on updating consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
+                            }
+                        }
+
+                        if (!rmqConsumer.IsInitialized)
+                        {
+                            rmqConsumer.Start();
+                        }
                     }
 
                     aliveSubs.Add(rmqConsumer);
@@ -95,6 +157,8 @@
         }
 
         protected MessageSenderCreator MessageSenderCreator;
+
+        public bool UseSingleConnection { get; set; } = false;
 
         /// <summary>
         /// Частота запуска синхронизации подписок.
@@ -133,7 +197,7 @@
             this._vhostName = vhost;
             this.useLegacySenders = useLegacySenders;
 
-            this._consumers = new List<RmqConsumer>();
+            this._consumers = new List<BaseRmqConsumer>();
         }
 
         public void Prepare()
@@ -141,7 +205,7 @@
             var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
             foreach (var subscription in subscriptions)
             {
-                this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders));
+                this._consumers.Add(CreateConsumer(subscription));
             }
         }
 

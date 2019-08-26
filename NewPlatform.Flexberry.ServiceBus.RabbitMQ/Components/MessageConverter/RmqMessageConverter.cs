@@ -143,7 +143,21 @@
                     if (property.Key.StartsWith(this._tagPropertiesPrefix))
                     {
                         var tagKey = property.Key.Substring(this._tagPropertiesPrefix.Length);
-                        var value = Encoding.UTF8.GetString((byte[])property.Value);
+                        string value = null;
+
+                        if (property.Value.GetType() == typeof(byte[]))
+                        {
+                            value = Encoding.UTF8.GetString((byte[])property.Value);
+                        }
+                        else if (property.Value is string)
+                        {
+                            value = (string)property.Value;
+                        }
+                        else
+                        {
+                            throw new InvalidCastException($"{value.GetType()} is an unknown property value type");
+                        }
+
                         messageTags.Add(tagKey, value);
                     }
                 }
