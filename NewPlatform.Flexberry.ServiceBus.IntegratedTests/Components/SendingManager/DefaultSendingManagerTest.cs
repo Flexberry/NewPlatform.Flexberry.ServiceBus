@@ -186,7 +186,7 @@
         private bool ValidateRequest(string request, Message message, TransportType transportType)
         {
             string requestTemplate;
-            string folder = @"Components\SendingManager\RequestTemplates\";
+            string folder = Path.Combine("Components", "SendingManager", "RequestTemplates");
             switch (transportType)
             {
                 case TransportType.WCF:
@@ -202,7 +202,11 @@
                     throw new ArgumentException("Invalid value.", nameof(transportType));
             }
 
-            return Regex.IsMatch(request, Razor.Parse(requestTemplate, message).Replace("/", @"\/").Replace(".", @"\."));
+            string expectedString = Razor.Parse(requestTemplate, message).Replace("/", @"\/").Replace(".", @"\.");
+
+            bool isMatch = Regex.IsMatch(request, expectedString);
+
+            return isMatch;
         }
     }
 }
