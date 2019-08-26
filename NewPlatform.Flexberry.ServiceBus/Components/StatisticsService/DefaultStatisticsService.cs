@@ -305,8 +305,7 @@
         public override void Start()
         {
             base.Start();
-            if (_periodicalTimer.State != PeriodicalTimer.TimerState.Working)
-                _periodicalTimer.Start(Process, StatisticsSavingPeriod);
+            _periodicalTimer.TryStart(Process, StatisticsSavingPeriod);
         }
 
         /// <summary>
@@ -315,8 +314,7 @@
         public override void Stop()
         {
             base.Stop();
-            if (_periodicalTimer.State == PeriodicalTimer.TimerState.Working)
-                _periodicalTimer.Stop();
+            _periodicalTimer.TryStop();
             SaveStatistics(true);
         }
 

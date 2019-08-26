@@ -286,6 +286,10 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="App.RMQ.Cluster.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="NewPlatform.Flexberry.ServiceBus.ConsoleHost.snk" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -309,6 +313,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Clustering\NewPlatform.Flexberry.ServiceBus.Dlm.Etcd\NewPlatform.Flexberry.ServiceBus.Dlm.Etcd.csproj">
+      <Project>{eaab0696-662d-4f52-9a3c-2c1763277dd2}</Project>
+      <Name>NewPlatform.Flexberry.ServiceBus.Dlm.Etcd</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NewPlatform.Flexberry.ServiceBus.ClientTools\Objects\NewPlatform.Flexberry.ServiceBus.ClientTools.csproj">
       <Project>{5de41952-fd87-47da-b6d1-f805c670cb09}</Project>
       <Name>NewPlatform.Flexberry.ServiceBus.ClientTools</Name>

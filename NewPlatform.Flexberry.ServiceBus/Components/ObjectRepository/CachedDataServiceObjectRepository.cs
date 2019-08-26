@@ -211,8 +211,7 @@
         public override void Start()
         {
             base.Start();
-            if (_periodicalTimer.State != PeriodicalTimer.TimerState.Working)
-                _periodicalTimer.Start(UpdateFromDb, UpdatePeriodMilliseconds);
+            _periodicalTimer.TryStart(UpdateFromDb, UpdatePeriodMilliseconds);
         }
 
         /// <summary>
@@ -221,8 +220,7 @@
         public override void Stop()
         {
             base.Stop();
-            if (_periodicalTimer.State == PeriodicalTimer.TimerState.Working)
-                _periodicalTimer.Stop();
+            _periodicalTimer.TryStop();
         }
 
         /// <summary>

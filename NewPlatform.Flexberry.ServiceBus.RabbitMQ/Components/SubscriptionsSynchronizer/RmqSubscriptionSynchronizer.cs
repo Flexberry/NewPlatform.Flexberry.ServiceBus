@@ -1,20 +1,22 @@
-﻿using EasyNetQ.Management.Client;
-using EasyNetQ.Management.Client.Model;
-using ICSSoft.STORMNET.Business;
-using ICSSoft.STORMNET.Business.LINQProvider;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Clustering;
+    using EasyNetQ.Management.Client;
+    using EasyNetQ.Management.Client.Model;
+    using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.Business.LINQProvider;
+
     /// <summary>
     /// Класс для синхронизации подписок в MQ и шине.
     /// </summary>
-    internal class RmqSubscriptionsSynchronizer : BaseServiceBusComponent, ISubscriptionSynchronizer
+    internal class RmqSubscriptionsSynchronizer : BaseServiceBusComponent, ISubscriptionSynchronizer, ISingletonClusterComponent
     {
         private readonly ILogger _logger;
         private readonly ISubscriptionsManager _esbSubscriptionsManager;
@@ -44,6 +46,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// Частота запуска синхронизации подписок.
         /// </summary>
         public int UpdatePeriodMilliseconds { get; set; } = 30 * 1000;
+
+        public bool IsSingletonEnabled { get; set; } = true;
 
         /// <summary>
         /// Создаёт новый экземпляр класса <see cref="RmqSubscriptionsSynchronizer"/>.
