@@ -22,6 +22,16 @@
             _connectionFactory = connectionFactory;
         }
 
+        public override void Stop()
+        {
+            if (_connection != null)
+            {
+                _connection.Dispose();
+            }
+
+            base.Stop();
+        }
+
         /// <summary>
         /// Get connection for RabbitMQ.
         /// </summary>
@@ -29,18 +39,9 @@
         {
             get
             {
-                if (_connection == null)
+                if (_connection == null || base.ShouldRecreate)
                 {
                     _connection = _connectionFactory.CreateConnection();
-                    _connection.ConnectionShutdown += OnConnectionShutdown;
-                    _connection.RecoverySucceeded += OnRecoverySucceeded;
-                    _connection.ConnectionRecoveryError += OnConnectionRecoveryError;
-                }
-                else if(!_connection.IsOpen)
-                {
-                    _connection.Dispose();
-                    _connection = _connectionFactory.CreateConnection();
-
                     _connection.ConnectionShutdown += OnConnectionShutdown;
                     _connection.RecoverySucceeded += OnRecoverySucceeded;
                     _connection.ConnectionRecoveryError += OnConnectionRecoveryError;

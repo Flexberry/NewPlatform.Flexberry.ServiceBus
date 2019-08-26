@@ -132,9 +132,18 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                             }
                         }
 
-                        if (!rmqConsumer.IsInitialized)
+                        if (rmqConsumer.ShouldRecreate)
                         {
-                            rmqConsumer.Start();
+                            try
+                            {
+                                rmqConsumer.Stop();
+                                rmqConsumer = CreateConsumer(subscription);
+                                rmqConsumer.Start();
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError("Rmq consumer events", $"Error on stopping consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
+                            }
                         }
                     }
 
