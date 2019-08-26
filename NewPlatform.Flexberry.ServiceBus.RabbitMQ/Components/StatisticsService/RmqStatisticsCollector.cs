@@ -51,15 +51,17 @@
 
         private List<SubscriptionQueueEntry> GetWatchedQueues()
         {
-            var queueGetTasks = new List<Task<SubscriptionQueueEntry>>();
+            var result = new List<SubscriptionQueueEntry>();
+
+            var queues = _managementClient.GetQueuesAsync().Result.ToArray();
 
             foreach (Subscription s in _esbSubscriptionsManager.GetSubscriptions())
             {
                 var name = _namingManager.GetClientQueueName(s.Client.ID, s.MessageType.ID);
-                queueGetTasks.Add(_managementClient.GetQueueAsync(name, Vhost).ContinueWith(x => new SubscriptionQueueEntry(s, x.Result)));
+                var queue = queues.FirstOrDefault(x => x.Name.Equals(name) && x.Vhost.Equals(Vhost.Name));
+                result.Add(new SubscriptionQueueEntry(s, queue));
             }
 
-            var result = queueGetTasks.Select(x => x.Result).ToList();
             return result;
         }
 
