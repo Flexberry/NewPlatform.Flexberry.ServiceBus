@@ -2,6 +2,6 @@ language: csharp
 solution: NewPlatform.Flexberry.ServiceBus.sln
 services:
   - postgresql
-  script:
+script:
   - msbuild /p:Configuration=Debug "NewPlatform.Flexberry.ServiceBus.sln"
   - mono ./packages/xunit.runner.console.2.4.0/tools/net452/xunit.console.exe ./NewPlatform.Flexberry.ServiceBus.IntegratedTests/bin/Debug/NewPlatform.Flexberry.ServiceBus.IntegratedTests.dll
