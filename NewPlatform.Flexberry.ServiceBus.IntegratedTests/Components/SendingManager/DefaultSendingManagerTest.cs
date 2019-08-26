@@ -190,13 +190,13 @@
             switch (transportType)
             {
                 case TransportType.WCF:
-                    requestTemplate = File.ReadAllText(folder + "WCFRequestTemplate.txt");
+                    requestTemplate = File.ReadAllText(Path.Combine(folder, "WCFRequestTemplate.txt"));
                     break;
                 case TransportType.WEB:
-                    requestTemplate = File.ReadAllText(folder + "WebRequestTemplate.txt");
+                    requestTemplate = File.ReadAllText(Path.Combine(folder, "WebRequestTemplate.txt"));
                     break;
                 case TransportType.HTTP:
-                    requestTemplate = File.ReadAllText(folder + "HTTPRequestTemplate.txt");
+                    requestTemplate = File.ReadAllText(Path.Combine(folder, "HTTPRequestTemplate.txt"));
                     break;
                 default:
                     throw new ArgumentException("Invalid value.", nameof(transportType));
