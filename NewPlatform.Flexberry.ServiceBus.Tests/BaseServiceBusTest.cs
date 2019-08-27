@@ -1,4 +1,5 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Tests
+﻿[assembly: Xunit.CollectionBehavior(DisableTestParallelization = true)]
+namespace NewPlatform.Flexberry.ServiceBus.Tests
 {
     using System;
     using System.Diagnostics;

@@ -8,6 +8,7 @@
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using Microsoft.Owin.Hosting;
+    using NewPlatform.Flexberry.ServiceBus.IntegratedTests.Components.SendingManager.RequestTemplates;
     using Owin;
     using RazorEngine;
     using Xunit;
@@ -185,24 +186,23 @@
 
         private bool ValidateRequest(string request, Message message, TransportType transportType)
         {
-            string requestTemplate;
-            string folder = Path.Combine("Components", "SendingManager", "RequestTemplates");
+            string requestTemplateT4;
             switch (transportType)
             {
                 case TransportType.WCF:
-                    requestTemplate = File.ReadAllText(Path.Combine(folder, "WCFRequestTemplate.txt"));
+                    requestTemplateT4 = new WCFRequestTemplate() { Model = message }.TransformText();
                     break;
                 case TransportType.WEB:
-                    requestTemplate = File.ReadAllText(Path.Combine(folder, "WebRequestTemplate.txt"));
+                    requestTemplateT4 = new WebRequestTemplate() { Model = message }.TransformText();
                     break;
                 case TransportType.HTTP:
-                    requestTemplate = File.ReadAllText(Path.Combine(folder, "HTTPRequestTemplate.txt"));
+                    requestTemplateT4 = new HTTPRequestTemplate() { Model = message }.TransformText();
                     break;
                 default:
                     throw new ArgumentException("Invalid value.", nameof(transportType));
             }
 
-            string expectedString = Razor.Parse(requestTemplate, message).Replace("/", @"\/").Replace(".", @"\.");
+            string expectedString = requestTemplateT4.Replace(Environment.NewLine, string.Empty).Replace("/", @"\/").Replace(".", @"\.");
 
             bool isMatch = Regex.IsMatch(request, expectedString);
 

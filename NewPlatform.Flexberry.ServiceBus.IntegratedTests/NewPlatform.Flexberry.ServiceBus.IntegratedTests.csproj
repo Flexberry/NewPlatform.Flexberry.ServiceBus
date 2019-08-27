@@ -35,7 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\..\..\Analyzers\Flexberry.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Flexberry.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,6 +44,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\Flexberry.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -206,6 +207,24 @@
     <Compile Include="Components\SendingManager\BaseSendingManagerTest.cs" />
     <Compile Include="Components\SendingManager\DefaultSendingManagerTest.cs" />
     <Compile Include="Components\SendingManager\OptimizedSendingManagerTest.cs" />
+    <Compile Include="Components\SendingManager\RequestTemplates\HTTPRequestTemplate.cs" />
+    <Compile Include="Components\SendingManager\RequestTemplates\HTTPRequestTemplate1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTTPRequestTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate.cs" />
+    <Compile Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WCFRequestTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Components\SendingManager\RequestTemplates\WebRequestTemplate.cs" />
+    <Compile Include="Components\SendingManager\RequestTemplates\WebRequestTemplate1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebRequestTemplate.tt</DependentUpon>
+    </Compile>
     <Compile Include="Components\StatisticsService\DefaultStatisticsCompressorServiceTest.cs" />
     <Compile Include="Components\SubscriptionsManager\CachedSubscriptionsManagerTest.cs" />
     <Compile Include="Components\SubscriptionsManager\DefaultSubscriptionsManagerTest.cs" />
@@ -258,14 +277,17 @@
     <Folder Include="Components\WebApiService\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Components\SendingManager\RequestTemplates\HTTPRequestTemplate.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Components\SendingManager\RequestTemplates\HTTPRequestTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>HTTPRequestTemplate1.cs</LastGenOutput>
     </Content>
-    <Content Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>WCFRequestTemplate1.cs</LastGenOutput>
     </Content>
-    <Content Include="Components\SendingManager\RequestTemplates\WebRequestTemplate.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Components\SendingManager\RequestTemplates\WebRequestTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>WebRequestTemplate1.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -278,6 +300,9 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
