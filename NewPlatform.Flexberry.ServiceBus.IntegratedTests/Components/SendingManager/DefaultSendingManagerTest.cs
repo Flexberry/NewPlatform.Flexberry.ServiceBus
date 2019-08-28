@@ -1,6 +1,7 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests.Components
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Text.RegularExpressions;
     using System.Threading;
@@ -205,6 +206,11 @@
             string expectedString = requestTemplateT4.Replace(Environment.NewLine, string.Empty).Replace("/", @"\/").Replace(".", @"\.");
 
             bool isMatch = Regex.IsMatch(request, expectedString);
+
+            if (!isMatch)
+            {
+                Debug.WriteLine($"Pattern:{Environment.NewLine}{expectedString}{Environment.NewLine}input:{Environment.NewLine}{request}");
+            }
 
             return isMatch;
         }
