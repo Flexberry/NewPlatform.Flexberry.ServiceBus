@@ -197,7 +197,7 @@
                     requestTemplateT4 = new WebRequestTemplate() { Model = message }.TransformText();
                     break;
                 case TransportType.HTTP:
-                    requestTemplateT4 = new HTTPRequestTemplate() { Model = message }.TransformText();
+                    requestTemplateT4 = new HTTPRequestTemplate() { Model = message }.ToString();
                     break;
                 default:
                     throw new ArgumentException("Invalid value.", nameof(transportType));

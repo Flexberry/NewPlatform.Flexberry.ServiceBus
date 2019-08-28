@@ -208,11 +208,6 @@
     <Compile Include="Components\SendingManager\DefaultSendingManagerTest.cs" />
     <Compile Include="Components\SendingManager\OptimizedSendingManagerTest.cs" />
     <Compile Include="Components\SendingManager\RequestTemplates\HTTPRequestTemplate.cs" />
-    <Compile Include="Components\SendingManager\RequestTemplates\HTTPRequestTemplate1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTTPRequestTemplate.tt</DependentUpon>
-    </Compile>
     <Compile Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate.cs" />
     <Compile Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate1.cs">
       <AutoGen>True</AutoGen>
@@ -277,10 +272,6 @@
     <Folder Include="Components\WebApiService\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Components\SendingManager\RequestTemplates\HTTPRequestTemplate.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>HTTPRequestTemplate1.cs</LastGenOutput>
-    </Content>
     <Content Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>WCFRequestTemplate1.cs</LastGenOutput>
