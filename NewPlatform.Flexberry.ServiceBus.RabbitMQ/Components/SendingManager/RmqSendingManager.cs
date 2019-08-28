@@ -48,14 +48,16 @@
                     if (_connection == null)
                     {
                         _connection = _connectionFactory.CreateConnection();
-                        _logger.LogDebugMessage("Consumer connection creation", "");
+                        _logger.LogDebugMessage("Consumer connection creation", $"Created RMQ connection to {_connection.GetNodeName()} node");
                     }
 
                     return _connection;
                 }
                 else
                 {
-                    return _connectionFactory.CreateConnection();
+                    var connection = _connectionFactory.CreateConnection();
+                    _logger.LogDebugMessage("Consumer connection creation", $"Created RMQ connection to {connection.GetNodeName()} node");
+                    return connection;
                 }
             }
         }
@@ -67,6 +69,7 @@
                 if (_sharedModel == null || _sharedModel.IsClosed)
                 {
                     var connection = _connectionFactory.CreateConnection();
+                    _logger.LogDebugMessage("Created receiving shared model", $"Created RMQ connection to {connection.GetNodeName()} node");
                     _sharedModel = connection.CreateModel();
                 }
 

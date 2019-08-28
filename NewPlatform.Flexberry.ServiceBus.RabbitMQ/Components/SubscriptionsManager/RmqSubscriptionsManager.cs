@@ -29,7 +29,9 @@
             {
                 if (_model == null || _model.IsClosed)
                 {
-                    _model = _connectionFactory.CreateConnection().CreateModel();
+                    var connection = _connectionFactory.CreateConnection();
+                    _model = connection.CreateModel();
+                    _logger.LogDebugMessage("RmqSubscriptionsManager", $"Created RMQ connection to {connection.GetNodeName()} node");
                 }
 
                 return _model;

@@ -42,6 +42,7 @@
                 if (_connection == null || base.ShouldRecreate)
                 {
                     _connection = _connectionFactory.CreateConnection();
+                    Logger.LogDebugMessage("Message publishing", $"Created RMQ connection to {_connection.GetNodeName()} node");
                     _connection.ConnectionShutdown += OnConnectionShutdown;
                     _connection.RecoverySucceeded += OnRecoverySucceeded;
                     _connection.ConnectionRecoveryError += OnConnectionRecoveryError;

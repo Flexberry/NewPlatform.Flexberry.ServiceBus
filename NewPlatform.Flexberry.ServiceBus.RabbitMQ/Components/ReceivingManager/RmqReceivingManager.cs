@@ -123,6 +123,8 @@
             {
                 using (var connection = connectionFactory.CreateConnection())
                 {
+                    _logger.LogDebugMessage("Message publishing", $"Created RMQ connection to {connection.GetNodeName()} node");
+
                     var model = connection.CreateModel();
 
                     var exchange = _namingManager.GetExchangeName(message.MessageTypeID);
@@ -191,6 +193,8 @@
             {
                 using (var connection = connectionFactory.CreateConnection())
                 {
+                    _logger.LogDebugMessage("Message publishing", $"Created RMQ connection to {connection.GetNodeName()} node");
+
                     var model = connection.CreateModel();
 
                     var exchange = _namingManager.GetExchangeName(eventTypeId);
