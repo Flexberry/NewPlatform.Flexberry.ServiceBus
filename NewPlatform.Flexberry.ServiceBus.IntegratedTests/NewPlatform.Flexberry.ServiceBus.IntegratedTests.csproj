@@ -209,17 +209,7 @@
     <Compile Include="Components\SendingManager\OptimizedSendingManagerTest.cs" />
     <Compile Include="Components\SendingManager\RequestTemplates\HTTPRequestTemplate.cs" />
     <Compile Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate.cs" />
-    <Compile Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WCFRequestTemplate.tt</DependentUpon>
-    </Compile>
     <Compile Include="Components\SendingManager\RequestTemplates\WebRequestTemplate.cs" />
-    <Compile Include="Components\SendingManager\RequestTemplates\WebRequestTemplate1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WebRequestTemplate.tt</DependentUpon>
-    </Compile>
     <Compile Include="Components\StatisticsService\DefaultStatisticsCompressorServiceTest.cs" />
     <Compile Include="Components\SubscriptionsManager\CachedSubscriptionsManagerTest.cs" />
     <Compile Include="Components\SubscriptionsManager\DefaultSubscriptionsManagerTest.cs" />
@@ -270,16 +260,6 @@
     <Folder Include="Components\RerouterService\Configuration\" />
     <Folder Include="Components\WcfService\" />
     <Folder Include="Components\WebApiService\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Components\SendingManager\RequestTemplates\WCFRequestTemplate.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>WCFRequestTemplate1.cs</LastGenOutput>
-    </Content>
-    <Content Include="Components\SendingManager\RequestTemplates\WebRequestTemplate.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>WebRequestTemplate1.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

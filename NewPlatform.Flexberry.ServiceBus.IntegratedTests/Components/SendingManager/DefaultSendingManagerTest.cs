@@ -187,23 +187,23 @@
 
         private bool ValidateRequest(string request, Message message, TransportType transportType)
         {
-            string requestTemplateT4;
+            string requestTemplate;
             switch (transportType)
             {
                 case TransportType.WCF:
-                    requestTemplateT4 = new WCFRequestTemplate() { Model = message }.TransformText();
+                    requestTemplate = new WCFRequestTemplate() { Model = message }.ToString();
                     break;
                 case TransportType.WEB:
-                    requestTemplateT4 = new WebRequestTemplate() { Model = message }.TransformText();
+                    requestTemplate = new WebRequestTemplate() { Model = message }.ToString();
                     break;
                 case TransportType.HTTP:
-                    requestTemplateT4 = new HTTPRequestTemplate() { Model = message }.ToString();
+                    requestTemplate = new HTTPRequestTemplate() { Model = message }.ToString();
                     break;
                 default:
                     throw new ArgumentException("Invalid value.", nameof(transportType));
             }
 
-            string expectedString = requestTemplateT4.Replace(Environment.NewLine, string.Empty).Replace("/", @"\/").Replace(".", @"\.");
+            string expectedString = requestTemplate.Replace(Environment.NewLine, string.Empty).Replace("/", @"\/").Replace(".", @"\.");
 
             bool isMatch = Regex.IsMatch(request, expectedString);
 
