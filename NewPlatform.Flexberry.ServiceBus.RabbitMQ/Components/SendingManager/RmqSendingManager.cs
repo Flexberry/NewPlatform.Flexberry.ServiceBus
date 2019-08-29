@@ -11,9 +11,10 @@
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
 
-    using RabbitMQ.Client;
-
     using MessageSenders;
+    using MultiTasking;
+
+    using RabbitMQ.Client;
 
     using Queue = EasyNetQ.Management.Client.Model.Queue;
     using Message = Message;
@@ -33,7 +34,7 @@
         private readonly bool useLegacySenders;
         private Vhost _vhost;
         private List<BaseRmqConsumer> _consumers;
-        private Timer _actualizationTimer;
+        private readonly PeriodicalTimer _actualizationTimer = new PeriodicalTimer();
         private static readonly object ActualizeLock = new object();
         private IModel _sharedModel;
 
@@ -237,11 +238,12 @@
                 }
             }
 
-            this._actualizationTimer = new Timer(x => this.Actualize(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);
+            _actualizationTimer.TryStart(this.Actualize, UpdatePeriodMilliseconds);
         }
 
         public void Stop()
         {
+            _actualizationTimer.TryStop();
             foreach (var consumer in _consumers)
             {
                 consumer.Stop();
