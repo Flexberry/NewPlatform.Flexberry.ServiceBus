@@ -4,10 +4,10 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Clustering;
+    using MultiTasking;
     using EasyNetQ.Management.Client;
     using EasyNetQ.Management.Client.Model;
     using ICSSoft.STORMNET.Business;
@@ -67,16 +67,16 @@
             this._vhostStr = vhost;
         }
 
-        private Timer _syncTimer;
+        private readonly PeriodicalTimer _syncTimer = new PeriodicalTimer();
 
         public void Start()
         {
-            this._syncTimer = new Timer(x => this.Sync(), null, 0, this.UpdatePeriodMilliseconds);
+            _syncTimer.TryStart(Sync, UpdatePeriodMilliseconds);
         }
 
         public void Stop()
         {
-            this._syncTimer.Dispose();
+            this._syncTimer.TryStop();
         }
 
         /// <summary>

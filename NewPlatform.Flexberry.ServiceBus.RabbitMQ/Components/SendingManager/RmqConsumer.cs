@@ -24,12 +24,9 @@
 
         public override void Stop()
         {
-            if (_connection != null)
-            {
-                _connection.Dispose();
-            }
-
             base.Stop();
+
+            _connection?.Dispose();
         }
 
         /// <summary>

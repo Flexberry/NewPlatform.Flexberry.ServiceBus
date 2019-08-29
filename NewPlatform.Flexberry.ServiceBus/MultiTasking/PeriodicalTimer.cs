@@ -5,7 +5,7 @@
     /// <summary>
     /// Thread-safe and nonblocking timer for repeatative event.
     /// </summary>
-    internal class PeriodicalTimer : BasePeriodicalTimer
+    public class PeriodicalTimer : BasePeriodicalTimer
     {
         /// <summary>
         /// Callback function. This function will be called periodicaly when component is started.

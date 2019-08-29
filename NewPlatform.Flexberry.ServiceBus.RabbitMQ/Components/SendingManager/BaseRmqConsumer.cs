@@ -61,6 +61,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         protected void OnRecoverySucceeded(object sender, EventArgs reason)
         {
             Logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} is recovered.");
+            ShouldRecreate = false;
         }
 
         protected void OnConnectionShutdown(object sender, ShutdownEventArgs reason)
@@ -78,6 +79,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         protected void ModelOnBasicRecoverOk(object sender, EventArgs e)
         {
             Logger.LogInformation("Callback sender event", $"Model {this.ConsumerTag} is recovered.");
+        }
+
+        protected async Task OnConsumerCancelled(object sender, ConsumerEventArgs @event)
+        {
+            Logger.LogInformation("Consumer event", $"Consumer {this.ConsumerTag} cancelled. Event: {@event}");
         }
 
         protected BaseRmqConsumer(ILogger logger, IMessageConverter converter, Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders)
@@ -128,10 +134,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
             try
             {
-                if (this.Model != null)
-                {
-                    this.Model.Dispose();
-                }
+                Model?.Dispose();
 
                 this.Model = Connection.CreateModel();
                 this.Model.ConfirmSelect();
@@ -155,6 +158,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             this.Logger.LogDebugMessage("",
                 $"Stopped listener of queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
             this.Model?.Dispose();
+            this.ConsumerCancelled += OnConsumerCancelled;
         }
 
         public override async Task HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, byte[] body)
