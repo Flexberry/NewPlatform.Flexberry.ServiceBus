@@ -12,7 +12,7 @@
             string tagsArray = string.Empty;
             foreach (var tag in tags)
             {
-                tagsArray += @"<b:KeyValueOfstringstring>\s*<b:Key>" + tag.Split(':')[0] + @"</b:Key>\s*<b:Value>" + tag.Split(':')[1] + @"</b:Value>\s*</b:KeyValueOfstringstring>\s*";
+                tagsArray += @"<[0-9a-z]{1,}:KeyValueOfstringstring>\s*<[0-9a-z]{1,}:Key>" + tag.Split(':')[0] + @"</[0-9a-z]{1,}:Key>\s*<[0-9a-z]{1,}:Value>" + tag.Split(':')[1] + @"</[0-9a-z]{1,}:Value>\s*</[0-9a-z]{1,}:KeyValueOfstringstring>\s*";
             }
 
             return
@@ -23,27 +23,27 @@
 </s:Header>\s*
 <s:Body>\s*
 <AcceptMessage xmlns=""http://tempuri.org/"">\s*
-<msg xmlns:a=""http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects"" xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"">\s*"
+<msg xmlns:[0-9a-z]{1,}=""http://schemas.datacontract.org/2004/07/IIS.Persona.ServiceBus.Objects"" xmlns:[0-9a-z]{1,}=""http://www.w3.org/2001/XMLSchema-instance"">\s*"
 + ((Model.Attachment == null) ? @"
-<a:Attachment/>\s*" : @"
-<a:Attachment>" + Model.Attachment + @"</a:Attachment>\s*") + @"
-<a:Body>" + Model.Body + @"</a:Body>\s*"
+<[0-9a-z]{1,}:Attachment/>\s*" : @"
+<[0-9a-z]{1,}:Attachment>" + Model.Attachment + @"</[0-9a-z]{1,}:Attachment>\s*") + @"
+<[0-9a-z]{1,}:Body>" + Model.Body + @"</[0-9a-z]{1,}:Body>\s*"
 + ((Model.Group == null) ? @"
-<a:GroupID i:nil=""true""/>\s*"
+<[0-9a-z]{1,}:GroupID i:nil=""true""/>\s*"
 : @"
-<a:GroupID>" + Model.Group + @"</a:GroupID>\s*") + @"
-<a:MessageFormingTime>" + Model.ReceivingTime.ToString("yyyy-MM-ddTHH:mm:ss.ff") + @"[\d]?</a:MessageFormingTime>\s*
-<a:MessageTypeID>" + Model.MessageType.ID + @"</a:MessageTypeID>\s*"
+<[0-9a-z]{1,}:GroupID>" + Model.Group + @"</[0-9a-z]{1,}:GroupID>\s*") + @"
+<[0-9a-z]{1,}:MessageFormingTime>" + Model.ReceivingTime.ToString("yyyy-MM-ddTHH:mm:ss.ff") + @"[\d]?</[0-9a-z]{1,}:MessageFormingTime>\s*
+<[0-9a-z]{1,}:MessageTypeID>" + Model.MessageType.ID + @"</[0-9a-z]{1,}:MessageTypeID>\s*"
 + ((Model.Sender == null) ? @"
-<a:SenderName i:nil=""true""/>\s*"
+<[0-9a-z]{1,}:SenderName i:nil=""true""/>\s*"
 : @"
-<a:SenderName>" + Model.Sender + @"</a:SenderName>\s*")
+<[0-9a-z]{1,}:SenderName>" + Model.Sender + @"</[0-9a-z]{1,}:SenderName>\s*")
 + ((Model.Tags == null) ? @"
-<a:Tags xmlns:b=""http://schemas.microsoft.com/2003/10/Serialization/Arrays""/>\s*"
+<[0-9a-z]{1,}:Tags xmlns:[0-9a-z]{1,}=""http://schemas.microsoft.com/2003/10/Serialization/Arrays""/>\s*"
 : @"
-<a:Tags xmlns:b=""http://schemas.microsoft.com/2003/10/Serialization/Arrays"">\s*
+<[0-9a-z]{1,}:Tags xmlns:[0-9a-z]{1,}=""http://schemas.microsoft.com/2003/10/Serialization/Arrays"">\s*
 " + tagsArray + @"
-</a:Tags>\s*"
+</[0-9a-z]{1,}:Tags>\s*"
 ) + @"
 </msg>\s*
 </AcceptMessage>\s*
