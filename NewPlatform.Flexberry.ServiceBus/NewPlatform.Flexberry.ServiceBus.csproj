@@ -372,6 +372,7 @@
     <Compile Include="Components\WcfService\SBService.IServiceBusCallbackClient.cs" />
     <Compile Include="Components\WcfService\SBService.IServiceBusClient.cs" />
     <Compile Include="Components\WcfService\SBService.IServiceBusManager.cs" />
+    <Compile Include="Components\WcfService\Soap12Binding.cs" />
     <Compile Include="Exceptions\ServiceBusComponentsNotSetException.cs" />
     <Compile Include="Exceptions\ServiceBusSettingsInvalidTypeException.cs" />
     <Compile Include="MessageSenders\BaseMessageSender.cs" />
