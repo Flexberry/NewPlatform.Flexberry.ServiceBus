@@ -86,6 +86,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 rmqConsumer = new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders);
             }
 
+            rmqConsumer.AlwaysRecreate = AlwaysRecreateConsumer;
+
             return rmqConsumer;
         }
 
@@ -190,6 +192,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 return _vhost;
             }
         }
+
+        public bool AlwaysRecreateConsumer { get; set; } = false;
 
         public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/", bool useLegacySenders = true)
         {
