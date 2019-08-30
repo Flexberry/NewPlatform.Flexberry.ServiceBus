@@ -38,7 +38,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         private bool CheckShouldRecreate(ShutdownEventArgs reason)
         {
-            return reason.ReplyCode == 530 || // attempt to reuse consumer tag
+            return AlwaysRecreate ||
+                   reason.ReplyCode == 530 || // attempt to reuse consumer tag
                    reason.ReplyCode == 0 || // internal library error
                    reason.ReplyCode == 541; // unexpected exception in library
         }
@@ -96,6 +97,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             _sender = new MessageSenderCreator(logger, useLegacySenders).GetMessageSender(subscription);
             _prefetchCount = GetPrefetchCount(subscription);
         }
+
+        /// <summary>
+        /// Flag about consumer should restart in all fail cases.
+        /// </summary>
+        public bool AlwaysRecreate { get; set; }
 
         /// <summary>
         /// Flag about consumer should restart due to changing prefetch count or inability to recover.
