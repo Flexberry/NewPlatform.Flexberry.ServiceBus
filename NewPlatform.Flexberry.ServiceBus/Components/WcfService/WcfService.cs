@@ -74,6 +74,14 @@
         public bool PublishWSDL { get; set; } = false;
 
         /// <summary>
+        /// Generate WSDL addresses using address from request.
+        /// </summary>
+        /// <remarks>
+        /// Used only when <see cref="UseWcfSettingsFromConfig"/> is <c>false</c>.
+        /// </remarks>
+        public bool UseRequestHeadersForMetadataAddress { get; set; } = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WcfService"/> class.
         /// </summary>
         /// <param name="subscriptionsManager">The subscriptions manager.</param>
@@ -140,6 +148,12 @@
                         HttpGetUrl = Address,
                         HttpGetEnabled = true,
                     });
+                }
+
+                if (UseRequestHeadersForMetadataAddress)
+                {
+                    _wcfServiceHost.Description.Behaviors.Remove<UseRequestHeadersForMetadataAddressBehavior>();
+                    _wcfServiceHost.Description.Behaviors.Add(new UseRequestHeadersForMetadataAddressBehavior());
                 }
             }
 
