@@ -1,7 +1,7 @@
-﻿using RabbitMQ.Client;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
+    using RabbitMQ.Client;
+
     /// <summary>
     /// RabbitMQ consumer using single connection from constructor.
     /// </summary>
@@ -16,8 +16,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders) : base(logger, converter, subscription, defaultPrefetchCount, useLegacySenders)
         {
             _connection = connection;
+            connection.ConnectionShutdown -= OnConnectionShutdown;
             connection.ConnectionShutdown += OnConnectionShutdown;
+
+            connection.RecoverySucceeded -= OnRecoverySucceeded;
             connection.RecoverySucceeded += OnRecoverySucceeded;
+
+            connection.ConnectionRecoveryError -= OnConnectionRecoveryError;
             connection.ConnectionRecoveryError += OnConnectionRecoveryError;
         }
     }

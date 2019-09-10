@@ -14,25 +14,26 @@
     /// </summary>
     internal class RmqSubscriptionsManager : BaseServiceBusComponent, ISubscriptionsManager
     {
-        private readonly ILogger _logger;
-        private readonly IManagementClient _managementClient;
-        private readonly IConnectionFactory _connectionFactory;
-        private readonly AmqpNamingManager _namingManager;
-        private readonly string _vhostStr;
-        private Vhost _vhost;
+        private readonly ILogger logger;
+        private readonly IManagementClient managementClient;
+        private readonly IConnectionFactory connectionFactory;
+        private readonly AmqpNamingManager namingManager;
+        private readonly string vhostStr;
+        private Vhost vhost;
 
-        private IModel _model;
+        private IModel model;
 
         private IModel Model
         {
             get
             {
-                if (_model == null || _model.IsClosed)
+                if (model == null || model.IsClosed)
                 {
-                    _model = _connectionFactory.CreateConnection().CreateModel();
+                    var connection = connectionFactory.CreateConnection();
+                    model = connection.CreateModel();
                 }
 
-                return _model;
+                return model;
             }
         }
 
@@ -44,10 +45,10 @@
         /// <param name="subQueue">RabbitMQ esb subscription queue name</param>
         private void DeclareDelayRoutes(string clientId, string messageTypeId, string subQueue)
         {
-            var delayExchangeName = _namingManager.GetClientDelayExchangeName(clientId);
-            var delayQueueName = _namingManager.GetClientDelayQueueName(clientId, messageTypeId);
-            var delayRoutingKey = _namingManager.GetDelayRoutingKey(clientId, messageTypeId);
-            var originalRoutingKey = _namingManager.GetRoutingKey(messageTypeId);
+            string delayExchangeName = namingManager.GetClientDelayExchangeName(clientId);
+            string delayQueueName = namingManager.GetClientDelayQueueName(clientId, messageTypeId);
+            string delayRoutingKey = namingManager.GetDelayRoutingKey(clientId, messageTypeId);
+            string originalRoutingKey = namingManager.GetRoutingKey(messageTypeId);
 
             // declare dead letter exhange and key for returning message to original queue
             var queueArguments = new Dictionary<string, object>();
@@ -69,29 +70,30 @@
         {
             get
             {
-                if (_vhost == null)
+                if (vhost == null)
                 {
-                    _vhost = this._managementClient.CreateVirtualHostAsync(_vhostStr).Result;
+                    vhost = this.managementClient.CreateVirtualHostAsync(vhostStr).Result;
                 }
-                return _vhost;
+                return vhost;
             }
         }
 
         /// <summary>
-        /// Создаёт новый экземпляр класса <see cref="RmqSubscriptionManager"/> class.
+        /// Creates new object of type <see cref="RmqSubscriptionManager"/> class.
         /// </summary>
-        /// <param name="logger">Используемый компонент логирования.</param>
-        /// <param name="managementClient">Фабрика соединений RabbitMQ.</param>
-        /// <param name="vhost">Virtual host RabbitMQ</param>
+        /// <param name="logger">Logging component.</param>
+        /// <param name="managementClient">Management client for RabbitMQ.</param>
+        /// <param name="connectionFactory">RabbitMQ connection factory.</param>
+        /// <param name="vhost">Virtual host RabbitMQ.</param>
         public RmqSubscriptionsManager(ILogger logger, IManagementClient managementClient, IConnectionFactory connectionFactory, string vhost = "/")
         {
-            this._logger = logger;
-            this._managementClient = managementClient;
-            _connectionFactory = connectionFactory;
-            this._vhostStr = vhost;
+            this.logger = logger;
+            this.managementClient = managementClient;
+            this.connectionFactory = connectionFactory;
+            this.vhostStr = vhost;
 
             // TODO: следует ли выносить это в зависимости?
-            this._namingManager = new AmqpNamingManager();
+            this.namingManager = new AmqpNamingManager();
         }
 
         /// <summary>
@@ -105,7 +107,7 @@
             try
             {
                 // Если клиента с указанным ID нет в RabbitMQ, то бросается исключение.
-                User client = _managementClient.GetUserAsync(clientId).Result;
+                User client = managementClient.GetUserAsync(clientId).Result;
             }
             catch(AggregateException ex)
             {
@@ -113,7 +115,7 @@
 
                 if (unexpectedHttpStatusCodeException != null && unexpectedHttpStatusCodeException.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    this._managementClient.CreateUserAsync(new UserInfo(clientId, ConfigurationManager.AppSettings["DefaultRmqUserPassword"])).Wait();
+                    this.managementClient.CreateUserAsync(new UserInfo(clientId, ConfigurationManager.AppSettings["DefaultRmqUserPassword"])).Wait();
                 }
                 else
                 {
@@ -128,14 +130,14 @@
         /// <param name="clientId">Идентификатор клиента.</param>
         public void DeleteClient(string clientId)
         {
-            var queueNamePrefix = this._namingManager.GetClientQueuePrefix(clientId);
+            var queueNamePrefix = this.namingManager.GetClientQueuePrefix(clientId);
 
-            var queues = this._managementClient.GetQueuesAsync().Result;
+            var queues = this.managementClient.GetQueuesAsync().Result;
 
             var queuesToDelete = queues.Where(x => x.Name.StartsWith(queueNamePrefix));
             foreach (var queue in queuesToDelete)
             {
-                this._managementClient.DeleteQueueAsync(queue).Wait();
+                this.managementClient.DeleteQueueAsync(queue).Wait();
             }
         }
 
@@ -145,10 +147,10 @@
         /// <param name="msgTypeInfo">Структура, описывающая тип сообщения.</param>
         public void CreateMessageType(ServiceBusMessageType msgTypeInfo)
         {
-            var exchangeName = this._namingManager.GetExchangeName(msgTypeInfo.ID);
+            var exchangeName = this.namingManager.GetExchangeName(msgTypeInfo.ID);
             var exchangeInfo = new ExchangeInfo(exchangeName, ExchangeType.Topic, autoDelete: false, durable: true, @internal: false, arguments: null);
 
-            this._managementClient.CreateExchangeAsync(exchangeInfo, _vhost).Wait();
+            this.managementClient.CreateExchangeAsync(exchangeInfo, vhost).Wait();
         }
 
         /// <summary>
@@ -209,18 +211,18 @@
         {
             var result = new List<Subscription>();
 
-            var exchangeName = this._namingManager.GetExchangeName(messageTypeId);
-            var exchange = this._managementClient.GetExchangeAsync(exchangeName, Vhost).Result;
-            var bindings = this._managementClient.GetBindingsWithSourceAsync(exchange).Result;
+            var exchangeName = this.namingManager.GetExchangeName(messageTypeId);
+            var exchange = this.managementClient.GetExchangeAsync(exchangeName, Vhost).Result;
+            var bindings = this.managementClient.GetBindingsWithSourceAsync(exchange).Result;
 
             foreach (var binding in bindings)
             {
-                if (binding.Destination.StartsWith(this._namingManager.ClientQueuePrefix))
+                if (binding.Destination.StartsWith(this.namingManager.ClientQueuePrefix))
                 {
                     if (senderId != null &&
-                        !binding.Destination.StartsWith(this._namingManager.GetClientQueuePrefix(senderId)))
+                        !binding.Destination.StartsWith(this.namingManager.GetClientQueuePrefix(senderId)))
                     {
-                        result.Add(this._namingManager.GetSubscriptionByAmqpModel(binding.Destination, binding.RoutingKey));
+                        result.Add(this.namingManager.GetSubscriptionByAmqpModel(binding.Destination, binding.RoutingKey));
                     }
                 }
             }
@@ -239,13 +241,13 @@
         /// <param name="subscribtionId">араметр игнорируется. Оставлен для совместимости с интерфейсом.</param>
         public void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null, string subscribtionId = null)
         {
-            var queueName = this._namingManager.GetClientQueueName(clientId, messageTypeId);
-            var exchangeName = this._namingManager.GetExchangeName(messageTypeId);
-            var routingKey = this._namingManager.GetRoutingKey(messageTypeId);
+            var queueName = this.namingManager.GetClientQueueName(clientId, messageTypeId);
+            var exchangeName = this.namingManager.GetExchangeName(messageTypeId);
+            var routingKey = this.namingManager.GetRoutingKey(messageTypeId);
 
             var queueArguments = new Dictionary<string, object>();
-            queueArguments["x-dead-letter-exchange"] = _namingManager.GetClientDelayExchangeName(clientId);
-            queueArguments["x-dead-letter-routing-key"] = _namingManager.GetDelayRoutingKey(clientId, messageTypeId);
+            queueArguments["x-dead-letter-exchange"] = namingManager.GetClientDelayExchangeName(clientId);
+            queueArguments["x-dead-letter-routing-key"] = namingManager.GetDelayRoutingKey(clientId, messageTypeId);
 
             Model.QueueDeclareNoWait(queueName, true, false, false, queueArguments);
             Model.ExchangeDeclareNoWait(exchangeName, ExchangeType.Topic, true);
@@ -268,18 +270,18 @@
             var result = new List<Subscription>();
 
             var prefix = string.IsNullOrEmpty(clientId)
-                ? this._namingManager.ClientQueuePrefix
-                : this._namingManager.GetClientQueuePrefix(clientId);
+                ? this.namingManager.ClientQueuePrefix
+                : this.namingManager.GetClientQueuePrefix(clientId);
 
-            var queues = this._managementClient.GetQueuesAsync().Result.Where(x =>
+            var queues = this.managementClient.GetQueuesAsync().Result.Where(x =>
                 x.Name.StartsWith(prefix) && !x.Arguments.ContainsKey(RabbitMqConstants.FlexberryArgumentsKeys.NotSyncFlag));
             foreach (var queue in queues)
             {
-                var bindings = this._managementClient.GetBindingsForQueueAsync(queue).Result
+                var bindings = this.managementClient.GetBindingsForQueueAsync(queue).Result
                                     .Where(x => !string.IsNullOrEmpty(x.Source)); // откидываем стандартный binding, берем только те, что связывают с exchange
                 foreach (var binding in bindings)
                 {
-                    result.Add(this._namingManager.GetSubscriptionByAmqpModel(queue.Name, binding.RoutingKey));
+                    result.Add(this.namingManager.GetSubscriptionByAmqpModel(queue.Name, binding.RoutingKey));
                 }
             }
 

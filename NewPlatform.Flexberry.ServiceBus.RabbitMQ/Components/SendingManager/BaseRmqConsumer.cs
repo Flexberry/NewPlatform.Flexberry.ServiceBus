@@ -1,27 +1,31 @@
-﻿using System.Threading.Tasks;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client.Framing.Impl;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
-    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using NewPlatform.Flexberry.ServiceBus.MessageSenders;
     using RabbitMQ.Client;
+    using RabbitMQ.Client.Events;
 
     /// <summary>
     /// Base RabbitMQ consumer.
     /// </summary>
     public abstract class BaseRmqConsumer : AsyncDefaultBasicConsumer
     {
+        /// <summary>
+        /// Logger component.
+        /// </summary>
         protected readonly ILogger Logger;
-        private IMessageSender _sender;
-        private readonly IMessageConverter _converter;
-        private readonly ushort _defaultPrefetchCount;
-        private AmqpNamingManager _namingManager = new AmqpNamingManager();
-        private bool _useLegacySenders;
-        private ushort _prefetchCount;
 
+        private IMessageSender sender;
+        private readonly IMessageConverter converter;
+        private readonly ushort defaultPrefetchCount;
+        private AmqpNamingManager namingManager = new AmqpNamingManager();
+        private bool useLegacySenders;
+        private ushort prefetchCount;
+
+        /// <summary>
+        /// Get alive connection to RabbitMQ.
+        /// </summary>
         protected abstract IConnection Connection { get; }
 
         private ushort GetPrefetchCount(Subscription subscription)
@@ -32,7 +36,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             }
             else
             {
-                return _defaultPrefetchCount;
+                return defaultPrefetchCount;
             }
         }
 
@@ -45,51 +49,84 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         }
 
         /// <summary>
-        /// Get consumertag, should be unique.
+        /// Get consumer tag, should be unique.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Consumer tag.</returns>
         protected string GetConsumerTag()
         {
-            var queueName = _namingManager.GetClientQueueName(this.Subscription.Client.ID, this.Subscription.MessageType.ID);
+            string queueName = namingManager.GetClientQueueName(this.Subscription.Client.ID, this.Subscription.MessageType.ID);
             return $"{queueName}_{Guid.NewGuid().ToString("N")}";
         }
 
+        /// <summary>
+        /// Handle connection recovery error.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="reason">Event args.</param>
         protected void OnConnectionRecoveryError(object sender, ConnectionRecoveryErrorEventArgs reason)
         {
-            Logger.LogError("Callback sender event", $"Connection's recovery of {this.ConsumerTag} failed. {Environment.NewLine} {reason.Exception}");
+            this.Logger.LogError("Callback sender event", $"Connection's recovery of {this.ConsumerTag} failed. {Environment.NewLine} {reason.Exception}");
         }
 
+        /// <summary>
+        /// Handle consumer recovery.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="reason">Event args.</param>
         protected void OnRecoverySucceeded(object sender, EventArgs reason)
         {
-            Logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} is recovered.");
+            this.Logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} is recovered.");
         }
 
+        /// <summary>
+        /// Handle connection shutdown.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="reason">Event args.</param>
         protected void OnConnectionShutdown(object sender, ShutdownEventArgs reason)
         {
-            Logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
+            this.Logger.LogInformation("Callback sender event", $"Connection of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
             ShouldRecreate = CheckShouldRecreate(reason);
         }
 
+        /// <summary>
+        /// Handle model shutdown.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="reason">Event args.</param>
         protected void OnModelShutdown(object sender, ShutdownEventArgs reason)
         {
-            Logger.LogInformation("Callback sender event", $"Model of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
+            this.Logger.LogInformation("Callback sender event", $"Model of {this.ConsumerTag} shutdown. Reason: {reason.ToString()}");
             ShouldRecreate = CheckShouldRecreate(reason);
         }
 
+        /// <summary>
+        /// Handle model recovery.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="reason">Event args.</param>
         protected void ModelOnBasicRecoverOk(object sender, EventArgs e)
         {
-            Logger.LogInformation("Callback sender event", $"Model {this.ConsumerTag} is recovered.");
+            this.Logger.LogInformation("Callback sender event", $"Model {this.ConsumerTag} is recovered.");
         }
 
+        /// <summary>
+        /// Create RabbitMQ consumer with self creating connection.
+        /// </summary>
+        /// <param name="logger">Logger component.</param>
+        /// <param name="converter">RabbitMQ message to flexberry message converter.</param>
+        /// <param name="subscription">Subscription for consumer.</param>
+        /// <param name="defaultPrefetchCount">Default prefetch count.</param>
+        /// <param name="useLegacySenders">Use legacy senders.</param>
         protected BaseRmqConsumer(ILogger logger, IMessageConverter converter, Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders)
         {
-            Logger = logger;
-            _converter = converter;
-            _defaultPrefetchCount = defaultPrefetchCount;
-            _useLegacySenders = useLegacySenders;
-            Subscription = subscription;
-            _sender = new MessageSenderCreator(logger, useLegacySenders).GetMessageSender(subscription);
-            _prefetchCount = GetPrefetchCount(subscription);
+            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.converter = converter ?? throw new ArgumentNullException(nameof(converter));
+            this.defaultPrefetchCount = defaultPrefetchCount;
+            this.useLegacySenders = useLegacySenders;
+            this.Subscription = subscription ?? throw new ArgumentNullException(nameof(subscription));
+            this.sender = new MessageSenderCreator(logger, useLegacySenders).GetMessageSender(subscription);
+            this.prefetchCount = GetPrefetchCount(subscription);
         }
 
         /// <summary>
@@ -103,34 +140,37 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         public bool ShouldRecreate { get; private set; }
 
         /// <summary>
-        /// Получание подписки слушателя.
+        /// Subscription using for consumer creating.
         /// </summary>
         public Subscription Subscription { get; private set; }
 
         /// <summary>
-        /// Обновление данных подписки (необходимо в случае если 
+        /// Update subscription data (sending type, address, client's connection limit).
         /// </summary>
-        /// <param name="subscription">Подписка</param>
+        /// <param name="subscription">Subscription.</param>
         public void UpdateSubscription(Subscription subscription)
         {
             if (subscription.TransportType != this.Subscription.TransportType ||
                 subscription.Client.Address != this.Subscription.Client.Address)
             {
-                this._sender = new MessageSenderCreator(this.Logger, _useLegacySenders).GetMessageSender(subscription);
+                this.sender = new MessageSenderCreator(this.Logger, useLegacySenders).GetMessageSender(subscription);
                 this.Subscription = subscription;
             }
 
-            var subPrefetchCount = GetPrefetchCount(subscription);
+            uint subPrefetchCount = GetPrefetchCount(subscription);
 
-            if (_prefetchCount != subPrefetchCount)
+            if (prefetchCount != subPrefetchCount)
             {
                 ShouldRecreate = true;
             }
         }
 
+        /// <summary>
+        /// Start consumer.
+        /// </summary>
         public void Start()
         {
-            var queueName = this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID);
+            string queueName = this.namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID);
 
             try
             {
@@ -141,10 +181,13 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
                 this.Model = Connection.CreateModel();
                 this.Model.ConfirmSelect();
-                this.Model.BasicQos(0, this._prefetchCount, false);
+                this.Model.BasicQos(0, this.prefetchCount, false);
                 this.Model.BasicConsume(this, queueName, false, GetConsumerTag());
 
+                this.Model.ModelShutdown -= OnModelShutdown;
                 this.Model.ModelShutdown += OnModelShutdown;
+
+                this.Model.BasicRecoverOk -= ModelOnBasicRecoverOk;
                 this.Model.BasicRecoverOk += ModelOnBasicRecoverOk;
 
                 this.Logger.LogDebugMessage("", $"Created listener of queue {queueName}");
@@ -155,33 +198,46 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 ShouldRecreate = true;
             }
         }
-
+        
+        /// <summary>
+        /// Stop consumer and dispose resourses.
+        /// </summary>
         public virtual void Stop()
         {
             this.Logger.LogDebugMessage("",
-                $"Stopped listener of queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
+                $"Stopped listener of queue {this.namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
             this.Model?.Dispose();
         }
 
+        /// <summary>
+        /// Send message from RabbitMQ to callback.
+        /// </summary>
+        /// <param name="consumerTag">Consumer tag.</param>
+        /// <param name="deliveryTag">Message delivery tag.</param>
+        /// <param name="redelivered">Is message redelivered.</param>
+        /// <param name="exchange">Original exchange.</param>
+        /// <param name="routingKey">Routing key.</param>
+        /// <param name="properties">Message properties.</param>
+        /// <param name="body">Message content.</param>
+        /// <returns></returns>
         public override async Task HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, byte[] body)
         {
-            Logger.LogDebugMessage($"Callback sender event",
-                $"Received message from queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
+            this.Logger.LogDebugMessage($"Callback sender event",
+                $"Received message from queue {this.namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
 
-            var message = this._converter.ConvertFromMqFormat(body, properties.Headers);
+            MessageWithNotTypedPk message = this.converter.ConvertFromMqFormat(body, properties.Headers);
             message.SendingTime = DateTime.Now;
             message.MessageType = Subscription.MessageType;
             message.Recipient = this.Subscription.Client;
 
             // TODO: вынести логику в отдельный компонент?
             // TODO: Подумать о равномерной нагрузке клиентов
-            var sended = this._sender.SendMessage(message);
+            bool sended = this.sender.SendMessage(message);
             if (sended)
             {
-
                 this.Model.BasicAck(deliveryTag, false);
-                Logger.LogDebugMessage($"Callback sender event",
-                    $"Acked message from queue {this._namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
+                this.Logger.LogDebugMessage($"Callback sender event",
+                    $"Acked message from queue {this.namingManager.GetClientQueueName(Subscription.Client.ID, Subscription.MessageType.ID)}");
             }
             else
             {

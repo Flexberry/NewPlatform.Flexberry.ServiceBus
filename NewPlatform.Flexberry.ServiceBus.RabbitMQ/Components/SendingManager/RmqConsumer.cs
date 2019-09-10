@@ -17,11 +17,21 @@
         private readonly IConnectionFactory _connectionFactory;
         private IConnection _connection;
 
+        /// <summary>
+        /// Create RabbitMQ consumer with self creating connection.
+        /// </summary>
+        /// <param name="logger">Logger component.</param>
+        /// <param name="converter">RabbitMQ message to flexberry message converter.</param>
+        /// <param name="connectionFactory">RabbitMQ connection factory.</param>
+        /// <param name="subscription">Subscription for consumer.</param>
+        /// <param name="defaultPrefetchCount">Default prefetch count.</param>
+        /// <param name="useLegacySenders">Use legacy senders.</param>
         public RmqConsumer(ILogger logger, IMessageConverter converter, IConnectionFactory connectionFactory, Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders) : base(logger, converter, subscription, defaultPrefetchCount, useLegacySenders)
         {
             _connectionFactory = connectionFactory;
         }
 
+        /// <inheritdoc />
         public override void Stop()
         {
             if (_connection != null)
@@ -42,8 +52,17 @@
                 if (_connection == null || base.ShouldRecreate)
                 {
                     _connection = _connectionFactory.CreateConnection();
+
+                    _connection.ConnectionShutdown -= OnConnectionShutdown;
                     _connection.ConnectionShutdown += OnConnectionShutdown;
+
+                    _connection.ConnectionShutdown -= OnConnectionShutdown;
+                    _connection.ConnectionShutdown += OnConnectionShutdown;
+
+                    _connection.RecoverySucceeded -= OnRecoverySucceeded;
                     _connection.RecoverySucceeded += OnRecoverySucceeded;
+
+                    _connection.ConnectionRecoveryError -= OnConnectionRecoveryError;
                     _connection.ConnectionRecoveryError += OnConnectionRecoveryError;
                 }
 
