@@ -59,7 +59,11 @@
             {
                 var name = _namingManager.GetClientQueueName(s.Client.ID, s.MessageType.ID);
                 var queue = queues.FirstOrDefault(x => x.Name.Equals(name) && x.Vhost.Equals(Vhost.Name));
-                result.Add(new SubscriptionQueueEntry(s, queue));
+
+                if (queue != null)
+                {
+                    result.Add(new SubscriptionQueueEntry(s, queue));
+                }
             }
 
             return result;
