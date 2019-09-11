@@ -22,33 +22,33 @@
     internal partial class RmqSendingManager : ISendingManager
     {
         private readonly ILogger logger;
-        private readonly ISubscriptionsManager _esbSubscriptionsManager;
+        private readonly ISubscriptionsManager esbSubscriptionsManager;
         private readonly IConnectionFactory connectionFactory;
         private readonly IManagementClient managementClient;
         private readonly IMessageConverter converter;
-        private readonly AmqpNamingManager _namingManager;
+        private readonly AmqpNamingManager namingManager;
         private readonly string vhostName;
         private readonly bool useLegacySenders;
         private Vhost vhost;
-        private List<BaseRmqConsumer> _consumers;
+        private List<BaseRmqConsumer> consumers;
         private Timer actualizationTimer;
         private static readonly object ActualizeLock = new object();
-        private IModel sharedModel;
-        private IConnection _connection;
+        private IModel sharedModelField;
+        private IConnection connectionField;
 
-        private IConnection Connection
+        private IConnection connection
         {
             get
             {
                 if (UseSingleConnection)
                 {
-                    if (_connection == null)
+                    if (connectionField == null)
                     {
-                        _connection = connectionFactory.CreateConnection();
+                        connectionField = connectionFactory.CreateConnection();
                         logger.LogDebugMessage("Consumer connection creation", "");
                     }
 
-                    return _connection;
+                    return connectionField;
                 }
                 else
                 {
@@ -57,17 +57,17 @@
             }
         }
 
-        private IModel SharedModel
+        private IModel sharedModel
         {
             get
             {
-                if (sharedModel == null || sharedModel.IsClosed)
+                if (sharedModelField == null || sharedModelField.IsClosed)
                 {
                     var connection = connectionFactory.CreateConnection();
-                    sharedModel = connection.CreateModel();
+                    sharedModelField = connection.CreateModel();
                 }
 
-                return sharedModel;
+                return sharedModelField;
             }
         }
 
@@ -76,7 +76,7 @@
             BaseRmqConsumer rmqConsumer;
             if (UseSingleConnection)
             {
-                rmqConsumer = new RmqSingleConnectionConsumer(logger, converter, Connection, subscription, DefaultPrefetchCount, useLegacySenders);
+                rmqConsumer = new RmqSingleConnectionConsumer(logger, converter, connection, subscription, DefaultPrefetchCount, useLegacySenders);
             }
             else
             {
@@ -96,13 +96,13 @@
             // on Mono 5.18 SynchronizedCollection did not work, will lock manually
             lock (ActualizeLock)
             {
-                var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions().ToArray();
+                var subscriptions = esbSubscriptionsManager.GetCallbackSubscriptions().ToArray();
                 var aliveSubs = new List<BaseRmqConsumer>();
 
                 foreach (var subscription in subscriptions)
                 {
                     var subscriptionPk = subscription.__PrimaryKey;
-                    BaseRmqConsumer rmqConsumer = this._consumers.FirstOrDefault(x => x.Subscription.__PrimaryKey.Equals(subscriptionPk));
+                    BaseRmqConsumer rmqConsumer = this.consumers.FirstOrDefault(x => x.Subscription.__PrimaryKey.Equals(subscriptionPk));
 
                     if (rmqConsumer == null) // create if not exists
                     {
@@ -149,7 +149,7 @@
                     aliveSubs.Add(rmqConsumer);
                 }
 
-                foreach (var rmqConsumer in this._consumers) // stop consumers of non-existings subscriptions
+                foreach (var rmqConsumer in this.consumers) // stop consumers of non-existings subscriptions
                 {
                     if (!aliveSubs.Contains(rmqConsumer))
                     {
@@ -157,7 +157,7 @@
                     }
                 }
 
-                this._consumers = aliveSubs;
+                this.consumers = aliveSubs;
             }
         }
 
@@ -193,35 +193,41 @@
             }
         }
 
+        /// <summary>
+        /// Should recreate RabbitMQ consumers on their fails.
+        /// </summary>
         public bool AlwaysRecreateConsumer { get; set; } = false;
 
         public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/", bool useLegacySenders = true)
         {
             this.logger = logger;
-            this._esbSubscriptionsManager = esbSubscriptionsManager;
+            this.esbSubscriptionsManager = esbSubscriptionsManager;
             this.connectionFactory = connectionFactory;
             this.managementClient = managementClient;
             this.converter = converter;
-            this._namingManager = namingManager;
+            this.namingManager = namingManager;
             this.MessageSenderCreator = new MessageSenderCreator(this.logger, useLegacySenders);
             this.vhostName = vhost;
             this.useLegacySenders = useLegacySenders;
 
-            this._consumers = new List<BaseRmqConsumer>();
+            this.consumers = new List<BaseRmqConsumer>();
         }
 
+        /// <summary>
+        /// Prepare component (prepare suscription data).
+        /// </summary>
         public void Prepare()
         {
-            var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
+            var subscriptions = esbSubscriptionsManager.GetCallbackSubscriptions();
             foreach (var subscription in subscriptions)
             {
-                this._consumers.Add(CreateConsumer(subscription));
+                this.consumers.Add(CreateConsumer(subscription));
             }
         }
 
         public void Start()
         {
-            var consumers = this._consumers.ToArray();
+            var consumers = this.consumers.ToArray();
 
             foreach (var consumer in consumers)
             {
@@ -240,7 +246,7 @@
 
         public void Stop()
         {
-            foreach (var consumer in _consumers)
+            foreach (var consumer in consumers)
             {
                 consumer.Stop();
             }
@@ -268,7 +274,7 @@
             }
 
             // Получаем очереди клиента.
-            var queuePrefix = _namingManager.GetClientQueuePrefix(clientId);
+            var queuePrefix = namingManager.GetClientQueuePrefix(clientId);
             var queues = managementClient.GetQueuesAsync().Result.Where(x => x.Name.StartsWith(queuePrefix)).ToList();
 
             // Суммируем количество сообщений в них.
@@ -293,7 +299,7 @@
                 throw new ArgumentException("", nameof(messageTypeId));
             }
 
-            string queueName = this._namingManager.GetClientQueueName(clientId, messageTypeId);
+            string queueName = this.namingManager.GetClientQueueName(clientId, messageTypeId);
             return this.managementClient.GetQueueAsync(queueName, this.Vhost).Result.Messages;
         }
 
@@ -305,7 +311,7 @@
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
         public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, int maxCount = 0)
         {
-            string queueNamePrefix = _namingManager.GetClientQueuePrefix(clientId);
+            string queueNamePrefix = namingManager.GetClientQueuePrefix(clientId);
             IEnumerable<Queue> queues = managementClient.GetQueuesAsync().Result;
             IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueNamePrefix));
 
@@ -318,7 +324,7 @@
                     ServiceBusMessageInfo msg = new ServiceBusMessageInfo
                     {
                         // TODO: Добавить заполнение других свойств.
-                        MessageTypeID = _namingManager.GetMessageType(message.RoutingKey),
+                        MessageTypeID = namingManager.GetMessageType(message.RoutingKey),
                     };
 
                     rmqMessagesInfo.Add(msg);
@@ -343,7 +349,7 @@
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
         public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, int maxCount = 0)
         {
-            string queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
+            string queueName = namingManager.GetClientQueueName(clientId, messageTypeId);
             IEnumerable<Queue> queues = managementClient.GetQueuesAsync().Result;
             IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueName));
 
@@ -382,7 +388,7 @@
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
         public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount = 0)
         {
-            string queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
+            string queueName = namingManager.GetClientQueueName(clientId, messageTypeId);
             IEnumerable<Queue> queues = managementClient.GetQueuesAsync().Result;
             IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueName));
 
@@ -398,7 +404,7 @@
                         ServiceBusMessageInfo msg = new ServiceBusMessageInfo
                         {
                             // TODO: Добавить заполнение других свойств.
-                            MessageTypeID = _namingManager.GetMessageType(message.RoutingKey),
+                            MessageTypeID = namingManager.GetMessageType(message.RoutingKey),
                         };
 
                         rmqMessagesInfo.Add(msg);
@@ -425,7 +431,7 @@
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
         public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount = 0)
         {
-            string queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
+            string queueName = namingManager.GetClientQueueName(clientId, messageTypeId);
             IEnumerable<Queue> queues = managementClient.GetQueuesAsync().Result;
             IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueName));
 
@@ -451,7 +457,7 @@
                         ServiceBusMessageInfo msg = new ServiceBusMessageInfo
                         {
                             // TODO: Добавить заполнение других свойств.
-                            MessageTypeID = _namingManager.GetMessageType(message.RoutingKey),
+                            MessageTypeID = namingManager.GetMessageType(message.RoutingKey),
                         };
 
                         rmqMessagesInfo.Add(msg);
@@ -488,8 +494,8 @@
         {
             MessageWithNotTypedPk result = null;
 
-            string queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
-            var message = SharedModel.BasicGet(queueName, false);
+            string queueName = namingManager.GetClientQueueName(clientId, messageTypeId);
+            var message = sharedModel.BasicGet(queueName, false);
             if (message != null)
             {
                 result = converter.ConvertFromMqFormat(message.Body, message.BasicProperties.Headers);
@@ -553,7 +559,7 @@
         public bool DeleteMessage(string id)
         {
             var rmqId = ulong.Parse(id);
-            SharedModel.BasicAck(rmqId, false);
+            sharedModel.BasicAck(rmqId, false);
 
             // похоже нет способа понять есть ли сообщение с заданным ID, поэтому только так
             return true;

@@ -7,15 +7,15 @@
     /// </summary>
     internal class RmqSingleConnectionConsumer : BaseRmqConsumer
     {
-        private readonly IConnection _connection;
+        private readonly IConnection connection;
 
-        protected override IConnection Connection => _connection;
+        protected override IConnection Connection => connection;
 
         /// <inheritdoc />
         public RmqSingleConnectionConsumer(ILogger logger, IMessageConverter converter, IConnection connection,
             Subscription subscription, ushort defaultPrefetchCount, bool useLegacySenders) : base(logger, converter, subscription, defaultPrefetchCount, useLegacySenders)
         {
-            _connection = connection;
+            this.connection = connection;
             connection.ConnectionShutdown -= OnConnectionShutdown;
             connection.ConnectionShutdown += OnConnectionShutdown;
 

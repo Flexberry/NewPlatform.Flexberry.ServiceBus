@@ -21,19 +21,19 @@
         private readonly string vhostStr;
         private Vhost vhost;
 
-        private IModel model;
+        private IModel modelField;
 
-        private IModel Model
+        private IModel model
         {
             get
             {
-                if (model == null || model.IsClosed)
+                if (modelField == null || modelField.IsClosed)
                 {
                     var connection = connectionFactory.CreateConnection();
-                    model = connection.CreateModel();
+                    modelField = connection.CreateModel();
                 }
 
-                return model;
+                return modelField;
             }
         }
 
@@ -56,11 +56,11 @@
             queueArguments["x-dead-letter-routing-key"] = originalRoutingKey;
             queueArguments[RabbitMqConstants.FlexberryArgumentsKeys.NotSyncFlag] = "";
 
-            Model.ExchangeDeclareNoWait(delayExchangeName, ExchangeType.Direct, true, false);
-            Model.QueueDeclareNoWait(delayQueueName, true, false, false, queueArguments);
+            model.ExchangeDeclareNoWait(delayExchangeName, ExchangeType.Direct, true, false);
+            model.QueueDeclareNoWait(delayQueueName, true, false, false, queueArguments);
 
-            Model.QueueBindNoWait(delayQueueName, delayExchangeName, delayRoutingKey, null);
-            Model.QueueBindNoWait(subQueue, delayExchangeName, originalRoutingKey, null);
+            model.QueueBindNoWait(delayQueueName, delayExchangeName, delayRoutingKey, null);
+            model.QueueBindNoWait(subQueue, delayExchangeName, originalRoutingKey, null);
         }
 
         /// <summary>
@@ -130,9 +130,9 @@
         /// <param name="clientId">Идентификатор клиента.</param>
         public void DeleteClient(string clientId)
         {
-            var queueNamePrefix = this.namingManager.GetClientQueuePrefix(clientId);
+            string queueNamePrefix = this.namingManager.GetClientQueuePrefix(clientId);
 
-            var queues = this.managementClient.GetQueuesAsync().Result;
+            IEnumerable<Queue> queues = this.managementClient.GetQueuesAsync().Result;
 
             var queuesToDelete = queues.Where(x => x.Name.StartsWith(queueNamePrefix));
             foreach (var queue in queuesToDelete)
@@ -147,7 +147,7 @@
         /// <param name="msgTypeInfo">Структура, описывающая тип сообщения.</param>
         public void CreateMessageType(ServiceBusMessageType msgTypeInfo)
         {
-            var exchangeName = this.namingManager.GetExchangeName(msgTypeInfo.ID);
+            string exchangeName = this.namingManager.GetExchangeName(msgTypeInfo.ID);
             var exchangeInfo = new ExchangeInfo(exchangeName, ExchangeType.Topic, autoDelete: false, durable: true, @internal: false, arguments: null);
 
             this.managementClient.CreateExchangeAsync(exchangeInfo, vhost).Wait();
@@ -211,9 +211,9 @@
         {
             var result = new List<Subscription>();
 
-            var exchangeName = this.namingManager.GetExchangeName(messageTypeId);
-            var exchange = this.managementClient.GetExchangeAsync(exchangeName, Vhost).Result;
-            var bindings = this.managementClient.GetBindingsWithSourceAsync(exchange).Result;
+            string exchangeName = this.namingManager.GetExchangeName(messageTypeId);
+            Exchange exchange = this.managementClient.GetExchangeAsync(exchangeName, Vhost).Result;
+            IEnumerable<Binding> bindings = this.managementClient.GetBindingsWithSourceAsync(exchange).Result;
 
             foreach (var binding in bindings)
             {
@@ -241,17 +241,17 @@
         /// <param name="subscribtionId">араметр игнорируется. Оставлен для совместимости с интерфейсом.</param>
         public void SubscribeOrUpdate(string clientId, string messageTypeId, bool isCallback, TransportType? transportType, DateTime? expiryDate = null, string subscribtionId = null)
         {
-            var queueName = this.namingManager.GetClientQueueName(clientId, messageTypeId);
-            var exchangeName = this.namingManager.GetExchangeName(messageTypeId);
-            var routingKey = this.namingManager.GetRoutingKey(messageTypeId);
+            string queueName = this.namingManager.GetClientQueueName(clientId, messageTypeId);
+            string exchangeName = this.namingManager.GetExchangeName(messageTypeId);
+            string routingKey = this.namingManager.GetRoutingKey(messageTypeId);
 
             var queueArguments = new Dictionary<string, object>();
             queueArguments["x-dead-letter-exchange"] = namingManager.GetClientDelayExchangeName(clientId);
             queueArguments["x-dead-letter-routing-key"] = namingManager.GetDelayRoutingKey(clientId, messageTypeId);
 
-            Model.QueueDeclareNoWait(queueName, true, false, false, queueArguments);
-            Model.ExchangeDeclareNoWait(exchangeName, ExchangeType.Topic, true);
-            Model.QueueBindNoWait(queueName, exchangeName, routingKey, null);
+            model.QueueDeclareNoWait(queueName, true, false, false, queueArguments);
+            model.ExchangeDeclareNoWait(exchangeName, ExchangeType.Topic, true);
+            model.QueueBindNoWait(queueName, exchangeName, routingKey, null);
 
             DeclareDelayRoutes(clientId, messageTypeId, queueName);
         }
@@ -269,7 +269,7 @@
         {
             var result = new List<Subscription>();
 
-            var prefix = string.IsNullOrEmpty(clientId)
+            string prefix = string.IsNullOrEmpty(clientId)
                 ? this.namingManager.ClientQueuePrefix
                 : this.namingManager.GetClientQueuePrefix(clientId);
 
