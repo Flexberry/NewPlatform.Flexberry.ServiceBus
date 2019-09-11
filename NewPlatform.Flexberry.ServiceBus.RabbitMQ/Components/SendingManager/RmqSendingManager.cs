@@ -198,6 +198,17 @@
         /// </summary>
         public bool AlwaysRecreateConsumer { get; set; } = false;
 
+        /// <summary>
+        /// Creates new object of type <see cref="RmqSendingManager"/> class.
+        /// </summary>
+        /// <param name="logger">Logger component.</param>
+        /// <param name="esbSubscriptionsManager">Subscription manager using database subscriptions.</param>
+        /// <param name="connectionFactory">RabbitMQ connection factory.</param>
+        /// <param name="managementClient">RabbitMQ management client.</param>
+        /// <param name="converter">RabbitMQ message to flexberry message converter.</param>
+        /// <param name="namingManager">AMQP naming manager.</param>
+        /// <param name="vhost">RabbitMQ virtual host.</param>
+        /// <param name="useLegacySenders">Use legacy senders.</param>
         public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/", bool useLegacySenders = true)
         {
             this.logger = logger;
