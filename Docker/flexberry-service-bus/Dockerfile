@@ -1,6 +1,6 @@
 FROM mono:latest as mono
 
-ARG TAG=1.2.1-beta02-service
+ARG TAG=1.2.1-beta03-service
 RUN mono --version && \
     apt update && \
 	apt install -y git && \
