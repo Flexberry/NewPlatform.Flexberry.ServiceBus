@@ -1,6 +1,6 @@
 FROM mono:latest as mono
 
-ARG TAG=1.2.1-beta01-service
+ARG TAG=1.2.1-beta02-service
 RUN mono --version && \
     apt update && \
 	apt install -y git && \
@@ -10,7 +10,7 @@ RUN mono --version && \
 	nuget restore NewPlatform.Flexberry.ServiceBus.sln && \
 	msbuild /p:Configuration=Release NewPlatform.Flexberry.ServiceBus.sln
 
-FROM flexberry/alt.p8-apache2-mono:4.6.2.7-1.2
+FROM flexberry/alt.p8-apache2-mono:4.6.2.7-1.3
 
 COPY --from=mono /Flexberry/NewPlatform.Flexberry.ServiceBus/NewPlatform.Flexberry.ServiceBus.WinServiceHost/bin/Release /opt/flexberry-service-bus
 COPY host/prepareConf.sh /opt/
@@ -24,4 +24,4 @@ MAINTAINER mail@flexberry.net
 
 USER root
 
-CMD echo "DOCKER_HOSTNAME=$DOCKER_HOSTNAME"; sh -x /opt/prepareConf.sh ; su -l -c "sh /opt/start-flexberry-service-bus.sh" flexberry
+CMD echo "DOCKER_HOSTNAME=$DOCKER_HOSTNAME"; sh -x /opt/prepareConf.sh ; sh -x /bin/change_XMLconfig_from_env.sh && su -l -c "sh /opt/start-flexberry-service-bus.sh" flexberry
