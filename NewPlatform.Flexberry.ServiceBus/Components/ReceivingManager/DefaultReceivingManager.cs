@@ -94,6 +94,16 @@
                 if (!subscriptions.Any())
                     _logger.LogInformation("Для сообщения нет ни одной подписки.", $"Было получено сообщение, для которого нет ни одной активной подписки (ID типа сообщения: {message.MessageTypeID}).");
 
+                var restrictSubsriptions = subscriptions.Where(x => x.RestrictQueueLength);
+                if (restrictSubsriptions?.Any() == true)
+                {
+                    var subcriptionRestrictQueue = _objectRepository.GetSubscriptionRestrictingQueue(restrictSubsriptions);
+                    if (subcriptionRestrictQueue != null)
+                    {
+                        throw new Exception($"Очередь сообщений типа {subcriptionRestrictQueue.MessageType.ID} для клиента {subcriptionRestrictQueue.Client.ID} переполнена, повторите отправку позже.");                      
+                    }
+                }
+
                 // Формируем для найденных подписчиков сообщения.
                 var messages = new List<Message>();
                 foreach (var subscription in subscriptions)
@@ -164,6 +174,16 @@
                 {
                     _logger.LogInformation("Для сообщения нет ни одной подписки.", $"Было получено сообщение, для которого нет ни одной активной подписки (ID типа сообщения: {message.MessageTypeID}).");
                     return;
+                }
+
+                var restrictSubsriptions = subscriptions.Where(x => x.RestrictQueueLength);
+                if (restrictSubsriptions?.Any() == true)
+                {
+                    var subcriptionRestrictQueue = _objectRepository.GetSubscriptionRestrictingQueue(restrictSubsriptions);
+                    if (subcriptionRestrictQueue != null)
+                    {
+                        throw new Exception($"Очередь сообщений типа {subcriptionRestrictQueue.MessageType.ID} для клиента {subcriptionRestrictQueue.Client.ID} переполнена, повторите отправку позже.");
+                    }
                 }
 
                 string signature = $"{nameof(DefaultReceivingManager)}.{nameof(AcceptMessage)}({nameof(ServiceBusMessage)} {nameof(message)}, string {nameof(groupName)})";

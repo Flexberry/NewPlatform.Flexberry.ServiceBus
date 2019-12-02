@@ -183,5 +183,45 @@
 
             return clients.Cast<Client>().ToList();
         }
+
+        /// <summary>
+        /// Get restricting subscription.
+        /// </summary>
+        /// <param name="subscriptions">Client subscriptions.</param>
+        /// <returns>Restricting subscription.</returns>
+        public Subscription GetSubscriptionRestrictingQueue(IEnumerable<Subscription> subscriptions)
+        {
+            var subscriptionRecipientIds = subscriptions.Select(x => x.Client.ID);
+            var subcriptionMessageTypeIds = subscriptions.Select(x => x.MessageType.ID);
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var query = _dataService.Query<Message>(Message.Views.RestrictingSubcriptionView.Name)
+                .Where(x => subscriptionRecipientIds.Contains(x.Recipient.ID) && subcriptionMessageTypeIds.Contains(x.MessageType.ID))
+                .ToList();
+
+            var messageGroups = query.GroupBy(x => x.MessageType.ID)
+                .Select(x => new
+                {
+                    MessageTypeID = x.Key,
+                    MessageCount = x.Count()
+                });
+
+            stopwatch.Stop();
+            long time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DataServiceObjectRepository.GetSubscriptionRestrictingQueue() load Subscription messages count.");
+
+            foreach (var messageGroup in messageGroups)
+            {
+                var subscription = subscriptions.FirstOrDefault(x => x.MessageType.ID == messageGroup.MessageTypeID && messageGroup.MessageCount >= x.MaxQueueLength);
+                if (subscription != null)
+                {
+                    return subscription;
+                }
+            }
+
+            return null;
+        }
     }
 }

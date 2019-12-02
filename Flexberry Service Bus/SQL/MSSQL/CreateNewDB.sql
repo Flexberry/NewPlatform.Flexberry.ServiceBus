@@ -234,6 +234,10 @@ CREATE TABLE [Подписка] (
 
 	 [ПередаватьПо] VARCHAR(4)  NULL,
 
+	 [RestrictQueueLength] BIT NOT NULL DEFAULT 0,
+
+	 [MaxQueueLength] INT NOT NULL DEFAULT 1000,
+
 	 [CreateTime] DATETIME  NULL,
 
 	 [Creator] VARCHAR(255)  NULL,

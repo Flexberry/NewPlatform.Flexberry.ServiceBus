@@ -234,6 +234,10 @@ CREATE TABLE Подписка (
 
  ПередаватьПо VARCHAR(4) NULL,
 
+ RestrictQueueLength BOOLEAN NOT NULL DEFAULT false,
+
+ MaxQueueLength INT NOT NULL DEFAULT 1000,
+
  CreateTime TIMESTAMP(3) NULL,
 
  Creator VARCHAR(255) NULL,

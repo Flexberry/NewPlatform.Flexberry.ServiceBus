@@ -35,6 +35,11 @@
         private static readonly List<Client> Clients = new List<Client>();
 
         /// <summary>
+        /// Cache for subscription messages count.
+        /// </summary>
+        private static readonly List<SubscriptionMessage> SubscriptionMessages = new List<SubscriptionMessage>();
+
+        /// <summary>
         /// Lock object for types of messages.
         /// </summary>
         private static readonly object MessageTypesLockObject = new object();
@@ -53,6 +58,11 @@
         /// Lock object for clients.
         /// </summary>
         private static readonly object ClientsLockObject = new object();
+
+        /// <summary>
+        /// Lock object for subscription messages count;
+        /// </summary>
+        private static readonly object SubscriptionMessagesLockObject = new object();
 
         /// <summary>
         /// Logger.
@@ -197,6 +207,28 @@
         }
 
         /// <summary>
+        /// Get restricting subscription.
+        /// </summary>
+        /// <param name="subscriptions">Client subscriptions.</param>
+        /// <returns>Restricting subscription.</returns>
+        public Subscription GetSubscriptionRestrictingQueue(IEnumerable<Subscription> subscriptions)
+        {
+            lock (SubscriptionMessagesLockObject)
+            {
+                foreach (var subscriptionMessage in SubscriptionMessages)
+                {
+                    var subscription = subscriptions.FirstOrDefault(x => x.MessageType.ID == subscriptionMessage.MessageTypeID && subscriptionMessage.MessageCount >= x.MaxQueueLength);
+                    if (subscription != null)
+                    {
+                        return subscription;
+                    }
+                }
+
+                return null;
+            }         
+        }
+
+        /// <summary>
         /// Initialize component.
         /// </summary>
         public override void Prepare()
@@ -234,6 +266,7 @@
             ServiceBuses.Clear();
             Restrictions.Clear();
             Clients.Clear();
+            SubscriptionMessages.Clear();
         }
 
         /// <summary>
@@ -294,11 +327,37 @@
                     Clients.Clear();
                     Clients.AddRange(clients);
                 }
+
+                stopwatch = new Stopwatch();
+                stopwatch.Start();
+                var query = _dataService.Query<Message>(Message.Views.RestrictingSubcriptionView.Name)
+                    .ToList();
+                var messageGroups = query.GroupBy(x => x.MessageType.ID)
+                    .Select(x => new SubscriptionMessage
+                    {
+                        MessageTypeID = x.Key,
+                        MessageCount = x.Count()
+                    });
+                stopwatch.Stop();
+                time = stopwatch.ElapsedMilliseconds;
+                _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedDataServiceObjectRepository.UpdateFromDb() load subcription messages count");
+
+                lock (SubscriptionMessagesLockObject)
+                {
+                    SubscriptionMessages.Clear();
+                    SubscriptionMessages.AddRange(messageGroups);
+                }
             }
             catch (Exception exception)
             {
                 _logger.LogError("Update data from database (once) error", exception.ToString());
             }
         }
+    }
+
+    internal class SubscriptionMessage
+    {
+        public string MessageTypeID { get; set; }
+        public int MessageCount { get; set; }
     }
 }
