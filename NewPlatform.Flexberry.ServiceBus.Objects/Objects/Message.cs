@@ -119,9 +119,6 @@ namespace NewPlatform.Flexberry.ServiceBus
             "MessageType.Name as \'Тип сообщения\'"}, Hidden=new string[] {
             "Recipient",
             "MessageType"})]
-    [View("RestrictingSubcriptionView", new string[] {
-            "MessageType.ID",
-            "Recipient.ID"})]
     [View("SendingByCallbackView", new string[] {
             "SendingTime",
             "ReceivingTime",
@@ -700,17 +697,6 @@ namespace NewPlatform.Flexberry.ServiceBus
                 get
                 {
                     return ICSSoft.STORMNET.Information.GetView("MessageListView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
-                }
-            }
-
-            /// <summary>
-            /// "RestrictingSubcriptionView" view.
-            /// </summary>
-            public static ICSSoft.STORMNET.View RestrictingSubcriptionView
-            {
-                get
-                {
-                    return ICSSoft.STORMNET.Information.GetView("RestrictingSubcriptionView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
                 }
             }
 

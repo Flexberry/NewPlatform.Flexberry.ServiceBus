@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
     using MultiTasking;
     using NewPlatform.Flexberry.ServiceBus.Components.ObjectRepository;
+    using Npgsql;
 
     /// <summary>
     /// Implementation of <see cref="IObjectRepository"/> using <see cref="IDataService"/> with cache.
@@ -225,7 +227,7 @@
                 }
 
                 return null;
-            }         
+            }
         }
 
         /// <summary>
@@ -330,14 +332,57 @@
 
                 stopwatch = new Stopwatch();
                 stopwatch.Start();
-                var query = _dataService.Query<Message>(Message.Views.RestrictingSubcriptionView.Name)
-                    .ToList();
-                var messageGroups = query.GroupBy(x => x.MessageType.ID)
-                    .Select(x => new SubscriptionMessage
+                var messageGroups = new List<SubscriptionMessage>();
+                if (_dataService is MSSQLDataService || _dataService.GetType().IsSubclassOf(typeof(MSSQLDataService)))
+                {
+                    var query = @"SELECT t.[Ид], r.[Ид], COUNT(m.primaryKey) FROM [Сообщение] AS m 
+                                INNER JOIN [ТипСообщения] AS t ON m.[ТипСообщения_m0] = t.primaryKey 
+                                INNER JOIN [Клиент] AS r ON m.[Получатель_m0] = r.primaryKey 
+                                GROUP BY t.[Ид], r.[Ид] ORDER BY 3 DESC";
+
+                    using (var connection = new SqlConnection(_dataService.CustomizationString))
                     {
-                        MessageTypeID = x.Key,
-                        MessageCount = x.Count()
-                    });
+                        connection.Open();
+                        var command = new SqlCommand(query, connection);
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            messageGroups.Add(new SubscriptionMessage
+                            {
+                                MessageTypeID = reader.GetString(0),
+                                MessageCount = reader.GetInt32(2)
+                            });
+                        }
+
+                        reader.Close();
+                        connection.Close();
+                    }
+                }
+                else if (_dataService is PostgresDataService || _dataService.GetType().IsSubclassOf(typeof(PostgresDataService)))
+                {
+                    var query = "SELECT t.\"Ид\", r.\"Ид\", COUNT(m.primaryKey) FROM \"Сообщение\" AS m " +
+                                "INNER JOIN \"ТипСообщения\" AS t ON m.\"ТипСообщения_m0\" = t.primaryKey " + 
+                                "INNER JOIN \"Клиент\" AS r ON m.\"Получатель_m0\" = r.primaryKey " +
+                                "GROUP BY t.\"Ид\", r.\"Ид\" ORDER BY 3 DESC";
+
+                    using (var connection = new NpgsqlConnection(_dataService.CustomizationString))
+                    {
+                        var command = new NpgsqlCommand(query, connection);
+                        connection.Open();
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            messageGroups.Add(new SubscriptionMessage
+                            {
+                                MessageTypeID = reader.GetString(0),
+                                MessageCount = reader.GetInt32(2)
+                            });
+                        }
+
+                        reader.Close();
+                        connection.Close();
+                    }
+                }
                 stopwatch.Stop();
                 time = stopwatch.ElapsedMilliseconds;
                 _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedDataServiceObjectRepository.UpdateFromDb() load subcription messages count");
