@@ -15,8 +15,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business.Audit;
     using ICSSoft.STORMNET.Business.Audit.Objects;
-    
-    
+
+
     // *** Start programmer edit section *** (Using statements)
 
     // *** End programmer edit section *** (Using statements)
@@ -38,7 +38,9 @@ namespace NewPlatform.Flexberry.ServiceBus
             "IsCallback as \'Callback\'",
             "TransportType as \'Передавать через\'",
             "MessageType as \'Тип сообщения\'",
-            "MessageType.ID"}, Hidden=new string[] {
+            "MessageType.ID",
+            "RestrictQueueLength",
+            "MaxQueueLength"}, Hidden = new string[] {
             "MessageType.ID"})]
     [MasterViewDefineAttribute("AuditView", "MessageType", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "ID")]
     [View("DetailView", new string[] {
@@ -47,7 +49,9 @@ namespace NewPlatform.Flexberry.ServiceBus
             "MessageType as \'Тип сообщения\'",
             "MessageType.Name",
             "ExpiryDate as \'Дата прекращения\'",
-            "TransportType as \'Передавать через\'"}, Hidden=new string[] {
+            "TransportType as \'Передавать через\'",
+            "RestrictQueueLength",
+            "MaxQueueLength"}, Hidden = new string[] {
             "Client",
             "MessageType.Name"})]
     [MasterViewDefineAttribute("DetailView", "MessageType", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Name")]
@@ -60,7 +64,9 @@ namespace NewPlatform.Flexberry.ServiceBus
             "ExpiryDate as \'Дата прекращения\'",
             "Description as \'Описание\'",
             "IsCallback as \'Callback\'",
-            "TransportType as \'Передавать через\'"}, Hidden=new string[] {
+            "TransportType as \'Передавать через\'",
+            "RestrictQueueLength",
+            "MaxQueueLength"}, Hidden = new string[] {
             "Client.Name",
             "MessageType.Name"})]
     [MasterViewDefineAttribute("EditView", "Client", ICSSoft.STORMNET.LookupTypeEnum.Standard, "", "Name")]
@@ -72,7 +78,9 @@ namespace NewPlatform.Flexberry.ServiceBus
             "MessageType",
             "MessageType.Name as \'Тип сообщения\'",
             "ExpiryDate as \'Дата прекращения\'",
-            "TransportType as \'Передавать через\'"}, Hidden=new string[] {
+            "TransportType as \'Передавать через\'",
+            "RestrictQueueLength",
+            "MaxQueueLength"}, Hidden = new string[] {
             "Client",
             "MessageType"})]
     [View("LookupView", new string[] {
@@ -86,14 +94,18 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Client.Name",
             "MessageType",
             "MessageType.ID",
-            "MessageType.Name"}, Hidden=new string[] {
+            "MessageType.Name",
+            "RestrictQueueLength",
+            "MaxQueueLength"}, Hidden = new string[] {
             "Description",
             "Client",
             "Client.ID",
             "Client.Name",
             "MessageType",
             "MessageType.ID",
-            "MessageType.Name"})]
+            "MessageType.Name",
+            "RestrictQueueLength",
+            "MaxQueueLength"})]
     [View("SendingByCallbackView", new string[] {
             "ExpiryDate",
             "IsCallback",
@@ -105,7 +117,9 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Client.DnsIdentity",
             "Client.ConnectionsLimit",
             "MessageType",
-            "MessageType.ID"})]
+            "MessageType.ID",
+            "RestrictQueueLength",
+            "MaxQueueLength"})]
     [View("SubscriptionsManagerView", new string[] {
             "ExpiryDate",
             "IsCallback",
@@ -113,35 +127,41 @@ namespace NewPlatform.Flexberry.ServiceBus
             "Client",
             "Client.ID",
             "MessageType",
-            "MessageType.ID"})]
+            "MessageType.ID",
+            "RestrictQueueLength",
+            "MaxQueueLength"})]
     public class Subscription : ICSSoft.STORMNET.DataObject, IDataObjectWithAuditFields
     {
-        
+
         private string fDescription;
-        
+
         private System.DateTime fExpiryDate = System.DateTime.Now;
-        
+
         private bool fIsCallback;
-        
+
         private NewPlatform.Flexberry.ServiceBus.TransportType fTransportType;
-        
+
+        private bool fRestrictQueueLength = false;
+
+        private int fMaxQueueLength = 1000;
+
         private System.Nullable<System.DateTime> fCreateTime;
-        
+
         private string fCreator;
-        
+
         private System.Nullable<System.DateTime> fEditTime;
-        
+
         private string fEditor;
-        
+
         private NewPlatform.Flexberry.ServiceBus.MessageType fMessageType;
-        
+
         private NewPlatform.Flexberry.ServiceBus.Client fClient;
-        
+
         // *** Start programmer edit section *** (Subscription CustomMembers)
 
         // *** End programmer edit section *** (Subscription CustomMembers)
 
-        
+
         /// <summary>
         /// Description.
         /// </summary>
@@ -173,7 +193,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.Description Set end)
             }
         }
-        
+
         /// <summary>
         /// DefaultDescription.
         /// </summary>
@@ -208,7 +228,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.DefaultDescription Set)
             }
         }
-        
+
         /// <summary>
         /// ExpiryDate.
         /// </summary>
@@ -240,7 +260,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.ExpiryDate Set end)
             }
         }
-        
+
         /// <summary>
         /// IsCallback.
         /// </summary>
@@ -271,7 +291,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.IsCallback Set end)
             }
         }
-        
+
         /// <summary>
         /// TransportType.
         /// </summary>
@@ -303,7 +323,71 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.TransportType Set end)
             }
         }
-        
+
+        /// <summary>
+        /// Ограничить длину очереди.
+        /// </summary>
+        // *** Start programmer edit section *** (Subscription.RestrictQueueLength CustomAttributes)
+
+        // *** End programmer edit section *** (Subscription.RestrictQueueLength CustomAttributes)
+        [NotNull()]
+        public virtual bool RestrictQueueLength
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Subscription.RestrictQueueLength Get start)
+
+                // *** End programmer edit section *** (Subscription.RestrictQueueLength Get start)
+                bool result = this.fRestrictQueueLength;
+                // *** Start programmer edit section *** (Subscription.RestrictQueueLength Get end)
+
+                // *** End programmer edit section *** (Subscription.RestrictQueueLength Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Subscription.RestrictQueueLength Set start)
+
+                // *** End programmer edit section *** (Subscription.RestrictQueueLength Set start)
+                this.fRestrictQueueLength = value;
+                // *** Start programmer edit section *** (Subscription.RestrictQueueLength Set end)
+
+                // *** End programmer edit section *** (Subscription.RestrictQueueLength Set end)
+            }
+        }
+
+        /// <summary>
+        /// Максимальная длина очереди.
+        /// </summary>
+        // *** Start programmer edit section *** (Subscription.MaxQueueLength CustomAttributes)
+
+        // *** End programmer edit section *** (Subscription.MaxQueueLength CustomAttributes)
+        [NotNull()]
+        public virtual int MaxQueueLength
+        {
+            get
+            {
+                // *** Start programmer edit section *** (Subscription.MaxQueueLength Get start)
+
+                // *** End programmer edit section *** (Subscription.MaxQueueLength Get start)
+                int result = this.fMaxQueueLength;
+                // *** Start programmer edit section *** (Subscription.MaxQueueLength Get end)
+
+                // *** End programmer edit section *** (Subscription.MaxQueueLength Get end)
+                return result;
+            }
+            set
+            {
+                // *** Start programmer edit section *** (Subscription.MaxQueueLength Set start)
+
+                // *** End programmer edit section *** (Subscription.MaxQueueLength Set start)
+                this.fMaxQueueLength = value;
+                // *** Start programmer edit section *** (Subscription.MaxQueueLength Set end)
+
+                // *** End programmer edit section *** (Subscription.MaxQueueLength Set end)
+            }
+        }
+
         /// <summary>
         /// Время создания объекта.
         /// </summary>
@@ -334,7 +418,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.CreateTime Set end)
             }
         }
-        
+
         /// <summary>
         /// Создатель объекта.
         /// </summary>
@@ -366,7 +450,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.Creator Set end)
             }
         }
-        
+
         /// <summary>
         /// Время последнего редактирования объекта.
         /// </summary>
@@ -397,7 +481,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.EditTime Set end)
             }
         }
-        
+
         /// <summary>
         /// Последний редактор объекта.
         /// </summary>
@@ -429,7 +513,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.Editor Set end)
             }
         }
-        
+
         /// <summary>
         /// Subscription.
         /// </summary>
@@ -463,7 +547,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.MessageType Set end)
             }
         }
-        
+
         /// <summary>
         /// мастеровая ссылка на шапку NewPlatform.Flexberry.ServiceBus.Client.
         /// </summary>
@@ -500,13 +584,13 @@ namespace NewPlatform.Flexberry.ServiceBus
                 // *** End programmer edit section *** (Subscription.Client Set end)
             }
         }
-        
+
         /// <summary>
         /// Class views container.
         /// </summary>
         public class Views
         {
-            
+
             /// <summary>
             /// "AuditView" view.
             /// </summary>
@@ -517,7 +601,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("AuditView", typeof(NewPlatform.Flexberry.ServiceBus.Subscription));
                 }
             }
-            
+
             /// <summary>
             /// "DetailView" view.
             /// </summary>
@@ -528,7 +612,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("DetailView", typeof(NewPlatform.Flexberry.ServiceBus.Subscription));
                 }
             }
-            
+
             /// <summary>
             /// "EditView" view.
             /// </summary>
@@ -539,7 +623,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("EditView", typeof(NewPlatform.Flexberry.ServiceBus.Subscription));
                 }
             }
-            
+
             /// <summary>
             /// "ListView" view.
             /// </summary>
@@ -550,7 +634,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("ListView", typeof(NewPlatform.Flexberry.ServiceBus.Subscription));
                 }
             }
-            
+
             /// <summary>
             /// "LookupView" view.
             /// </summary>
@@ -561,7 +645,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("LookupView", typeof(NewPlatform.Flexberry.ServiceBus.Subscription));
                 }
             }
-            
+
             /// <summary>
             /// "SendingByCallbackView" view.
             /// </summary>
@@ -572,7 +656,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("SendingByCallbackView", typeof(NewPlatform.Flexberry.ServiceBus.Subscription));
                 }
             }
-            
+
             /// <summary>
             /// "SubscriptionsManagerView" view.
             /// </summary>
@@ -584,100 +668,100 @@ namespace NewPlatform.Flexberry.ServiceBus
                 }
             }
         }
-        
+
         /// <summary>
         /// Audit class settings.
         /// </summary>
         public class AuditSettings
         {
-            
+
             /// <summary>
             /// Включён ли аудит для класса.
             /// </summary>
             public static bool AuditEnabled = true;
-            
+
             /// <summary>
             /// Использовать имя представления для аудита по умолчанию.
             /// </summary>
             public static bool UseDefaultView = false;
-            
+
             /// <summary>
             /// Включён ли аудит операции чтения.
             /// </summary>
             public static bool SelectAudit = false;
-            
+
             /// <summary>
             /// Имя представления для аудирования операции чтения.
             /// </summary>
             public static string SelectAuditViewName = "AuditView";
-            
+
             /// <summary>
             /// Включён ли аудит операции создания.
             /// </summary>
             public static bool InsertAudit = true;
-            
+
             /// <summary>
             /// Имя представления для аудирования операции создания.
             /// </summary>
             public static string InsertAuditViewName = "AuditView";
-            
+
             /// <summary>
             /// Включён ли аудит операции изменения.
             /// </summary>
             public static bool UpdateAudit = true;
-            
+
             /// <summary>
             /// Имя представления для аудирования операции изменения.
             /// </summary>
             public static string UpdateAuditViewName = "AuditView";
-            
+
             /// <summary>
             /// Включён ли аудит операции удаления.
             /// </summary>
             public static bool DeleteAudit = true;
-            
+
             /// <summary>
             /// Имя представления для аудирования операции удаления.
             /// </summary>
             public static string DeleteAuditViewName = "AuditView";
-            
+
             /// <summary>
             /// Путь к форме просмотра результатов аудита.
             /// </summary>
             public static string FormUrl = "";
-            
+
             /// <summary>
             /// Режим записи данных аудита (синхронный или асинхронный).
             /// </summary>
             public static ICSSoft.STORMNET.Business.Audit.Objects.tWriteMode WriteMode = ICSSoft.STORMNET.Business.Audit.Objects.tWriteMode.Synchronous;
-            
+
             /// <summary>
             /// Максимальная длина сохраняемого значения поля (если 0, то строка обрезаться не будет).
             /// </summary>
             public static int PrunningLength = 0;
-            
+
             /// <summary>
             /// Показывать ли пользователям в изменениях первичные ключи.
             /// </summary>
             public static bool ShowPrimaryKey = false;
-            
+
             /// <summary>
             /// Сохранять ли старое значение.
             /// </summary>
             public static bool KeepOldValue = true;
-            
+
             /// <summary>
             /// Сжимать ли сохраняемые значения.
             /// </summary>
             public static bool Compress = false;
-            
+
             /// <summary>
             /// Сохранять ли все значения атрибутов, а не только изменяемые.
             /// </summary>
             public static bool KeepAllValues = false;
         }
     }
-    
+
     /// <summary>
     /// Detail array of Subscription.
     /// </summary>
@@ -686,12 +770,12 @@ namespace NewPlatform.Flexberry.ServiceBus
     // *** End programmer edit section *** (DetailArrayDetailArrayOfSubscription CustomAttributes)
     public class DetailArrayOfSubscription : ICSSoft.STORMNET.DetailArray
     {
-        
+
         // *** Start programmer edit section *** (NewPlatform.Flexberry.ServiceBus.DetailArrayOfSubscription members)
 
         // *** End programmer edit section *** (NewPlatform.Flexberry.ServiceBus.DetailArrayOfSubscription members)
 
-        
+
         /// <summary>
         /// Construct detail array.
         /// </summary>
@@ -701,11 +785,11 @@ namespace NewPlatform.Flexberry.ServiceBus
         /// <summary>
         /// Adds object with type Subscription.
         /// </summary>
-        public DetailArrayOfSubscription(NewPlatform.Flexberry.ServiceBus.Client fClient) : 
+        public DetailArrayOfSubscription(NewPlatform.Flexberry.ServiceBus.Client fClient) :
                 base(typeof(Subscription), ((ICSSoft.STORMNET.DataObject)(fClient)))
         {
         }
-        
+
         public NewPlatform.Flexberry.ServiceBus.Subscription this[int index]
         {
             get
@@ -713,7 +797,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                 return ((NewPlatform.Flexberry.ServiceBus.Subscription)(this.ItemByIndex(index)));
             }
         }
-        
+
         public virtual void Add(NewPlatform.Flexberry.ServiceBus.Subscription dataobject)
         {
             this.AddObject(((ICSSoft.STORMNET.DataObject)(dataobject)));

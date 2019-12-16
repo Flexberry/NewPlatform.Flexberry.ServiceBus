@@ -699,7 +699,7 @@ namespace NewPlatform.Flexberry.ServiceBus
                     return ICSSoft.STORMNET.Information.GetView("MessageListView", typeof(NewPlatform.Flexberry.ServiceBus.Message));
                 }
             }
-            
+
             /// <summary>
             /// "SendingByCallbackView" view.
             /// </summary>

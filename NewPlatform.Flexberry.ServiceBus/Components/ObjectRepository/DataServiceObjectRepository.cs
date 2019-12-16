@@ -2,12 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
+
+    using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
+
     using NewPlatform.Flexberry.ServiceBus.Components.ObjectRepository;
-    using ICSSoft.STORMNET;
+
+    using Npgsql;
 
     /// <summary>
     /// Default implementation of <see cref="IObjectRepository"/> using <see cref="IDataService"/>.
@@ -182,6 +187,79 @@
             _statisticsService.NotifyAvgTimeSql(null, (int)time, "DataServiceObjectRepository.GetAllClients() load Clients.");
 
             return clients.Cast<Client>().ToList();
+        }
+
+        /// <summary>
+        /// Get restricting subscription.
+        /// </summary>
+        /// <param name="subscriptions">Client subscriptions.</param>
+        /// <returns>Restricting subscription.</returns>
+        public Subscription GetSubscriptionRestrictingQueue(IEnumerable<Subscription> subscriptions)
+        {
+            var subscriptionMessageTypeIds = string.Join(", ", subscriptions.Select(x => $"'{x.MessageType.ID}'").Distinct());
+            var subscriptionRecipientIds = string.Join(", ", subscriptions.Select(x => $"'{x.Client.ID}'").Distinct());
+            var messageGroups = new List<Tuple<string, int>>();
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+           
+            if (_dataService is MSSQLDataService || _dataService.GetType().IsSubclassOf(typeof(MSSQLDataService)))
+            {
+                var query = @"SELECT t.[Ид], r.[Ид], COUNT(m.primaryKey) FROM [Сообщение] AS m 
+                            INNER JOIN [ТипСообщения] AS t ON m.[ТипСообщения_m0] = t.primaryKey AND t.[Ид] IN (" + subscriptionMessageTypeIds + ") " +
+                            "INNER JOIN [Клиент] AS r ON m.[Получатель_m0] = r.primaryKey AND r.[Ид] IN (" + subscriptionRecipientIds + ") " +
+                            "GROUP BY t.[Ид], r.[Ид] ORDER BY 3 DESC";
+
+                using (var connection = new SqlConnection(_dataService.CustomizationString))
+                {
+                    connection.Open();
+                    var command = new SqlCommand(query, connection);
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        messageGroups.Add(new Tuple<string, int>(reader.GetString(0), reader.GetInt32(2)));
+                    }
+
+                    reader.Close();
+                    connection.Close();
+                }
+            }
+            else if (_dataService is PostgresDataService || _dataService.GetType().IsSubclassOf(typeof(PostgresDataService)))
+            {
+                var query = "SELECT t.\"Ид\", r.\"Ид\", COUNT(m.primaryKey) FROM \"Сообщение\" AS m " +
+                            "INNER JOIN \"ТипСообщения\" AS t ON m.\"ТипСообщения_m0\" = t.primaryKey AND t.\"Ид\" IN (" + subscriptionMessageTypeIds + ") " +
+                            "INNER JOIN \"Клиент\" AS r ON m.\"Получатель_m0\" = r.primaryKey AND r.\"Ид\" IN (" + subscriptionRecipientIds + ") " +
+                            "GROUP BY t.\"Ид\", r.\"Ид\" ORDER BY 3 DESC";
+
+                using (var connection = new NpgsqlConnection(_dataService.CustomizationString))
+                {
+                    var command = new NpgsqlCommand(query, connection);
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        messageGroups.Add(new Tuple<string, int>(reader.GetString(0), reader.GetInt32(2)));
+                    }
+
+                    reader.Close();
+                    connection.Close();
+                }
+            }
+
+            stopwatch.Stop();
+            long time = stopwatch.ElapsedMilliseconds;
+            _statisticsService.NotifyAvgTimeSql(null, (int)time, "DataServiceObjectRepository.GetSubscriptionRestrictingQueue() load Subscription messages count.");
+
+            foreach (var messageGroup in messageGroups)
+            {
+                var subscription = subscriptions.FirstOrDefault(x => x.MessageType.ID == messageGroup.Item1 && messageGroup.Item2 >= x.MaxQueueLength);
+                if (subscription != null)
+                {
+                    return subscription;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
     using MultiTasking;
     using NewPlatform.Flexberry.ServiceBus.Components.ObjectRepository;
+    using Npgsql;
 
     /// <summary>
     /// Implementation of <see cref="IObjectRepository"/> using <see cref="IDataService"/> with cache.
@@ -35,6 +37,11 @@
         private static readonly List<Client> Clients = new List<Client>();
 
         /// <summary>
+        /// Cache for subscription messages count.
+        /// </summary>
+        private static readonly List<SubscriptionMessage> SubscriptionMessages = new List<SubscriptionMessage>();
+
+        /// <summary>
         /// Lock object for types of messages.
         /// </summary>
         private static readonly object MessageTypesLockObject = new object();
@@ -53,6 +60,11 @@
         /// Lock object for clients.
         /// </summary>
         private static readonly object ClientsLockObject = new object();
+
+        /// <summary>
+        /// Lock object for subscription messages count;
+        /// </summary>
+        private static readonly object SubscriptionMessagesLockObject = new object();
 
         /// <summary>
         /// Logger.
@@ -197,6 +209,28 @@
         }
 
         /// <summary>
+        /// Get restricting subscription.
+        /// </summary>
+        /// <param name="subscriptions">Client subscriptions.</param>
+        /// <returns>Restricting subscription.</returns>
+        public Subscription GetSubscriptionRestrictingQueue(IEnumerable<Subscription> subscriptions)
+        {
+            lock (SubscriptionMessagesLockObject)
+            {
+                foreach (var subscriptionMessage in SubscriptionMessages)
+                {
+                    var subscription = subscriptions.FirstOrDefault(x => x.MessageType.ID == subscriptionMessage.MessageTypeID && subscriptionMessage.MessageCount >= x.MaxQueueLength);
+                    if (subscription != null)
+                    {
+                        return subscription;
+                    }
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Initialize component.
         /// </summary>
         public override void Prepare()
@@ -234,6 +268,7 @@
             ServiceBuses.Clear();
             Restrictions.Clear();
             Clients.Clear();
+            SubscriptionMessages.Clear();
         }
 
         /// <summary>
@@ -294,11 +329,80 @@
                     Clients.Clear();
                     Clients.AddRange(clients);
                 }
+
+                stopwatch = new Stopwatch();
+                stopwatch.Start();
+                var messageGroups = new List<SubscriptionMessage>();
+                if (_dataService is MSSQLDataService || _dataService.GetType().IsSubclassOf(typeof(MSSQLDataService)))
+                {
+                    var query = @"SELECT t.[Ид], r.[Ид], COUNT(m.primaryKey) FROM [Сообщение] AS m 
+                                INNER JOIN [ТипСообщения] AS t ON m.[ТипСообщения_m0] = t.primaryKey 
+                                INNER JOIN [Клиент] AS r ON m.[Получатель_m0] = r.primaryKey 
+                                GROUP BY t.[Ид], r.[Ид] ORDER BY 3 DESC";
+
+                    using (var connection = new SqlConnection(_dataService.CustomizationString))
+                    {
+                        connection.Open();
+                        var command = new SqlCommand(query, connection);
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            messageGroups.Add(new SubscriptionMessage
+                            {
+                                MessageTypeID = reader.GetString(0),
+                                MessageCount = reader.GetInt32(2)
+                            });
+                        }
+
+                        reader.Close();
+                        connection.Close();
+                    }
+                }
+                else if (_dataService is PostgresDataService || _dataService.GetType().IsSubclassOf(typeof(PostgresDataService)))
+                {
+                    var query = "SELECT t.\"Ид\", r.\"Ид\", COUNT(m.primaryKey) FROM \"Сообщение\" AS m " +
+                                "INNER JOIN \"ТипСообщения\" AS t ON m.\"ТипСообщения_m0\" = t.primaryKey " + 
+                                "INNER JOIN \"Клиент\" AS r ON m.\"Получатель_m0\" = r.primaryKey " +
+                                "GROUP BY t.\"Ид\", r.\"Ид\" ORDER BY 3 DESC";
+
+                    using (var connection = new NpgsqlConnection(_dataService.CustomizationString))
+                    {
+                        var command = new NpgsqlCommand(query, connection);
+                        connection.Open();
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            messageGroups.Add(new SubscriptionMessage
+                            {
+                                MessageTypeID = reader.GetString(0),
+                                MessageCount = reader.GetInt32(2)
+                            });
+                        }
+
+                        reader.Close();
+                        connection.Close();
+                    }
+                }
+                stopwatch.Stop();
+                time = stopwatch.ElapsedMilliseconds;
+                _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedDataServiceObjectRepository.UpdateFromDb() load subcription messages count");
+
+                lock (SubscriptionMessagesLockObject)
+                {
+                    SubscriptionMessages.Clear();
+                    SubscriptionMessages.AddRange(messageGroups);
+                }
             }
             catch (Exception exception)
             {
                 _logger.LogError("Update data from database (once) error", exception.ToString());
             }
         }
+    }
+
+    internal class SubscriptionMessage
+    {
+        public string MessageTypeID { get; set; }
+        public int MessageCount { get; set; }
     }
 }

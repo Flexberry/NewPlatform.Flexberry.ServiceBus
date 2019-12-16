@@ -72,5 +72,10 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
 
         // *** End programmer edit section *** (IObjectRepository.GetAllClients CustomAttributes)
         System.Collections.Generic.IEnumerable<Client> GetAllClients();
+
+        // *** Start programmer edit section *** (IObjectRepository.GetAllClients CustomAttributes)
+
+        // *** End programmer edit section *** (IObjectRepository.GetAllClients CustomAttributes)
+        Subscription GetSubscriptionRestrictingQueue(System.Collections.Generic.IEnumerable<Subscription> subscriptions);
     }
 }

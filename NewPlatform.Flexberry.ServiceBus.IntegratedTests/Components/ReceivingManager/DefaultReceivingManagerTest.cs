@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@
 
     using NewPlatform.Flexberry.ServiceBus.Components;
 
+    using Npgsql;
     using Xunit;
 
     public class DefaultReceivingManagerTest : BaseServiceBusIntegratedTest
@@ -375,6 +377,211 @@
                 // Assert.
                 Assert.Equal(1, ((SQLDataService)dataService).Query<Message>().Count());
             }
+        }
+
+        [Fact]
+        public void TestAcceptMessageRestrictingQueue()
+        {
+            foreach (var dataService in this.DataServices)
+            {
+                // Arrange.
+                var sender = new Client() { ID = "senderId" };
+                var recipient = new Client() { ID = "recipientId" };
+                var messageType = new MessageType() { ID = "messageTypeId" };
+                var subscription = new Subscription() { Client = recipient, MessageType = messageType, RestrictQueueLength = true, MaxQueueLength = 2 };
+                var dataObjects = new DataObject[] { sender, recipient, messageType, subscription };
+                var mockLogger = new Mock<ILogger>();
+                var mockObjectRepository = new Mock<IObjectRepository>();
+                var mockSubscriptionManager = new Mock<ISubscriptionsManager>();
+                dataService.UpdateObjects(ref dataObjects);
+                mockObjectRepository
+                    .Setup(or => or.GetRestrictionsForClient(It.Is<string>(id => id == sender.ID)))
+                    .Returns(new[] { new SendingPermission() { Client = sender, MessageType = messageType } });
+                mockObjectRepository
+                    .Setup(or => or.GetSubscriptionRestrictingQueue(new List<Subscription>() { subscription }))
+                    .Returns((IEnumerable<Subscription> subscriptions) => { return GetTestRescrictingSubscription(dataService, subscriptions); });
+                mockSubscriptionManager
+                    .Setup(sm => sm.GetSubscriptionsForMsgType(It.Is<string>(id => id == messageType.ID), It.Is<string>(id => id == sender.ID)))
+                    .Returns(new[] { subscription });
+
+                var component = new DefaultReceivingManager(
+                    GetMockLogger(),
+                    mockObjectRepository.Object,
+                    mockSubscriptionManager.Object,
+                    GetMockSendingManager(),
+                    dataService,
+                    GetMockStatisticsService());
+
+                var serviceBusMessage1 = new ServiceBusMessage()
+                {
+                    ClientID = sender.ID,
+                    MessageTypeID = messageType.ID,
+                    Body = "Body1",
+                    Tags = new Dictionary<string, string>() { { "senderName", sender.ID } },
+                };
+
+                var serviceBusMessage2 = new ServiceBusMessage()
+                {
+                    ClientID = sender.ID,
+                    MessageTypeID = messageType.ID,
+                    Body = "Body2",
+                    Tags = new Dictionary<string, string>() { { "senderName", sender.ID } },
+                };
+
+                var serviceBusMessage3 = new ServiceBusMessage()
+                {
+                    ClientID = sender.ID,
+                    MessageTypeID = messageType.ID,
+                    Body = "Body3",
+                    Tags = new Dictionary<string, string>() { { "senderName", sender.ID } },
+                };
+
+                // Act.
+                component.AcceptMessage(serviceBusMessage1);
+                component.AcceptMessage(serviceBusMessage2);
+                Exception ex = Assert.Throws<Exception>(() => component.AcceptMessage(serviceBusMessage3));
+                var messages = dataService.LoadObjects(LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.MessageEditView))
+                    .Cast<Message>()
+                    .OrderBy(message => message.Group)
+                    .ToList();
+
+                // Assert.
+                Assert.Equal(2, messages.Count);
+                Assert.Equal($"Очередь сообщений типа {messageType.ID} для клиента {recipient.ID} переполнена, повторите отправку позже.", ex.Message);
+            }
+        }
+
+        [Fact]
+        public void TestAcceptMessageWithGroupRestrictingQueue()
+        {
+            foreach (var dataService in this.DataServices)
+            {
+                // Arrange.
+                var sender = new Client() { ID = "senderId" };
+                var recipient = new Client() { ID = "recipientId" };
+                var messageType = new MessageType() { ID = "messageTypeId" };
+                var subscription = new Subscription() { Client = recipient, MessageType = messageType, RestrictQueueLength = true, MaxQueueLength = 2 };
+                var dataObjects = new DataObject[] { sender, recipient, messageType, subscription };
+                var mockLogger = new Mock<ILogger>();
+                var mockObjectRepository = new Mock<IObjectRepository>();
+                var mockSubscriptionManager = new Mock<ISubscriptionsManager>();
+                dataService.UpdateObjects(ref dataObjects);
+                mockObjectRepository
+                    .Setup(or => or.GetRestrictionsForClient(It.Is<string>(id => id == sender.ID)))
+                    .Returns(new[] { new SendingPermission() { Client = sender, MessageType = messageType } });
+                mockObjectRepository
+                    .Setup(or => or.GetSubscriptionRestrictingQueue(new List<Subscription>() { subscription }))
+                    .Returns((IEnumerable<Subscription> subscriptions) => { return GetTestRescrictingSubscription(dataService, subscriptions); });
+                mockSubscriptionManager
+                    .Setup(sm => sm.GetSubscriptionsForMsgType(It.Is<string>(id => id == messageType.ID), It.Is<string>(id => id == sender.ID)))
+                    .Returns(new[] { subscription });
+
+                var component = new DefaultReceivingManager(
+                    GetMockLogger(),
+                    mockObjectRepository.Object,
+                    mockSubscriptionManager.Object,
+                    GetMockSendingManager(),
+                    dataService,
+                    GetMockStatisticsService());
+
+                var serviceBusMessage1 = new ServiceBusMessage()
+                {
+                    ClientID = sender.ID,
+                    MessageTypeID = messageType.ID,
+                    Body = "Body1",
+                    Tags = new Dictionary<string, string>() { { "senderName", sender.ID } },
+                };
+
+                var serviceBusMessage2 = new ServiceBusMessage()
+                {
+                    ClientID = sender.ID,
+                    MessageTypeID = messageType.ID,
+                    Body = "Body2",
+                    Tags = new Dictionary<string, string>() { { "senderName", sender.ID } },
+                };
+
+                var serviceBusMessage3 = new ServiceBusMessage()
+                {
+                    ClientID = sender.ID,
+                    MessageTypeID = messageType.ID,
+                    Body = "Body3",
+                    Tags = new Dictionary<string, string>() { { "senderName", sender.ID } },
+                };
+
+                // Act.
+                component.AcceptMessage(serviceBusMessage1, "group1");
+                component.AcceptMessage(serviceBusMessage2, "group2");
+                Exception ex = Assert.Throws<Exception>(() => component.AcceptMessage(serviceBusMessage3, "group3"));
+                var messages = dataService.LoadObjects(LoadingCustomizationStruct.GetSimpleStruct(typeof(Message), Message.Views.MessageEditView))
+                    .Cast<Message>()
+                    .OrderBy(message => message.Group)
+                    .ToList();
+
+                // Assert.
+                Assert.Equal(2, messages.Count);
+                Assert.Equal($"Очередь сообщений типа {messageType.ID} для клиента {recipient.ID} переполнена, повторите отправку позже.", ex.Message);
+            }
+        }
+
+        private Subscription GetTestRescrictingSubscription(IDataService dataService, IEnumerable<Subscription> subscriptions)
+        {
+            var subscriptionMessageTypeIds = string.Join(", ", subscriptions.Select(x => $"'{x.MessageType.ID}'").Distinct());
+            var subscriptionRecipientIds = string.Join(", ", subscriptions.Select(x => $"'{x.Client.ID}'").Distinct());
+
+            var messageGroups = new List<Tuple<string, int>>();
+            if (dataService is MSSQLDataService || dataService.GetType().IsSubclassOf(typeof(MSSQLDataService)))
+            {
+                var query = @"SELECT t.[Ид], r.[Ид], COUNT(m.primaryKey) FROM [Сообщение] AS m 
+                            INNER JOIN [ТипСообщения] AS t ON m.[ТипСообщения_m0] = t.primaryKey AND t.[Ид] IN (" + subscriptionMessageTypeIds + ") " +
+                            "INNER JOIN [Клиент] AS r ON m.[Получатель_m0] = r.primaryKey AND r.[Ид] IN (" + subscriptionRecipientIds + ") " +
+                            "GROUP BY t.[Ид], r.[Ид] ORDER BY 3 DESC";
+
+                using (var connection = new SqlConnection(dataService.CustomizationString))
+                {
+                    connection.Open();
+                    var command = new SqlCommand(query, connection);
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        messageGroups.Add(new Tuple<string, int>(reader.GetString(0), reader.GetInt32(2)));
+                    }
+
+                    reader.Close();
+                    connection.Close();
+                }
+            }
+            else if (dataService is PostgresDataService || dataService.GetType().IsSubclassOf(typeof(PostgresDataService)))
+            {
+                var query = "SELECT t.\"Ид\", r.\"Ид\", COUNT(m.primaryKey) FROM \"Сообщение\" AS m " +
+                            "INNER JOIN \"ТипСообщения\" AS t ON m.\"ТипСообщения_m0\" = t.primaryKey AND t.\"Ид\" IN (" + subscriptionMessageTypeIds + ") " +
+                            "INNER JOIN \"Клиент\" AS r ON m.\"Получатель_m0\" = r.primaryKey AND r.\"Ид\" IN (" + subscriptionRecipientIds + ") " +
+                            "GROUP BY t.\"Ид\", r.\"Ид\" ORDER BY 3 DESC";
+
+                using (var connection = new NpgsqlConnection(dataService.CustomizationString))
+                {
+                    var command = new NpgsqlCommand(query, connection);
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        messageGroups.Add(new Tuple<string, int>(reader.GetString(0), reader.GetInt32(2)));
+                    }
+
+                    reader.Close();
+                    connection.Close();
+                }
+            }
+
+            foreach (var messageGroup in messageGroups)
+            {
+                var subscription = subscriptions.FirstOrDefault(x => x.MessageType.ID == messageGroup.Item1 && messageGroup.Item2 >= x.MaxQueueLength);
+                if (subscription != null)
+                {
+                    return subscription;
+                }
+            }
+
+            return null;
         }
     }
 }
