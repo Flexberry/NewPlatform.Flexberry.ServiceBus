@@ -38,8 +38,8 @@
                 Subscription = subscription;
                 _converter = converter;
                 _connectionFactory = connectionFactory;
-                this.useLegacySenders = useLegacySenders;
-                _sender = new MessageSenderCreator(logger, useLegacySenders).GetMessageSender(subscription);
+                useLegacySenders = this.useLegacySenders;
+                _sender = new MessageSenderCreator(logger) { UseLegacySenders = useLegacySenders }.GetMessageSender(subscription);
 
                 if (Subscription.Client.ConnectionsLimit.HasValue && Subscription.Client.ConnectionsLimit > 0)
                 {
@@ -62,7 +62,7 @@
             {
                 if (subscription.TransportType != this.Subscription.TransportType || subscription.Client.Address != this.Subscription.Client.Address)
                 {
-                    this._sender = new MessageSenderCreator(this._logger, useLegacySenders).GetMessageSender(subscription);
+                    this._sender = new MessageSenderCreator(_logger) { UseLegacySenders = useLegacySenders }.GetMessageSender(subscription);
                     this.Subscription = subscription;
                 }
             }

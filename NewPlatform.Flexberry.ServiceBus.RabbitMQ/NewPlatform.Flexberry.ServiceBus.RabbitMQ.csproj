@@ -171,6 +171,7 @@
     <Compile Include="Queue.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="NewPlatform.Flexberry.ServiceBus.RabbitMQ.snk" />
     <None Include="packages.config" />
   </ItemGroup>

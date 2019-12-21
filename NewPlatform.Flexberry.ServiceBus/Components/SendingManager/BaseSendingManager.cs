@@ -48,7 +48,16 @@
         /// </summary>
         public int ScanningPeriodMilliseconds { get; set; } = 10000;
 
-        public BaseSendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statistics, IDataService dataService, ILogger logger, bool useLegacySenders)
+        /// <summary>
+        /// If <c>true</c>, legacy types of message senders will be created.
+        /// </summary>
+        public bool UseLegacySenders
+        {
+            get => MessageSenderCreator.UseLegacySenders;
+            set => MessageSenderCreator.UseLegacySenders = value;
+        }
+
+        public BaseSendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statistics, IDataService dataService, ILogger logger)
         {
             if (subscriptionsManager == null)
                 throw new ArgumentNullException(nameof(subscriptionsManager));
@@ -66,7 +75,7 @@
             _statistics = statistics;
             _dataService = dataService;
             _logger = logger;
-            MessageSenderCreator = new MessageSenderCreator(_logger, useLegacySenders);
+            MessageSenderCreator = new MessageSenderCreator(_logger);
         }
 
         public abstract void QueueForSending(Message msg);

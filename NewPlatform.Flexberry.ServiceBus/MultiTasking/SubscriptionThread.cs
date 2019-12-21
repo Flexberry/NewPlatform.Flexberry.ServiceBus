@@ -318,7 +318,7 @@
             if (!ServiceHelper.TryWithExceptionLogging(loadMessageDelegate, null, "Ошибка при отправке сообщения по callback", parameters.Subscription.Client, null, logger))
                 return false;
 
-            IMessageSender messageSender = new MessageSenderCreator(logger, true).GetMessageSender(parameters.Subscription);
+            IMessageSender messageSender = new MessageSenderCreator(logger).GetMessageSender(parameters.Subscription);
 
             statisticsService.NotifyIncConnectionCount(parameters.Subscription);
             stopwatch = new Stopwatch();

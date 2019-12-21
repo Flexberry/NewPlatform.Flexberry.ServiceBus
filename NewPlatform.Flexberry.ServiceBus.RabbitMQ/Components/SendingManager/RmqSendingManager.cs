@@ -131,7 +131,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             this._managementClient = managementClient;
             this._converter = converter;
             this._namingManager = namingManager;
-            this.MessageSenderCreator = new MessageSenderCreator(_logger, useLegacySenders);
+            this.MessageSenderCreator = new MessageSenderCreator(_logger) { UseLegacySenders = useLegacySenders };
             this._vhostName = vhost;
             this.useLegacySenders = useLegacySenders;
 

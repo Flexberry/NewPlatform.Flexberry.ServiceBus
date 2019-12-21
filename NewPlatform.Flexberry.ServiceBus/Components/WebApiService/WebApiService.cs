@@ -1,10 +1,14 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
+    using System.IO;
+    using System.Net.Http;
+    using System.Reflection;
     using System.Web.Http;
     using Controllers;
     using Microsoft.Owin.Hosting;
     using Owin;
+    using Swashbuckle.Application;
 
     /// <summary>
     /// The class of component that allows to communicate with the SB by HTTP REST interface.
@@ -75,23 +79,20 @@
                     // Генерация документации WebAPI сервиса.
                     // Будет доступна по пути /swagger (http://localhost:1235/RestService/swagger).
                     // Подробнее тут: https://github.com/domaindrivendev/Swashbuckle.
-//                    config.EnableSwagger(
-//                        c =>
-//                        {
-//                            c.RootUrl(message => _baseAddress);
-//                            c.SingleApiVersion("v1", "Rest Service API").Description("RESTful сервис шины");
-//                            c.Schemes(new[] { "http" });
-//                            c.UseFullTypeNameInSchemaIds();
-//
-//                            // Папка, в которой расположен исполняемый файл текущего приложения.
-//                            string execDirPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
-//
-//                            // Файл документации для контроллеров текущего проекта (генерация должна быть включена в свойствах проекта).
-//                            c.IncludeXmlComments(Path.Combine(execDirPath, typeof(SBService).Namespace + ".xml"));
-//
-//                            // Файл документации для моделей.
-//                            c.IncludeXmlComments(Path.Combine(execDirPath, "NewPlatform.Flexberry.ServiceBus.Objects.xml"));
-//                        }).EnableSwaggerUi();
+                    config.EnableSwagger(
+                        c =>
+                        {
+                            c.RootUrl(message => _baseAddress);
+                            c.SingleApiVersion("v1", "Rest Service API").Description("RESTful сервис шины");
+                            c.Schemes(new[] { "http" });
+                            c.UseFullTypeNameInSchemaIds();
+
+                            // Файл документации для контроллеров текущего проекта (генерация должна быть включена в свойствах проекта).
+                            c.IncludeXmlComments(Path.ChangeExtension(typeof(SBService).Assembly.Location, "xml"));
+
+                            // Файл документации для моделей.
+                            c.IncludeXmlComments(Path.ChangeExtension(typeof(HttpMessageForEsb).Assembly.Location, "xml"));
+                        }).EnableSwaggerUi();
 
                     builder.UseWebApi(config);
                 });

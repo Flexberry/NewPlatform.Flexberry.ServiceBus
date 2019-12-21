@@ -104,9 +104,8 @@
         /// <param name="statisticsService">IStatisticsService component.</param>
         /// <param name="dataService">Current DataService.</param>
         /// <param name="logger">ILogger component.</param>
-        /// <param name="useLegacySenders">If <c>true</c>, previous versions of the interfaces will be used to send messages.</param>
-        public PrioritySendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statisticsService, IDataService dataService, ILogger logger, bool useLegacySenders = true)
-            : base(subscriptionsManager, statisticsService, dataService, logger, useLegacySenders)
+        public PrioritySendingManager(ISubscriptionsManager subscriptionsManager, IStatisticsService statisticsService, IDataService dataService, ILogger logger)
+            : base(subscriptionsManager, statisticsService, dataService, logger)
         {
             _subscriptionsManager = subscriptionsManager ?? throw new ArgumentNullException(nameof(subscriptionsManager));
             _statisticsService = statisticsService ?? throw new ArgumentNullException(nameof(statisticsService));

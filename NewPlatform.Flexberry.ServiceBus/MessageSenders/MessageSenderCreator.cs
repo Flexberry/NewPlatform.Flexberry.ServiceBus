@@ -17,17 +17,15 @@
         /// <summary>
         /// If <c>true</c>, legacy types of message senders will be created.
         /// </summary>
-        private readonly bool useLegacySenders;
+        public bool UseLegacySenders = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageSenderCreator"/> class.
         /// </summary>
         /// <param name="logger">Logger for logging.</param>
-        /// <param name="useLegacySenders">If <c>true</c>, legacy types of message senders will be created.</param>
-        public MessageSenderCreator(ILogger logger, bool useLegacySenders)
+        public MessageSenderCreator(ILogger logger)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.useLegacySenders = useLegacySenders;
         }
 
         /// <summary>
@@ -43,7 +41,7 @@
                     return new MailMessageSender(subscription.Client, logger);
 
                 case TransportType.HTTP:
-                    if (useLegacySenders)
+                    if (UseLegacySenders)
                     {
                         return new LegacyHttpMessageSender(subscription.Client, logger);
                     }
@@ -51,7 +49,7 @@
                     return new HttpMessageSender(subscription.Client, logger);
 
                 case TransportType.WEB:
-                    if (useLegacySenders)
+                    if (UseLegacySenders)
                     {
                         return new LegacyWebMessageSender(subscription.Client, logger);
                     }
@@ -59,7 +57,7 @@
                     return new WebMessageSender(subscription.Client, logger);
 
                 case TransportType.WCF:
-                    if (useLegacySenders)
+                    if (UseLegacySenders)
                     {
                         return new LegacyWcfMessageSender(subscription.Client, logger);
                     }
