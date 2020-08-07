@@ -271,8 +271,8 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** End programmer edit section *** (StatisticsCompressionSetting.StatisticsAge CustomAttributes)
         [ICSSoft.STORMNET.NotStored()]
         [StrLen(255)]
-        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.MSSQLDataService), "CAST(@StatisticsAgeCount@ as varchar(max)) + \' (\' + @StatisticsAgeUnits@ + \')\'")]
-        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.PostgresDataService), "@StatisticsAgeCount@::text || \'(\' || @StatisticsAgeUnits@ || \')\'")]
+        [DataServiceExpression("ICSSoft.STORMNET.Business.MSSQLDataService, ICSSoft.STORMNET.Business.MSSQLDataService", "CAST(@StatisticsAgeCount@ as varchar(max)) + \' (\' + @StatisticsAgeUnits@ + \')\'")]
+        [DataServiceExpression("ICSSoft.STORMNET.Business.PostgresDataService, ICSSoft.STORMNET.Business.PostgresDataService", "@StatisticsAgeCount@::text || \'(\' || @StatisticsAgeUnits@ || \')\'")]
         public virtual string StatisticsAge
         {
             get
@@ -363,9 +363,9 @@ namespace NewPlatform.Flexberry.ServiceBus
         // *** End programmer edit section *** (StatisticsCompressionSetting.CompressFrequency CustomAttributes)
         [ICSSoft.STORMNET.NotStored()]
         [StrLen(255)]
-        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.MSSQLDataService), "CAST(@CompressFrequencyCount@ as varchar(max)) + \' (\' + @CompressFrequencyUnits@ " +
+        [DataServiceExpression("ICSSoft.STORMNET.Business.MSSQLDataService, ICSSoft.STORMNET.Business.MSSQLDataService", "CAST(@CompressFrequencyCount@ as varchar(max)) + \' (\' + @CompressFrequencyUnits@ " +
             "+ \')\'")]
-        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.PostgresDataService), "@CompressFrequencyCount@::text || \' (\' || @CompressFrequencyUnits@ || \')\'")]
+        [DataServiceExpression("ICSSoft.STORMNET.Business.PostgresDataService, ICSSoft.STORMNET.Business.PostgresDataService", "@CompressFrequencyCount@::text || \' (\' || @CompressFrequencyUnits@ || \')\'")]
         public virtual string CompressFrequency
         {
             get

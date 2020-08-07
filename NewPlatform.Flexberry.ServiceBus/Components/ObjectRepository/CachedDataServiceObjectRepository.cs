@@ -2,14 +2,12 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.LINQProvider;
     using MultiTasking;
     using NewPlatform.Flexberry.ServiceBus.Components.ObjectRepository;
-    using Npgsql;
 
     /// <summary>
     /// Implementation of <see cref="IObjectRepository"/> using <see cref="IDataService"/> with cache.
@@ -333,54 +331,45 @@
                 stopwatch = new Stopwatch();
                 stopwatch.Start();
                 var messageGroups = new List<SubscriptionMessage>();
-                if (_dataService is MSSQLDataService || _dataService.GetType().IsSubclassOf(typeof(MSSQLDataService)))
+
+                string msType = "ICSSoft.STORMNET.Business.MSSQLDataService, ICSSoft.STORMNET.Business.MSSQLDataService";
+                string pgType = "ICSSoft.STORMNET.Business.PostgresDataService, ICSSoft.STORMNET.Business.PostgresDataService";
+                var dsType = _dataService.GetType();
+
+                if (dsType.IsAssignableFrom(Type.GetType(msType, false)))
                 {
                     var query = @"SELECT t.[Ид], r.[Ид], COUNT(m.primaryKey) FROM [Сообщение] AS m 
                                 INNER JOIN [ТипСообщения] AS t ON m.[ТипСообщения_m0] = t.primaryKey 
                                 INNER JOIN [Клиент] AS r ON m.[Получатель_m0] = r.primaryKey 
                                 GROUP BY t.[Ид], r.[Ид] ORDER BY 3 DESC";
 
-                    using (var connection = new SqlConnection(_dataService.CustomizationString))
+                    var state = new object();
+                    var data = (_dataService as SQLDataService)?.ReadFirst(query, ref state, 0);
+                    foreach (var obj in data)
                     {
-                        connection.Open();
-                        var command = new SqlCommand(query, connection);
-                        var reader = command.ExecuteReader();
-                        while (reader.Read())
+                        messageGroups.Add(new SubscriptionMessage
                         {
-                            messageGroups.Add(new SubscriptionMessage
-                            {
-                                MessageTypeID = reader.GetString(0),
-                                MessageCount = reader.GetInt32(2)
-                            });
-                        }
-
-                        reader.Close();
-                        connection.Close();
+                            MessageTypeID = obj[0].ToString(),
+                            MessageCount = (int)obj[2]
+                        });
                     }
                 }
-                else if (_dataService is PostgresDataService || _dataService.GetType().IsSubclassOf(typeof(PostgresDataService)))
+                else if (dsType.IsAssignableFrom(Type.GetType(pgType, false)))
                 {
                     var query = "SELECT t.\"Ид\", r.\"Ид\", COUNT(m.primaryKey) FROM \"Сообщение\" AS m " +
                                 "INNER JOIN \"ТипСообщения\" AS t ON m.\"ТипСообщения_m0\" = t.primaryKey " + 
                                 "INNER JOIN \"Клиент\" AS r ON m.\"Получатель_m0\" = r.primaryKey " +
                                 "GROUP BY t.\"Ид\", r.\"Ид\" ORDER BY 3 DESC";
 
-                    using (var connection = new NpgsqlConnection(_dataService.CustomizationString))
+                    var state = new object();
+                    var data = (_dataService as SQLDataService)?.ReadFirst(query, ref state, 0);
+                    foreach (var obj in data)
                     {
-                        var command = new NpgsqlCommand(query, connection);
-                        connection.Open();
-                        var reader = command.ExecuteReader();
-                        while (reader.Read())
+                        messageGroups.Add(new SubscriptionMessage
                         {
-                            messageGroups.Add(new SubscriptionMessage
-                            {
-                                MessageTypeID = reader.GetString(0),
-                                MessageCount = reader.GetInt32(2)
-                            });
-                        }
-
-                        reader.Close();
-                        connection.Close();
+                            MessageTypeID = obj[0].ToString(),
+                            MessageCount = (int)obj[2]
+                        });
                     }
                 }
                 stopwatch.Stop();

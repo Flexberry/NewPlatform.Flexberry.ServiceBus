@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
     using ICSSoft.STORMNET;
@@ -12,7 +11,6 @@
     using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
-    using Npgsql;
     using SortOrder = ICSSoft.STORMNET.Business.SortOrder;
 
     using NewPlatform.Flexberry.ServiceBus.MessageSenders;
@@ -685,16 +683,17 @@
         /// <param name="logger">Логгер для выполнения операции.</param>
         private static void CorrectMessagesStatus(IDataService ds, ILogger logger)
         {
+            string msType = "ICSSoft.STORMNET.Business.MSSQLDataService, ICSSoft.STORMNET.Business.MSSQLDataService";
+            string pgType = "ICSSoft.STORMNET.Business.PostgresDataService, ICSSoft.STORMNET.Business.PostgresDataService";
+            var dsType = ds.GetType();
+
             // TODO: придумать, как быстро и массово обновить статусы сообщений без sql.
-            if (ds is PostgresDataService)
+            if (dsType.IsAssignableFrom(Type.GetType(msType, false)))
             {
-                var conn = new NpgsqlConnection(ds.CustomizationString);
                 try
                 {
                     const string SqlString = "UPDATE Сообщение SET Отправляется = false";
-                    var sqlCommand = new NpgsqlCommand(SqlString, conn);
-                    conn.Open();
-                    sqlCommand.ExecuteNonQuery();
+                    (ds as SQLDataService).ExecuteNonQuery(SqlString);
 
                     logger.LogInformation(null, "Успешно обновлены некорректные статусы сообщений в БД.");
                 }
@@ -702,33 +701,19 @@
                 {
                     logger.LogUnhandledException(ex, null, "Ошибка при массовом обновлении статусов сообщений");
                 }
-                finally
-                {
-                    conn.Close();
-                }
-
-                return;
             }
-
-            if (ds is MSSQLDataService)
+            else if (dsType.IsAssignableFrom(Type.GetType(pgType, false)))
             {
-                var conn = new SqlConnection(ds.CustomizationString);
                 try
                 {
                     const string SqlString = "UPDATE [Сообщение] SET [Отправляется] = 0";
-                    var sqlCommand = new SqlCommand(SqlString, conn);
-                    conn.Open();
-                    sqlCommand.ExecuteNonQuery();
+                    (ds as SQLDataService).ExecuteNonQuery(SqlString);
 
                     logger.LogInformation(null, "Успешно обновлены некорректные статусы сообщений в БД.");
                 }
                 catch (Exception ex)
                 {
                     logger.LogUnhandledException(ex, null, "Ошибка при массовом обновлении статусов сообщений");
-                }
-                finally
-                {
-                    conn.Close();
                 }
             }
         }

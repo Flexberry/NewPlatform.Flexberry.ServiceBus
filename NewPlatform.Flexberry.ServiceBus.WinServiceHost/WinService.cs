@@ -3,10 +3,11 @@
     using System.Linq;
     using System.ServiceProcess;
 
-    using Unity;
-    using Microsoft.Practices.Unity.Configuration;
+    using ICSSoft.Services;
 
     using NewPlatform.Flexberry.ServiceBus.Components;
+
+    using Unity;
 
     public partial class WinService : ServiceBase
     {
@@ -16,8 +17,7 @@
         {
             InitializeComponent();
 
-            var unityContainer = new UnityContainer();
-            unityContainer.LoadConfiguration();
+            var unityContainer = UnityFactory.GetContainer();
 
             var sbComponents =
                 from registration in unityContainer.Registrations
