@@ -1,21 +1,19 @@
 ﻿[assembly: Xunit.CollectionBehavior(DisableTestParallelization = true)]
 namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
 {
-    using Xunit;
-    using ICSSoft.STORMNET.Business;
-    using Npgsql;
-    using Oracle.ManagedDataAccess.Client;
     using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Data.SqlClient;
-    using System.Diagnostics.Contracts;
     using System.Linq;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
+    using ICSSoft.STORMNET.Business;
+    using Npgsql;
+    using Oracle.ManagedDataAccess.Client;
+
     public abstract class BaseIntegratedTest : IDisposable
     {
+        private const string poolingFalseConst = "Pooling=false;";
+
         /// <summary>
         /// The temporary database name prefix.
         /// </summary>
@@ -88,7 +86,8 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                 throw new ArgumentException();
             _tempDbNamePrefix = tempDbNamePrefix;
             _databaseName = _tempDbNamePrefix + "_" + DateTime.Now.ToString("yyyyMMddHHmmssff") + "_" + Guid.NewGuid().ToString("N");
-            if (!string.IsNullOrWhiteSpace(PostgresScript))
+
+            if (!string.IsNullOrWhiteSpace(PostgresScript) && ConnectionStringPostgres != poolingFalseConst)
             {
                 if (!(tempDbNamePrefix.Length <= 12))                // Max length is 63 (-18 -32).
                     throw new ArgumentException();
@@ -101,11 +100,10 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                         cmd.ExecuteNonQuery();
 
                 }
+
                 using (var conn = new NpgsqlConnection($"{ConnectionStringPostgres};Database={_databaseName}"))
                 {
                     conn.Open();
-                    using (var cmd = new NpgsqlCommand("CREATE EXTENSION postgis;", conn) { CommandTimeout = 60 })
-                        cmd.ExecuteNonQuery();
 
                     string[] commands = PostgresScript.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var command in commands)
@@ -119,7 +117,8 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                     _dataServices.Add(CreatePostgresDataService($"{ConnectionStringPostgres};Database={_databaseName}"));
                 }
             }
-            if (!string.IsNullOrWhiteSpace(MssqlScript))
+
+            if (!string.IsNullOrWhiteSpace(MssqlScript) && ConnectionStringMssql != poolingFalseConst)
             {
                 if (!(tempDbNamePrefix.Length <= 64))// Max is 128.
                     throw new ArgumentException();
@@ -129,6 +128,7 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                     using (var command = new SqlCommand($"CREATE DATABASE {_databaseName} COLLATE Cyrillic_General_CI_AS", connection))
                         command.ExecuteNonQuery();
                 }
+
                 using (var connection = new SqlConnection($"{ConnectionStringMssql};Database={_databaseName}"))
                 {
                     connection.Open();
@@ -137,10 +137,12 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                         command.CommandTimeout = 180;
                         command.ExecuteNonQuery();
                     }
+
                     _dataServices.Add(CreateMssqlDataService($"{ConnectionStringMssql};Database={_databaseName}"));
                 }
             }
-            if (!string.IsNullOrWhiteSpace(OracleScript))
+
+            if (!string.IsNullOrWhiteSpace(OracleScript) && ConnectionStringOracle != poolingFalseConst)
             {
                 if (!(tempDbNamePrefix.Length <= 8))                // Max length is 30 (-18 -4).
                     throw new ArgumentException();
@@ -162,6 +164,7 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                         command.ExecuteNonQuery();
                     }
                 }
+
                 using (var connection = new OracleConnection($"{ConnectionStringOracleDataSource};User Id={_tmpUserNameOracle};Password={_tmpUserNameOracle};"))
                 {
                     connection.Open();
@@ -173,6 +176,7 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                             if (!string.IsNullOrWhiteSpace(command.CommandText))
                                 command.ExecuteNonQuery();
                         }
+
                         _dataServices.Add(CreateOracleDataService($"{ConnectionStringOracleDataSource};User Id={_tmpUserNameOracle};Password={_tmpUserNameOracle};"));
                     }
                 }
@@ -233,6 +237,7 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                                 command.ExecuteNonQuery();
                         }
                     }
+
                     if (ds is MSSQLDataService || ds.GetType().IsSubclassOf(typeof(MSSQLDataService)))
                     {
                         using (var connection = new SqlConnection(ConnectionStringMssql))
@@ -242,6 +247,7 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
                                 command.ExecuteNonQuery();
                         }
                     }
+
                     if (ds is OracleDataService || ds.GetType().IsSubclassOf(typeof(OracleDataService)))
                     {
                         using (var connection = new OracleConnection(ConnectionStringOracle))
@@ -274,27 +280,30 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
             {
                 // ADO.NET doesn't close the connection with pooling. We have to disable it explicitly.
                 // http://stackoverflow.com/questions/9033356/connection-still-idle-after-close
-                return $"Pooling=false;{ConfigurationManager.ConnectionStrings["ConnectionStringPostgres"]}";
+                return $"{poolingFalseConst}{ConfigurationManager.ConnectionStrings["ConnectionStringPostgres"]}";
             }
         }
+
         private static string ConnectionStringMssql
         {
             get
             {
                 // ADO.NET doesn't close the connection with pooling. We have to disable it explicitly.
                 // http://stackoverflow.com/questions/9033356/connection-still-idle-after-close
-                return $"Pooling=false;{ConfigurationManager.ConnectionStrings["ConnectionStringMssql"]}";
+                return $"{poolingFalseConst}{ConfigurationManager.ConnectionStrings["ConnectionStringMssql"]}";
             }
         }
+
         private static string ConnectionStringOracle
         {
             get
             {
                 // ADO.NET doesn't close the connection with pooling. We have to disable it explicitly.
                 // http://stackoverflow.com/questions/9033356/connection-still-idle-after-close
-                return $"Pooling=false;{ConfigurationManager.ConnectionStrings["ConnectionStringOracle"]}";
+                return $"{poolingFalseConst}{ConfigurationManager.ConnectionStrings["ConnectionStringOracle"]}";
             }
         }
+
         private static string ConnectionStringOracleDataSource
         {
             get
@@ -303,7 +312,7 @@ namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests
 
                 // ADO.NET doesn't close the connection with pooling. We have to disable it explicitly.
                 // http://stackoverflow.com/questions/9033356/connection-still-idle-after-close
-                return $"Pooling=false;{dataSource};";
+                return $"{poolingFalseConst}{dataSource};";
             }
         }
     }

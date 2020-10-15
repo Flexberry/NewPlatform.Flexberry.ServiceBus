@@ -1,6 +1,7 @@
 ﻿namespace NewPlatform.Flexberry.ServiceBus.IntegratedTests.Components
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Text.RegularExpressions;
     using System.Threading;
@@ -8,6 +9,7 @@
     using ICSSoft.STORMNET;
     using ICSSoft.STORMNET.Business;
     using Microsoft.Owin.Hosting;
+    using NewPlatform.Flexberry.ServiceBus.IntegratedTests.Components.SendingManager.RequestTemplates;
     using Owin;
     using RazorEngine;
     using Xunit;
@@ -186,23 +188,31 @@
         private bool ValidateRequest(string request, Message message, TransportType transportType)
         {
             string requestTemplate;
-            string folder = @"Components\SendingManager\RequestTemplates\";
             switch (transportType)
             {
                 case TransportType.WCF:
-                    requestTemplate = File.ReadAllText(folder + "WCFRequestTemplate.txt");
+                    requestTemplate = new WCFRequestTemplate() { Model = message }.ToString();
                     break;
                 case TransportType.WEB:
-                    requestTemplate = File.ReadAllText(folder + "WebRequestTemplate.txt");
+                    requestTemplate = new WebRequestTemplate() { Model = message }.ToString();
                     break;
                 case TransportType.HTTP:
-                    requestTemplate = File.ReadAllText(folder + "HTTPRequestTemplate.txt");
+                    requestTemplate = new HTTPRequestTemplate() { Model = message }.ToString();
                     break;
                 default:
                     throw new ArgumentException("Invalid value.", nameof(transportType));
             }
 
-            return Regex.IsMatch(request, Razor.Parse(requestTemplate, message).Replace("/", @"\/").Replace(".", @"\."));
+            string expectedString = requestTemplate.Replace(Environment.NewLine, string.Empty).Replace("/", @"\/").Replace(".", @"\.");
+
+            bool isMatch = Regex.IsMatch(request, expectedString);
+
+            if (!isMatch)
+            {
+                Debug.WriteLine($"Pattern:{Environment.NewLine}{expectedString}{Environment.NewLine}input:{Environment.NewLine}{request}");
+            }
+
+            return isMatch;
         }
     }
 }
