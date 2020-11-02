@@ -7,6 +7,8 @@ namespace NewPlatform.Flexberry.ServiceBus
     public abstract class BaseServiceBus<T> : IServiceBus
         where T : IServiceBusSettings
     {
+        private object _lockObject = new object();
+
         protected BaseServiceBus(ILogger logger)
         {
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -40,32 +42,38 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         public void Start()
         {
-            Logger.LogDebugMessage(nameof(ServiceBus), "Starting service bus");
-
-            try
+            lock(_lockObject)
             {
-                StartService();
+                Logger.LogDebugMessage(nameof(ServiceBus), "Starting service bus");
 
-                State = ServiceBusState.Started;
-                Logger.LogDebugMessage(nameof(ServiceBus), "Started successfully");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogUnhandledException(ex);
-                throw;
+                try
+                {
+                    StartService();
+
+                    State = ServiceBusState.Started;
+                    Logger.LogDebugMessage(nameof(ServiceBus), "Started successfully");
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogUnhandledException(ex);
+                    throw;
+                }
             }
         }
 
         public void Stop()
         {
-            if (State != ServiceBusState.Started)
-                throw new InvalidOperationException("Wrong state");
+            lock (_lockObject)
+            {
+                if (State != ServiceBusState.Started)
+                    throw new InvalidOperationException("Wrong state");
 
-            Logger.LogDebugMessage(nameof(ServiceBus), "Stopping service bus");
+                Logger.LogDebugMessage(nameof(ServiceBus), "Stopping service bus");
 
-            StopService();
+                StopService();
 
-            State = ServiceBusState.Stopped;
+                State = ServiceBusState.Stopped;
+            }
         }
 
         void IDisposable.Dispose()

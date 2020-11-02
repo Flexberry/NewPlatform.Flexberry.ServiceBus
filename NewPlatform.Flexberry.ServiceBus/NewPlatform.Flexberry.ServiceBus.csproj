@@ -356,6 +356,7 @@
     <Compile Include="ClusteredServiceBus.cs" />
     <Compile Include="Components\ClusterManager\DefaultClusterManager.cs" />
     <Compile Include="Components\ClusterManager\DefaultClusterManagerSettings.cs" />
+    <Compile Include="Components\ClusterManager\StaticRoleClusterManager.cs" />
     <Compile Include="Components\Logger\DatabaseTraceListener.cs" />
     <Compile Include="Components\Logger\Log4NetLogger.cs" />
     <Compile Include="Components\Logger\LoggerHelper.cs" />

@@ -28,15 +28,15 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         protected override void StartService()
         {
-            ClusterManager.Start();
             ClusterManager.InitComponents(SingletonComponents);
+            ClusterManager.Start();
             MultiInstanceComponents.PrepareAndStartComponents(Logger);
         }
 
         protected override void StopService()
         {
-            ClusterManager.Stop();
             MultiInstanceComponents.StopAndDisposeComponents(Logger);
+            ClusterManager.Stop();
         }
     }
 }
