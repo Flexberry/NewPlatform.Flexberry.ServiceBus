@@ -1,10 +1,11 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Description;
-    using ClientTools;
+    using NewPlatform.Flexberry.ServiceBus.ClientTools;
 
     /// <summary>
     /// Base implementation of component for providing access by WCF.
@@ -195,3 +196,4 @@
         }
     }
 }
+#endif

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net452</TargetFrameworks>
     <Configurations>Debug;Release</Configurations>
-    <LangVersion>8</LangVersion>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>NewPlatform.Flexberry.ServiceBus.RabbitMQ</RootNamespace>
     <AssemblyName>NewPlatform.Flexberry.ServiceBus.RabbitMQ</AssemblyName>
     <SignAssembly>true</SignAssembly>
@@ -15,25 +15,14 @@
     <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="NewPlatform.Flexberry.EasyNetQ.Management.Client" Version="1.0.0" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta04" />
-    <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NewPlatform.Flexberry.EasyNetQ.Management.Client" Version="1.0.0" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

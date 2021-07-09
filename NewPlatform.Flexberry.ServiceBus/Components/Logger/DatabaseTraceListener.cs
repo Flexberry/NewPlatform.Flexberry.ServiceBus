@@ -1,4 +1,5 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Diagnostics;
@@ -186,5 +187,5 @@
             DataServiceProvider.DataService.UpdateObject(appLogEntry);
         }
     }
-
 }
+#endif

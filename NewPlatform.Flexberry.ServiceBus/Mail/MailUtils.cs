@@ -1,4 +1,5 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Mail
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ServiceBus.Mail
 {
     using System;
     using System.Collections.Generic;
@@ -52,7 +53,7 @@
         /// </summary>
         /// <param name="attachment">The attachment.</param>
         /// <param name="password">The password.</param>
-        /// <returns>The <see cref="byte[]"/>.</returns>
+        /// <returns>The array of <see cref="byte"/>.</returns>
         private static byte[] GetAttachment(string attachment, string password)
         {
             string zipFileName = "TempArchiveFileName.7z";
@@ -84,7 +85,7 @@
         /// </summary>
         /// <param name="list">The list.</param>
         /// <param name="password">The password.</param>
-        /// <returns>The <see cref="byte[]"/>.</returns>
+        /// <returns>The array of <see cref="byte"/>.</returns>
         private static byte[] GetAttachmentFromMany(IEnumerable<Attach> list, string password)
         {
             string zipFileName = "TempArchiveFileName.7z";
@@ -349,3 +350,4 @@
         }
     }
 }
+#endif

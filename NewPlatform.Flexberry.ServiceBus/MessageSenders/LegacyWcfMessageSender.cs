@@ -41,7 +41,7 @@
             ICallbackSubscriber channel;
             try
             {
-                var endpointAddress = Client.DnsIdentity == null ? new EndpointAddress(Client.Address) : new EndpointAddress(new Uri(Client.Address), EndpointIdentity.CreateDnsIdentity(Client.DnsIdentity));
+                var endpointAddress = Client.DnsIdentity == null ? new EndpointAddress(Client.Address) : new EndpointAddress(new Uri(Client.Address), new DnsEndpointIdentity(Client.DnsIdentity));
                 channelFactory = new ChannelFactory<ICallbackSubscriber>("CallbackClient", endpointAddress);
                 channel = channelFactory.CreateChannel();
                 ((IClientChannel)channel).Open();

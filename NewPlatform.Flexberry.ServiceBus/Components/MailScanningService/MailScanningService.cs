@@ -1,8 +1,9 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Threading;
-    using Mail;
+    using NewPlatform.Flexberry.ServiceBus.Mail;
 
     /// <summary>
     /// Implementation of service for scanning e-mails to get new messages.
@@ -71,3 +72,4 @@
         }
     }
 }
+#endif

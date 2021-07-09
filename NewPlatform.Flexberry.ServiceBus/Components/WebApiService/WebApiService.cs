@@ -1,9 +1,10 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Web.Http;
-    using Controllers;
     using Microsoft.Owin.Hosting;
+    using NewPlatform.Flexberry.ServiceBus.Controllers;
     using Owin;
 
     /// <summary>
@@ -46,15 +47,9 @@
             if (baseAddress == string.Empty)
                 throw new ArgumentException(nameof(baseAddress));
 
-            if (sendingManager == null)
-                throw new ArgumentNullException(nameof(sendingManager));
-
-            if (receivingManager == null)
-                throw new ArgumentNullException(nameof(receivingManager));
-
             _baseAddress = baseAddress;
-            _sendingManager = sendingManager;
-            _receivingManager = receivingManager;
+            _sendingManager = sendingManager ?? throw new ArgumentNullException(nameof(sendingManager));
+            _receivingManager = receivingManager ?? throw new ArgumentNullException(nameof(receivingManager));
         }
 
         /// <summary>
@@ -110,3 +105,4 @@
         }
     }
 }
+#endif

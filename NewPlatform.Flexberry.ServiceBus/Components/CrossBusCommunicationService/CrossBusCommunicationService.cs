@@ -210,7 +210,8 @@
                 {
                     _logger.LogDebugMessage(nameof(CrossBusCommunicationService), $"Working with remote SB '{serviceBus.Name ?? "<noname>"}' ({serviceBus.ManagerAddress}).");
 
-                    var client = new ChannelFactory<IServiceBusInterop>(new BasicHttpBinding()).CreateChannel(new EndpointAddress(serviceBus.ManagerAddress));
+                    var endpoint = new EndpointAddress(serviceBus.ManagerAddress);
+                    var client = new ChannelFactory<IServiceBusInterop>(new BasicHttpBinding(), endpoint).CreateChannel();
                     if (client == null)
                         throw new InvalidOperationException($"Unable to create WCF client to the SB ({serviceBus.ManagerAddress}).");
 

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <Configurations>Debug;Release</Configurations>
-    <LangVersion>8</LangVersion>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>NewPlatform.Flexberry.ServiceBus</RootNamespace>
     <AssemblyName>NewPlatform.Flexberry.ServiceBus</AssemblyName>
     <SignAssembly>true</SignAssembly>
@@ -15,25 +15,14 @@
     <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="NewPlatform.Flexberry.LogService.Objects" Version="3.0.0" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0-beta04" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NewPlatform.Flexberry.LogService.Objects" Version="4.0.0" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -44,7 +33,7 @@
     <None Remove="StyleCop.Cache" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <PackageReference Include="EnterpriseLibrary.Common" Version="6.0.1304" />
     <PackageReference Include="EnterpriseLibrary.Data" Version="6.0.1304" />
     <PackageReference Include="EnterpriseLibrary.Logging" Version="6.0.1304" />
@@ -54,11 +43,15 @@
     <PackageReference Include="Microsoft.Owin.Host.HttpListener" Version="4.1.0" />
     <PackageReference Include="Microsoft.Owin.Hosting" Version="4.1.0" />
     <PackageReference Include="OpenPop.NET" Version="2.0.6.1120" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.7.0" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
