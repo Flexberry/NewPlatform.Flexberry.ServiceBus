@@ -42,10 +42,9 @@
             var dataServiceMock = repo.Create<IDataService>();
             var loggerMock = repo.Create<ILogger>();
             int calls = 0;
-            DataObject[] dObjs = { };
 
             dataServiceMock
-                .Setup(ds => ds.UpdateObjects(ref dObjs, true))
+                .Setup(ds => ds.UpdateObjects(ref It.Ref<DataObject[]>.IsAny, true))
                 .RefValCallback((ref DataObject[] objects, bool alwaysThrowException) => calls++);
 
             var service = new DefaultStatisticsSaveService(dataServiceMock.Object, loggerMock.Object);
@@ -77,10 +76,8 @@
                 }
             };
 
-            DataObject[] dObjs = It.IsAny<DataObject[]>();
-
             dataServiceMock
-                .Setup(ds => ds.UpdateObjects(ref dObjs, true))
+                .Setup(ds => ds.UpdateObjects(ref It.Ref<DataObject[]>.IsAny, true))
                 .RefValCallback((ref DataObject[] objects, bool alwaysThrowException) =>
                 {
                     called = true;
@@ -88,7 +85,7 @@
                     // Existed record is updated.
                     Assert.Equal(24, (objects[0] as StatisticsRecord).SentCount);
                     Assert.Equal(16, (objects[0] as StatisticsRecord).ReceivedCount);
-                }).IgnoreRefMatching();
+                });
             dataServiceMock.Setup(ds => ds.LoadObjects(It.IsAny<LoadingCustomizationStruct>()))
                 .Returns(new DataObject[] { new StatisticsRecord() { SentCount = 20, ReceivedCount = 10, StatisticsSetting = setting } });
 
