@@ -363,13 +363,17 @@
 
                     var state = new object();
                     var data = (_dataService as SQLDataService)?.ReadFirst(query, ref state, 0);
-                    foreach (var obj in data)
+
+                    if (data != null)
                     {
-                        messageGroups.Add(new SubscriptionMessage
+                        foreach (var obj in data)
                         {
-                            MessageTypeID = obj[0].ToString(),
-                            MessageCount = (int)obj[2]
-                        });
+                            messageGroups.Add(new SubscriptionMessage
+                            {
+                                MessageTypeID = obj[0].ToString(),
+                                MessageCount = (int)obj[2]
+                            });
+                        }
                     }
                 }
                 stopwatch.Stop();
