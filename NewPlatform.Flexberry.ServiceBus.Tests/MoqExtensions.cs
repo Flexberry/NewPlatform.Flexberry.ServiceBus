@@ -55,40 +55,7 @@
         public static IReturnsThrows<TMock, TReturn> RefCallback<TMock, TReturn, TRef>(this ICallback<TMock, TReturn> mock, RefAction<TRef> action)
             where TMock : class
         {
-            return RefCallbackInternal(mock, action);
-        }
-
-        /// <summary>
-        /// Метод расширения для <see cref="Moq"/>, который отключает проверку параметров для Callback-функций (вариант с возвращаемым значением).
-        /// </summary>
-        /// <param name="mock">
-        /// <see cref="Moq"/>, для которого нужно отключить проверку параметров.
-        /// </param>
-        /// <returns>
-        /// Для поддержки цепочечных вызовов, возвращаем <paramref name="mock"/>.
-        /// </returns>
-        public static IThrowsResult IgnoreRefMatching(this IThrowsResult mock)
-        {
-            try
-            {
-                FieldInfo matcherField = typeof(Mock).GetTypeInfo().Assembly.GetType("Moq.MethodCall").GetField("argumentMatchers", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.SetField | BindingFlags.Instance);
-
-                IList argumentMatchers = (IList)matcherField.GetValue(mock);
-                Type refMatcherType = typeof(Mock).GetTypeInfo().Assembly.GetType("Moq.Matchers.RefMatcher");
-                FieldInfo equalField = refMatcherType.GetField("equals", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.SetField | BindingFlags.Instance);
-
-                foreach (object matcher in argumentMatchers)
-                {
-                    if (matcher.GetType() == refMatcherType)
-                        equalField.SetValue(matcher, new Func<object, bool>(o => true));
-                }
-
-                return mock;
-            }
-            catch (NullReferenceException)
-            {
-                return mock;
-            }
+            return mock.Callback(action);
         }
 
         /// <summary>
@@ -108,7 +75,7 @@
         /// </returns>
         public static ICallbackResult RefCallback<TRef>(this ICallback mock, RefAction<TRef> action)
         {
-            return RefCallbackInternal(mock, action);
+            return mock.Callback(action);
         }
 
         /// <summary>
@@ -121,84 +88,7 @@
         /// <returns>Результат выполнения Callback.</returns>
         public static ICallbackResult RefValCallback<TRef, TParam>(this ICallback mock, RefValAction<TRef, TParam> action)
         {
-            return RefCallbackInternal(mock, action);
-        }
-
-        /// <summary>
-        /// Метод расширения для <see cref="Moq"/>, который отключает проверку параметров для Callback-функций (вариант без возвращаемого значения).
-        /// </summary>
-        /// <param name="mock">
-        /// <see cref="Moq"/>, для которого нужно отключить проверку параметров.
-        /// </param>
-        /// <returns>
-        /// Для поддержки цепочечных вызовов, возвращаем <paramref name="mock"/>.
-        /// </returns>
-        public static ICallback IgnoreRefMatching(this ICallback mock)
-        {
-            try
-            {
-                FieldInfo matcherField = typeof(Mock).GetTypeInfo().Assembly.GetType("Moq.MethodCall").GetField("argumentMatchers", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.SetField | BindingFlags.Instance);
-
-                IList argumentMatchers = (IList)matcherField.GetValue(mock);
-                Type refMatcherType = typeof(Mock).GetTypeInfo().Assembly.GetType("Moq.Matchers.RefMatcher");
-                FieldInfo equalField = refMatcherType.GetField("equals", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.SetField | BindingFlags.Instance);
-
-                foreach (object matcher in argumentMatchers)
-                {
-                    if (matcher.GetType() == refMatcherType)
-                        equalField.SetValue(matcher, new Func<object, bool>(o => true));
-                }
-
-                return mock;
-            }
-            catch (NullReferenceException)
-            {
-                return mock;
-            }
-        }
-
-        /// <summary>
-        /// Вызов внутренней "магии" Moq для подписки на нужный Callback (вариант с возвращаемым значением).
-        /// </summary>
-        /// <param name="mock">
-        /// <see cref="Moq"/>, для которого нужно вызвать "магию".
-        /// </param>
-        /// <param name="action">
-        /// <see cref="Action{T}"/> с ref-параметром.
-        /// </param>
-        /// <typeparam name="TMock">
-        /// Moq для какого типа.
-        /// </typeparam>
-        /// <typeparam name="TReturn">
-        /// Тип возвращаемого значения.
-        /// </typeparam>
-        /// <returns>
-        /// Возвращаем структуру для поддержки цепочечного вызова функции.
-        /// </returns>
-        private static IReturnsThrows<TMock, TReturn> RefCallbackInternal<TMock, TReturn>(ICallback<TMock, TReturn> mock, object action)
-            where TMock : class
-        {
-            mock.GetType().Assembly.GetType("Moq.MethodCall").InvokeMember("SetCallbackWithArguments", BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance, null, mock, new[] { action });
-            return mock as IReturnsThrows<TMock, TReturn>;
-        }
-
-        /// <summary>
-        /// Вызов внутренней "магии" Moq для подписки на нужный Callback (вариант без возвращаемого значения).
-        /// </summary>
-        /// <param name="mock">
-        /// <see cref="Moq"/>, для которого нужно вызвать "магию".
-        /// </param>
-        /// <param name="action">
-        /// <see cref="Action{T}"/> с ref-параметром.
-        /// </param>
-        /// <returns>
-        /// Результат выполнения Callback.
-        /// </returns>
-        private static ICallbackResult RefCallbackInternal(ICallback mock, object action)
-        {
-            mock.GetType().Assembly.GetType("Moq.MethodCall")
-                .InvokeMember("SetCallbackWithArguments", BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance, null, mock, new[] { action });
-            return (ICallbackResult)mock;
+            return mock.Callback(action);
         }
     }
 }
