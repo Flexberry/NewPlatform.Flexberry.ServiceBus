@@ -1,6 +1,4 @@
-﻿using ICSSoft.STORMNET.KeyGen;
-
-namespace NewPlatform.Flexberry.ServiceBus.Components
+﻿namespace NewPlatform.Flexberry.ServiceBus.Components
 {
     using System;
     using System.Collections;
@@ -23,32 +21,71 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
     /// </summary>
     internal partial class RmqSendingManager : ISendingManager
     {
-        private readonly ILogger _logger;
-        private readonly ISubscriptionsManager _esbSubscriptionsManager;
-        private readonly IConnectionFactory _connectionFactory;
-        private readonly IManagementClient _managementClient;
-        private readonly IMessageConverter _converter;
-        private readonly AmqpNamingManager _namingManager;
-        private readonly string _vhostName;
+        private readonly ILogger logger;
+        private readonly ISubscriptionsManager esbSubscriptionsManager;
+        private readonly IConnectionFactory connectionFactory;
+        private readonly IManagementClient managementClient;
+        private readonly IMessageConverter converter;
+        private readonly AmqpNamingManager namingManager;
+        private readonly string vhostName;
         private readonly bool useLegacySenders;
-        private Vhost _vhost;
-        private List<RmqConsumer> _consumers;
-        private Timer _actualizationTimer;
+        private Vhost vhost;
+        private List<BaseRmqConsumer> consumers;
+        private Timer actualizationTimer;
         private static readonly object ActualizeLock = new object();
-        private IModel _sharedModel;
+        private IModel sharedModelField;
+        private IConnection connectionField;
 
-        private IModel SharedModel
+        private IConnection connection
         {
             get
             {
-                if (_sharedModel == null || _sharedModel.IsClosed)
+                if (UseSingleConnection)
                 {
-                    var connection = _connectionFactory.CreateConnection();
-                    _sharedModel = connection.CreateModel();
+                    if (connectionField == null)
+                    {
+                        connectionField = connectionFactory.CreateConnection();
+                        logger.LogDebugMessage("Consumer connection creation", "");
+                    }
+
+                    return connectionField;
+                }
+                else
+                {
+                    return connectionFactory.CreateConnection();
+                }
+            }
+        }
+
+        private IModel sharedModel
+        {
+            get
+            {
+                if (sharedModelField == null || sharedModelField.IsClosed)
+                {
+                    var connection = connectionFactory.CreateConnection();
+                    sharedModelField = connection.CreateModel();
                 }
 
-                return _sharedModel;
+                return sharedModelField;
             }
+        }
+
+        private BaseRmqConsumer CreateConsumer(Subscription subscription)
+        {
+            BaseRmqConsumer rmqConsumer;
+            if (UseSingleConnection)
+            {
+                rmqConsumer = new RmqSingleConnectionConsumer(logger, converter, connection, subscription, DefaultPrefetchCount, useLegacySenders);
+            }
+            else
+            {
+                rmqConsumer = new RmqConsumer(logger, converter, connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders);
+            }
+
+            rmqConsumer.AlwaysRecreate = AlwaysRecreateConsumer;
+
+            return rmqConsumer;
         }
 
         /// <summary>
@@ -59,32 +96,60 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             // on Mono 5.18 SynchronizedCollection did not work, will lock manually
             lock (ActualizeLock)
             {
-                var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions().ToArray();
-                var aliveSubs = new List<RmqConsumer>();
+                var subscriptions = esbSubscriptionsManager.GetCallbackSubscriptions().ToArray();
+                var aliveSubs = new List<BaseRmqConsumer>();
 
                 foreach (var subscription in subscriptions)
                 {
                     var subscriptionPk = subscription.__PrimaryKey;
-                    var rmqConsumer = this._consumers.FirstOrDefault(x => x.Subscription.__PrimaryKey.Equals(subscriptionPk));
+                    BaseRmqConsumer rmqConsumer = this.consumers.FirstOrDefault(x => x.Subscription.__PrimaryKey.Equals(subscriptionPk));
 
                     if (rmqConsumer == null) // create if not exists
                     {
-                        rmqConsumer = new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders);
-                        rmqConsumer.Start();
-                    }
-                    else if (!rmqConsumer.IsRunning)
-                    {
-                        rmqConsumer.Start();
+                        rmqConsumer = CreateConsumer(subscription);
+
+                        try
+                        {
+                            rmqConsumer.Start();
+                        }
+                        catch (Exception e)
+                        {
+                            logger.LogError("Rmq consumer events", $"Error on starting consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
+                        }
                     }
                     else // actualize subscription data(transfer type and address)
                     {
-                        rmqConsumer.UpdateSubscription(subscription);
+                        if (rmqConsumer.IsRunning)
+                        {
+                            try
+                            {
+                                rmqConsumer.UpdateSubscription(subscription);
+                            }
+                            catch (Exception e)
+                            {
+                                logger.LogError("Rmq consumer events", $"Error on updating consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
+                            }
+                        }
+
+                        if (rmqConsumer.ShouldRecreate)
+                        {
+                            try
+                            {
+                                rmqConsumer.Stop();
+                                rmqConsumer = CreateConsumer(subscription);
+                                rmqConsumer.Start();
+                            }
+                            catch (Exception e)
+                            {
+                                logger.LogError("Rmq consumer events", $"Error on stopping consumer {subscription.Client.ID}, message type {subscription.MessageType.ID}. {e.ToString()}");
+                            }
+                        }
                     }
 
                     aliveSubs.Add(rmqConsumer);
                 }
 
-                foreach (var rmqConsumer in this._consumers) // stop consumers of non-existings subscriptions
+                foreach (var rmqConsumer in this.consumers) // stop consumers of non-existings subscriptions
                 {
                     if (!aliveSubs.Contains(rmqConsumer))
                     {
@@ -92,11 +157,16 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                     }
                 }
 
-                this._consumers = aliveSubs;
+                this.consumers = aliveSubs;
             }
         }
 
         protected MessageSenderCreator MessageSenderCreator;
+
+        /// <summary>
+        /// Should use single connection for all consumers. 
+        /// </summary>
+        public bool UseSingleConnection { get; set; } = false;
 
         /// <summary>
         /// Частота запуска синхронизации подписок.
@@ -115,41 +185,60 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         {
             get
             {
-                if (_vhost == null)
+                if (vhost == null)
                 {
-                    _vhost = this._managementClient.CreateVirtualHostAsync(_vhostName).Result;
+                    vhost = this.managementClient.CreateVirtualHostAsync(vhostName).Result;
                 }
-                return _vhost;
+                return vhost;
             }
         }
 
+        /// <summary>
+        /// Should recreate RabbitMQ consumers on their fails.
+        /// </summary>
+        public bool AlwaysRecreateConsumer { get; set; } = false;
+
+        /// <summary>
+        /// Creates new object of type <see cref="RmqSendingManager"/> class.
+        /// </summary>
+        /// <param name="logger">Logger component.</param>
+        /// <param name="esbSubscriptionsManager">Subscription manager using database subscriptions.</param>
+        /// <param name="connectionFactory">RabbitMQ connection factory.</param>
+        /// <param name="managementClient">RabbitMQ management client.</param>
+        /// <param name="converter">RabbitMQ message to flexberry message converter.</param>
+        /// <param name="namingManager">AMQP naming manager.</param>
+        /// <param name="vhost">RabbitMQ virtual host.</param>
+        /// <param name="useLegacySenders">Use legacy senders.</param>
         public RmqSendingManager(ILogger logger, ISubscriptionsManager esbSubscriptionsManager, IConnectionFactory connectionFactory, IManagementClient managementClient, IMessageConverter converter, AmqpNamingManager namingManager, string vhost = "/", bool useLegacySenders = true)
         {
-            this._logger = logger;
-            this._esbSubscriptionsManager = esbSubscriptionsManager;
-            this._connectionFactory = connectionFactory;
-            this._managementClient = managementClient;
-            this._converter = converter;
-            this._namingManager = namingManager;
-            this.MessageSenderCreator = new MessageSenderCreator(_logger, useLegacySenders);
-            this._vhostName = vhost;
+            this.logger = logger;
+            this.esbSubscriptionsManager = esbSubscriptionsManager;
+            this.connectionFactory = connectionFactory;
+            this.managementClient = managementClient;
+            this.converter = converter;
+            this.namingManager = namingManager;
+            this.MessageSenderCreator = new MessageSenderCreator(this.logger, useLegacySenders);
+            this.vhostName = vhost;
             this.useLegacySenders = useLegacySenders;
 
-            this._consumers = new List<RmqConsumer>();
+            this.consumers = new List<BaseRmqConsumer>();
         }
 
+        /// <summary>
+        /// Prepare component (prepare suscription data).
+        /// </summary>
         public void Prepare()
         {
-            var subscriptions = _esbSubscriptionsManager.GetCallbackSubscriptions();
+            var subscriptions = esbSubscriptionsManager.GetCallbackSubscriptions();
             foreach (var subscription in subscriptions)
             {
-                this._consumers.Add(new RmqConsumer(_logger, _converter, _connectionFactory, subscription, DefaultPrefetchCount, useLegacySenders));
+                this.consumers.Add(CreateConsumer(subscription));
             }
         }
 
         public void Start()
         {
-            var consumers = this._consumers.ToArray();
+            var consumers = this.consumers.ToArray();
 
             foreach (var consumer in consumers)
             {
@@ -159,16 +248,16 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError("Ошибка запуска слушателя брокера", e.ToString());
+                    logger.LogError("Ошибка запуска слушателя брокера", e.ToString());
                 }
             }
 
-            this._actualizationTimer = new Timer(x => this.Actualize(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);
+            this.actualizationTimer = new Timer(x => this.Actualize(), null, this.UpdatePeriodMilliseconds, this.UpdatePeriodMilliseconds);
         }
 
         public void Stop()
         {
-            foreach (var consumer in _consumers)
+            foreach (var consumer in consumers)
             {
                 consumer.Stop();
             }
@@ -196,8 +285,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
             }
 
             // Получаем очереди клиента.
-            var queuePrefix = _namingManager.GetClientQueuePrefix(clientId);
-            var queues = _managementClient.GetQueuesAsync().Result.Where(x => x.Name.StartsWith(queuePrefix)).ToList();
+            var queuePrefix = namingManager.GetClientQueuePrefix(clientId);
+            var queues = managementClient.GetQueuesAsync().Result.Where(x => x.Name.StartsWith(queuePrefix)).ToList();
 
             // Суммируем количество сообщений в них.
             return queues.Sum(x => x.Messages);
@@ -221,8 +310,8 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                 throw new ArgumentException("", nameof(messageTypeId));
             }
 
-            var queueName = this._namingManager.GetClientQueueName(clientId, messageTypeId);
-            return this._managementClient.GetQueueAsync(queueName, this.Vhost).Result.Messages;
+            string queueName = this.namingManager.GetClientQueueName(clientId, messageTypeId);
+            return this.managementClient.GetQueueAsync(queueName, this.Vhost).Result.Messages;
         }
 
         /// <summary>
@@ -233,20 +322,20 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
         public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, int maxCount = 0)
         {
-            string queueNamePrefix = _namingManager.GetClientQueuePrefix(clientId);
-            IEnumerable<Queue> queues = _managementClient.GetQueuesAsync().Result;
+            string queueNamePrefix = namingManager.GetClientQueuePrefix(clientId);
+            IEnumerable<Queue> queues = managementClient.GetQueuesAsync().Result;
             IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueNamePrefix));
 
             List<ServiceBusMessageInfo> rmqMessagesInfo = new List<ServiceBusMessageInfo>();
             foreach (Queue clientQueue in clientQueues)
             {
-                var messages = _managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
+                var messages = managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
                 foreach (var message in messages)
                 {
                     ServiceBusMessageInfo msg = new ServiceBusMessageInfo
                     {
                         // TODO: Добавить заполнение других свойств.
-                        MessageTypeID = _namingManager.GetMessageType(message.RoutingKey),
+                        MessageTypeID = namingManager.GetMessageType(message.RoutingKey),
                     };
 
                     rmqMessagesInfo.Add(msg);
@@ -271,14 +360,14 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
         public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, int maxCount = 0)
         {
-            var queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
-            IEnumerable<Queue> queues = _managementClient.GetQueuesAsync().Result;
+            string queueName = namingManager.GetClientQueueName(clientId, messageTypeId);
+            IEnumerable<Queue> queues = managementClient.GetQueuesAsync().Result;
             IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueName));
 
             List<ServiceBusMessageInfo> rmqMessagesInfo = new List<ServiceBusMessageInfo>();
             foreach (Queue clientQueue in clientQueues)
             {
-                var messages = _managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
+                var messages = managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
                 foreach (var message in messages)
                 {
                     ServiceBusMessageInfo msg = new ServiceBusMessageInfo
@@ -310,14 +399,14 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
         public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string groupName, int maxCount = 0)
         {
-            var queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
-            IEnumerable<Queue> queues = _managementClient.GetQueuesAsync().Result;
+            string queueName = namingManager.GetClientQueueName(clientId, messageTypeId);
+            IEnumerable<Queue> queues = managementClient.GetQueuesAsync().Result;
             IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueName));
 
             List<ServiceBusMessageInfo> rmqMessagesInfo = new List<ServiceBusMessageInfo>();
             foreach (Queue clientQueue in clientQueues)
             {
-                var messages = _managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
+                var messages = managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
                 foreach (var message in messages)
                 {
                     // TODO: Исправить считывание групп.
@@ -326,7 +415,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                         ServiceBusMessageInfo msg = new ServiceBusMessageInfo
                         {
                             // TODO: Добавить заполнение других свойств.
-                            MessageTypeID = _namingManager.GetMessageType(message.RoutingKey),
+                            MessageTypeID = namingManager.GetMessageType(message.RoutingKey),
                         };
 
                         rmqMessagesInfo.Add(msg);
@@ -353,20 +442,20 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         /// <returns>Информация о сообщениях. Записи отсортированы в планируемом порядке отправки.</returns>
         public IEnumerable<ServiceBusMessageInfo> GetMessagesInfo(string clientId, string messageTypeId, string[] tags, int maxCount = 0)
         {
-            var queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
-            IEnumerable<Queue> queues = _managementClient.GetQueuesAsync().Result;
+            string queueName = namingManager.GetClientQueueName(clientId, messageTypeId);
+            IEnumerable<Queue> queues = managementClient.GetQueuesAsync().Result;
             IEnumerable<Queue> clientQueues = queues.Where(x => x.Name.StartsWith(queueName));
 
             List<ServiceBusMessageInfo> rmqMessagesInfo = new List<ServiceBusMessageInfo>();
             foreach (Queue clientQueue in clientQueues)
             {
-                var messages = _managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
+                var messages = managementClient.GetMessagesFromQueueAsync(clientQueue, new GetMessagesCriteria(clientQueue.Messages, Ackmodes.ack_requeue_true)).Result;
                 foreach (var message in messages)
                 {
                     var haveAllTags = true;
                     foreach (string tag in tags)
                     {
-                        var headerTag = message.Properties.Headers.Where(pr => pr.Key.StartsWith(_converter.GetTagPropertiesPrefix(tag)));
+                        var headerTag = message.Properties.Headers.Where(pr => pr.Key.StartsWith(converter.GetTagPropertiesPrefix(tag)));
                         if (headerTag.ToArray().Length == 0)
                         {
                             haveAllTags = false;
@@ -379,7 +468,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
                         ServiceBusMessageInfo msg = new ServiceBusMessageInfo
                         {
                             // TODO: Добавить заполнение других свойств.
-                            MessageTypeID = _namingManager.GetMessageType(message.RoutingKey),
+                            MessageTypeID = namingManager.GetMessageType(message.RoutingKey),
                         };
 
                         rmqMessagesInfo.Add(msg);
@@ -416,11 +505,11 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         {
             MessageWithNotTypedPk result = null;
 
-            var queueName = _namingManager.GetClientQueueName(clientId, messageTypeId);
-            var message = SharedModel.BasicGet(queueName, false);
+            string queueName = namingManager.GetClientQueueName(clientId, messageTypeId);
+            var message = sharedModel.BasicGet(queueName, false);
             if (message != null)
             {
-                result = _converter.ConvertFromMqFormat(message.Body, message.BasicProperties.Headers);
+                result = converter.ConvertFromMqFormat(message.Body, message.BasicProperties.Headers);
                 result.MessageType = new MessageType()
                 {
                     ID = messageTypeId
@@ -481,7 +570,7 @@ namespace NewPlatform.Flexberry.ServiceBus.Components
         public bool DeleteMessage(string id)
         {
             var rmqId = ulong.Parse(id);
-            SharedModel.BasicAck(rmqId, false);
+            sharedModel.BasicAck(rmqId, false);
 
             // похоже нет способа понять есть ли сообщение с заданным ID, поэтому только так
             return true;
