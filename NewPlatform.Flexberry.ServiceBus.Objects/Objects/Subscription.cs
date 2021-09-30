@@ -201,9 +201,9 @@ namespace NewPlatform.Flexberry.ServiceBus
 
         // *** End programmer edit section *** (Subscription.DefaultDescription CustomAttributes)
         [ICSSoft.STORMNET.NotStored()]
-        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.MSSQLDataService), "COALESCE(NULLIF(@Description@, \'\'), COALESCE(@Client.Name@, @Client.ID@) + \' - \' " +
+        [DataServiceExpression("ICSSoft.STORMNET.Business.MSSQLDataService, ICSSoft.STORMNET.Business.MSSQLDataService", "COALESCE(NULLIF(@Description@, \'\'), COALESCE(@Client.Name@, @Client.ID@) + \' - \' " +
             "+ COALESCE(@MessageType.Name@, @MessageType.ID@))")]
-        [DataServiceExpression(typeof(ICSSoft.STORMNET.Business.PostgresDataService), "COALESCE(NULLIF(@Description@, \'\'), CONCAT(COALESCE(@Client.Name@, @Client.ID@), " +
+        [DataServiceExpression("ICSSoft.STORMNET.Business.PostgresDataService, ICSSoft.STORMNET.Business.PostgresDataService", "COALESCE(NULLIF(@Description@, \'\'), CONCAT(COALESCE(@Client.Name@, @Client.ID@), " +
             "\' - \', COALESCE(@MessageType.Name@, @MessageType.ID@)))")]
         public virtual string DefaultDescription
         {

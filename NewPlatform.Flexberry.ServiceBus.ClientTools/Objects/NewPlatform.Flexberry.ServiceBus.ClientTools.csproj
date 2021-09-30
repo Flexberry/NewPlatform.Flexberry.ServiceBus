@@ -1,107 +1,41 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5DE41952-FD87-47DA-B6D1-F805C670CB09}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <Configurations>Debug;Release</Configurations>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>NewPlatform.Flexberry.ServiceBus</RootNamespace>
     <AssemblyName>NewPlatform.Flexberry.ServiceBus.ClientTools</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\NewPlatform.Flexberry.ServiceBus.ClientTools.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\NewPlatform.Flexberry.ServiceBus.ClientTools.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
     <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
+    <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>NewPlatform.Flexberry.ServiceBus.ClientTools.snk</AssemblyOriginatorKeyFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <CodeAnalysisRuleSet>..\..\Flexberry.ruleset</CodeAnalysisRuleSet>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System">
-      <HintPath>System.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="StyleCop.Cache" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="IServiceBusCallbackClient.cs" />
-    <Compile Include="IServiceBusClient.cs" />
-    <Compile Include="IServiceBusComponent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IServiceBusManager.cs" />
-    <Compile Include="MessageFromESB.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MessageInfoFromESB.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MessageOrderingInformation.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MessageForESB.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NameCommentStruct.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="HttpMessageForEsb.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="HttpSubscription.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="HttpMessageFromEsb.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IServiceBusInterop.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ICallbackSubscriber.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IServiceBusService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MessageInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ServiceBusClient.cs" />
-    <Compile Include="ServiceBusMessage.cs" />
-    <Compile Include="ServiceBusMessageInfo.cs" />
-    <Compile Include="ServiceBusMessageType.cs" />
-    <Compile Include="ServiceBusSubscription.cs" />
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="NewPlatform.Flexberry.ServiceBus.ClientTools.snk" />
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+
 </Project>

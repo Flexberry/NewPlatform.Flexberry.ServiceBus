@@ -10,7 +10,6 @@
     using ICSSoft.STORMNET.FunctionalLanguage;
     using ICSSoft.STORMNET.KeyGen;
     using ICSSoft.STORMNET.Windows.Forms;
-    using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
     /// <summary>
     /// Статический класс для хранения и поддержания актуальности коллекции активных (срок действия которых не истек) на данный момент подписок.
@@ -165,7 +164,10 @@
                 _statisticsService.NotifyAvgTimeSql(null, (int)time, "CachedSubscriptionsManager.DeleteClient() load messages.");
 
                 objectsToDelete = objectsToDelete.Concat(new DataObject[] { client }).ToArray();
-                objectsToDelete.ForEach(obj => obj.SetStatus(ObjectStatus.Deleted));
+                foreach (var obj in objectsToDelete)
+                {
+                    obj.SetStatus(ObjectStatus.Deleted);
+                }
             }
 
             stopwatch = new Stopwatch();

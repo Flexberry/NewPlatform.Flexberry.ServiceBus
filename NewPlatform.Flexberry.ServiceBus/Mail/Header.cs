@@ -1,3 +1,4 @@
+#if NETFRAMEWORK
 namespace NewPlatform.Flexberry.ServiceBus.Mail
 {
     using OpenPop.Mime;
@@ -23,3 +24,4 @@ namespace NewPlatform.Flexberry.ServiceBus.Mail
         public bool stored;
     }
 }
+#endif

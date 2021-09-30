@@ -1,10 +1,11 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Controllers
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ServiceBus.Controllers
 {
     using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Web.Http;
-    using Components;
+    using NewPlatform.Flexberry.ServiceBus.Components;
 
     /// <summary>
     /// WebAPI контроллер для WebAPI сервиса шины.
@@ -17,14 +18,8 @@
 
         public RestServiceController(ISendingManager sendingManager, IReceivingManager receivingManager)
         {
-            if (sendingManager == null)
-                throw new ArgumentNullException(nameof(sendingManager));
-
-            if (receivingManager == null)
-                throw new ArgumentNullException(nameof(receivingManager));
-
-            _sendingManager = sendingManager;
-            _receivingManager = receivingManager;
+            _sendingManager = sendingManager ?? throw new ArgumentNullException(nameof(sendingManager));
+            _receivingManager = receivingManager ?? throw new ArgumentNullException(nameof(receivingManager));
         }
 
         /// <summary>
@@ -125,3 +120,4 @@
         }
     }
 }
+#endif

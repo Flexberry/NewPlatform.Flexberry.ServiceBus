@@ -1,8 +1,9 @@
-﻿namespace NewPlatform.Flexberry.ServiceBus.Controllers
+﻿#if NETFRAMEWORK
+namespace NewPlatform.Flexberry.ServiceBus.Controllers
 {
     using System;
     using System.Web.Http.Dependencies;
-    using Components;
+    using NewPlatform.Flexberry.ServiceBus.Components;
 
     public class RestDependencyResolver : RestDependencyScope, IDependencyResolver
     {
@@ -29,3 +30,4 @@
         }
     }
 }
+#endif

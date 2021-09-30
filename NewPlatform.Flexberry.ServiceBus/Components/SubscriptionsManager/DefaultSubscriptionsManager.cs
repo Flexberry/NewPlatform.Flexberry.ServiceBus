@@ -8,7 +8,6 @@
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.FunctionalLanguage;
     using ICSSoft.STORMNET.Windows.Forms;
-    using Microsoft.Practices.EnterpriseLibrary.Common.Utility;
 
     /// <summary>
     /// Класс по умолчанию для управления подписками.
@@ -94,7 +93,10 @@
             _statisticsService.NotifyAvgTimeSql(null, (int)time, "DefaultSubscriptionsManager.DeleteClient() load Client.");
 
             objectsToDelete = objectsToDelete.Concat(new DataObject[] { client }).ToArray();
-            objectsToDelete.ForEach(obj => obj.SetStatus(ObjectStatus.Deleted));
+            foreach (var obj in objectsToDelete)
+            {
+                obj.SetStatus(ObjectStatus.Deleted);
+            }
 
             stopwatch = new Stopwatch();
             stopwatch.Start();

@@ -3,10 +3,11 @@
     using System;
     using System.Linq;
 
-    using Unity;
-    using Microsoft.Practices.Unity.Configuration;
+    using ICSSoft.Services;
 
     using NewPlatform.Flexberry.ServiceBus.Components;
+
+    using Unity;
 
     /// <summary>
     /// Консольное приложение для запуска сервисов ServiceBus.
@@ -18,8 +19,7 @@
         /// </summary>
         public static void Main()
         {
-            var unityContainer = new UnityContainer();
-            unityContainer.LoadConfiguration();
+            var unityContainer = UnityFactory.GetContainer();
 
             var components = 
                 from registration in unityContainer.Registrations
