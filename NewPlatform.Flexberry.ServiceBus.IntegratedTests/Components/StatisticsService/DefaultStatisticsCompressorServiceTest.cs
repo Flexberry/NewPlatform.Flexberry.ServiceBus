@@ -32,7 +32,7 @@
                     NextCompressTime = DateTime.Now,
                 };
                 var dataObjects = new DataObject[100];
-                var date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour - 1, 0, 0, 0);
+                var date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, 0, 0, 0).AddHours(-1);
                 for (int i = 0; i < 100; i++)
                 {
                     dataObjects[i] = new StatisticsRecord()
