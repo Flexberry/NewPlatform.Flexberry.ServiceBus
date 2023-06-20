@@ -53,6 +53,7 @@
         {
             this.callback = callback;
             var thread = new Thread(DoCicling);
+            thread.Priority = ThreadPriority.Lowest;
             thread.Start(milliseconds);
             State = TimerState.Working;
         }
