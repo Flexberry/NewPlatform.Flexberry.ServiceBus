@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ServiceBus.Components</id>
-    <version>1.2.1-beta04</version>
+    <version>2.0.0-beta01</version>
     <title>Flexberry Service Bus Components</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -12,15 +12,25 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Components interfaces for Flexberry Service Bus.</description>
     <releaseNotes></releaseNotes>
-    <copyright>Copyright © New Platform Ltd. 2018</copyright>
+    <copyright>Copyright © New Platform Ltd. 2021</copyright>
     <tags>Flexberry Service Bus</tags>
     <dependencies>
-      <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="1.2.0" />
-      <dependency id="NewPlatform.Flexberry.ServiceBus.Objects" version="1.2.0" />
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="NewPlatform.Flexberry.ORM" version="6.0.0" />
+        <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="2.0.0-beta01" />
+        <dependency id="NewPlatform.Flexberry.ServiceBus.Objects" version="2.0.0-beta01" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="NewPlatform.Flexberry.ORM" version="6.0.0" />
+        <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="2.0.0-beta01" />
+        <dependency id="NewPlatform.Flexberry.ServiceBus.Objects" version="2.0.0-beta01" />
+      </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="NewPlatform.Flexberry.ServiceBus.Components.dll" target="lib\net45\NewPlatform.Flexberry.ServiceBus.Components.dll" />
-    <file src="NewPlatform.Flexberry.ServiceBus.Components.xml" target="lib\net45\NewPlatform.Flexberry.ServiceBus.Components.xml" />
+    <file src="net45\NewPlatform.Flexberry.ServiceBus.Components.dll" target="lib\net45\NewPlatform.Flexberry.ServiceBus.Components.dll" />
+    <file src="net45\NewPlatform.Flexberry.ServiceBus.Components.xml" target="lib\net45\NewPlatform.Flexberry.ServiceBus.Components.xml" />
+    <file src="netstandard2.0\NewPlatform.Flexberry.ServiceBus.Components.dll" target="lib\netstandard2.0\NewPlatform.Flexberry.ServiceBus.Components.dll" />
+    <file src="netstandard2.0\NewPlatform.Flexberry.ServiceBus.Components.xml" target="lib\netstandard2.0\NewPlatform.Flexberry.ServiceBus.Components.xml" />
   </files>
 </package>
