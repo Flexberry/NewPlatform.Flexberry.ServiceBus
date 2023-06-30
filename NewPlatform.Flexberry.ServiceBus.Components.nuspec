@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ServiceBus.Components</id>
-    <version>2.0.0-alpha01</version>
+    <version>2.0.0-beta01</version>
     <title>Flexberry Service Bus Components</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -17,13 +17,13 @@
     <dependencies>
       <group targetFramework=".NETFramework4.5">
         <dependency id="NewPlatform.Flexberry.ORM" version="6.0.0" />
-        <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="2.0.0-alpha01" />
-        <dependency id="NewPlatform.Flexberry.ServiceBus.Objects" version="2.0.0-alpha01" />
+        <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="2.0.0-beta01" />
+        <dependency id="NewPlatform.Flexberry.ServiceBus.Objects" version="2.0.0-beta01" />
       </group>
       <group targetFramework=".NETStandard2.0">
         <dependency id="NewPlatform.Flexberry.ORM" version="6.0.0" />
-        <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="2.0.0-alpha01" />
-        <dependency id="NewPlatform.Flexberry.ServiceBus.Objects" version="2.0.0-alpha01" />
+        <dependency id="NewPlatform.Flexberry.ServiceBus.ClientTools" version="2.0.0-beta01" />
+        <dependency id="NewPlatform.Flexberry.ServiceBus.Objects" version="2.0.0-beta01" />
       </group>
     </dependencies>
   </metadata>
