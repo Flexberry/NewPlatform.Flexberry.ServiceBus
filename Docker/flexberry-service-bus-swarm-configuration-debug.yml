@@ -15,6 +15,8 @@ services:
      - "7075:7075"
      - "7085:7085"
   FlexberryServiceBusEditor:
+    environment:
+     - ESB_CONNECTION_STRING=Host=FlexberryServiceBusPostgres;Port=5432;Database=flexberryservicebus;User ID=flexberryservicebususer;Password=jhv;
     image: "flexberry/flexberry-service-bus-editor:latest"
     command: /bin/sleep 11d
     ports:
