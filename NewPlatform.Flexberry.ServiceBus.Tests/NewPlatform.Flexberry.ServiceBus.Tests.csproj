@@ -86,8 +86,8 @@
     <Reference Include="ICSSoft.STORMNET.UserDataTypes, Version=1.0.0.1, Culture=neutral, PublicKeyToken=bc478021255def29, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0\lib\net45\ICSSoft.STORMNET.UserDataTypes.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.4.1.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
@@ -102,7 +102,7 @@
       <HintPath>..\packages\Moq.4.14.1\lib\net45\Moq.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.LogService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fd6943b998f5450d, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.LogService.2.0.0\lib\net45\NewPlatform.Flexberry.LogService.dll</HintPath>
+      <HintPath>..\packages\NewPlatform.Flexberry.LogService.2.2.1\lib\net45\NewPlatform.Flexberry.LogService.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.ORM.CurrentUserService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=087bc7ccdc1b0bb4, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0\lib\net45\NewPlatform.Flexberry.ORM.CurrentUserService.dll</HintPath>

@@ -151,8 +151,8 @@
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=1.1.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.1.28\lib\net40\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
@@ -170,7 +170,7 @@
       <HintPath>..\packages\Microsoft.Spatial.7.7.2\lib\net45\Microsoft.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.LogService, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fd6943b998f5450d, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewPlatform.Flexberry.LogService.2.0.0\lib\net45\NewPlatform.Flexberry.LogService.dll</HintPath>
+      <HintPath>..\packages\NewPlatform.Flexberry.LogService.2.2.1\lib\net45\NewPlatform.Flexberry.LogService.dll</HintPath>
     </Reference>
     <Reference Include="NewPlatform.Flexberry.ORM.CurrentUserService, Version=1.0.0.1, Culture=neutral, PublicKeyToken=087bc7ccdc1b0bb4, processorArchitecture=MSIL">
       <HintPath>..\packages\NewPlatform.Flexberry.ORM.6.0.0\lib\net45\NewPlatform.Flexberry.ORM.CurrentUserService.dll</HintPath>
@@ -181,8 +181,8 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Npgsql, Version=3.2.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Npgsql.3.2.6\lib\net451\Npgsql.dll</HintPath>
+    <Reference Include="Npgsql, Version=3.2.7.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.3.2.7\lib\net451\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>

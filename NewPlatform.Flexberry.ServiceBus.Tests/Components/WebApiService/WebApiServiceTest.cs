@@ -39,7 +39,10 @@
             {
                 var httpClient = new HttpClient();
                 var response = httpClient.GetAsync($"{baseAddress}/Message/{Guid.NewGuid():D}");
-                log.Add(response.Result.StatusCode);
+                lock (log)
+                {
+                    log.Add(response.Result.StatusCode);
+                }
             };
 
             var sendingManager = GetMockSendingManager();
