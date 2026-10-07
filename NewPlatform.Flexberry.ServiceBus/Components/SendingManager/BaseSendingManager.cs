@@ -688,7 +688,7 @@
             var dsType = ds.GetType();
 
             // TODO: придумать, как быстро и массово обновить статусы сообщений без sql.
-            if (dsType.IsAssignableFrom(Type.GetType(msType, false)))
+            if (dsType.IsAssignableFrom(Type.GetType(pgType, false)))
             {
                 try
                 {
@@ -702,7 +702,7 @@
                     logger.LogUnhandledException(ex, null, "Ошибка при массовом обновлении статусов сообщений");
                 }
             }
-            else if (dsType.IsAssignableFrom(Type.GetType(pgType, false)))
+            else if (dsType.IsAssignableFrom(Type.GetType(msType, false)))
             {
                 try
                 {
